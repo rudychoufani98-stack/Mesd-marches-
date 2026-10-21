@@ -96,12 +96,12 @@ export const defaultOffers: Offer[] = [
   },
 ];
 
-export function formatPrice(offer: Offer): string {
-  const amount = new Intl.NumberFormat("fr-FR", {
+export function formatPrice(offer: Offer, locale: "fr" | "en" = "fr"): string {
+  const amount = new Intl.NumberFormat(locale === "en" ? "en-GB" : "fr-FR", {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: Number.isInteger(offer.price) ? 0 : 2,
     maximumFractionDigits: 2,
   }).format(offer.price);
-  return offer.billing === "mensuel" ? `${amount} / mois` : amount;
+  return offer.billing === "mensuel" ? `${amount} / ${locale === "en" ? "month" : "mois"}` : amount;
 }

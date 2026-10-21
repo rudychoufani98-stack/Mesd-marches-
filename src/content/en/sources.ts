@@ -1,0 +1,46 @@
+import type { SourceId } from "../sources";
+import type { SourceText } from "../translations";
+
+/** English descriptions of official sources (names stay as published by the French authorities). */
+export const sourcesEn: Partial<Record<SourceId, SourceText>> = {
+  "service-public": { label: "Official administrative information website for individuals" },
+  "sp-logement": { label: "Housing section: renting, financial aid, insurance, moving" },
+  "sp-argent": { label: "Money section: banking, credit, taxes, consumer matters" },
+  "sp-etranger": { label: "Foreigners section: residence, work and study in France" },
+  "sp-famille": { label: "Family section: schooling, birth, family life" },
+  "sp-travail": { label: "Work section: contracts, salary, training" },
+  "sp-social-sante": { label: "Social and health section: health insurance, social benefits" },
+  "sp-papiers": { label: "Documents section: identity documents, civil status records" },
+  "sp-fiche-paie": { label: "Practical guide to the payslip (bulletin de paie)" },
+  "sp-demenagement": { label: "Procedures linked to moving house in France" },
+  "sp-declaration-revenus": { label: "Official calendar for the income tax return" },
+  "sp-recherche-emploi": { label: "Procedures linked to looking for a job" },
+  "sp-permis": { label: "Official section on the driving licence" },
+  "sp-permis-echange": {
+    label: "Conditions and steps for exchanging a foreign licence when settling in France",
+  },
+  "sp-permis-court-sejour": {
+    label: "Rules for driving in France with a foreign licence without exchanging it",
+  },
+  impots: { label: "Individual taxpayer area of the tax administration" },
+  ameli: { label: "Assurance Maladie website for insured people" },
+  caf: { label: "Family allowance fund (Caisse d'allocations familiales): family benefits and housing aid" },
+  "france-services": { label: "Find a local public support centre" },
+  "travail-emploi": { label: "Ministry of Labour: employment law and jobs" },
+  "france-travail": { label: "Public employment service" },
+  cnil: { label: "Protection of personal data" },
+  "cnil-rgpd": { label: "CNIL guide to GDPR compliance" },
+  cybermalveillance: { label: "Assistance and prevention in digital security" },
+  "cybermalveillance-phishing": { label: "What to do in case of phishing" },
+  franceconnect: { label: "Identification system for accessing online public services" },
+  anef: { label: "Official portal for residence-related procedures" },
+  "banque-france": { label: "Information on banking services, including the right to a bank account" },
+  mesquestionsdargent: { label: "Financial education portal (Banque de France)" },
+  etudiant: { label: "Information for student life" },
+  "campus-france": { label: "Public agency for international students" },
+  dossierfacile: { label: "Public service for building a rental application file" },
+  visale: { label: "Rental guarantee offered by Action Logement" },
+  "energie-info": { label: "Information website of the national energy ombudsman" },
+  signalconso: { label: "Report a problem with a business" },
+  urssaf: { label: "Social contributions" },
+};

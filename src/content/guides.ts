@@ -245,7 +245,7 @@ export const defaultGuides: Guide[] = [
     category: "banque",
     readingMinutes: 5,
     intro:
-      "Ce guide explique des notions générales pour lire une offre de crédit. MesDémarches ne recommande aucun crédit, ne met pas en relation avec des prêteurs et ne perçoit aucune rémunération d'établissements financiers. Un crédit engage et doit être remboursé : vérifiez vos capacités de remboursement avant de vous engager.",
+      "Ce guide explique des notions générales pour lire une offre de crédit. MesDémarches ne recommande aucun crédit. Un crédit engage et doit être remboursé : vérifiez vos capacités de remboursement avant de vous engager.",
     steps: [
       {
         title: "Le TAEG",

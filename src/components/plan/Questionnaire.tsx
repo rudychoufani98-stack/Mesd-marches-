@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { categories, type CategoryId } from "@/content/categories";
+import { localizeCategory } from "@/content/translations";
+import type { Locale } from "@/i18n";
 import {
   answersSchema,
   goalOptions,
@@ -21,13 +23,43 @@ type Step = {
   help?: string;
 };
 
-const steps: Step[] = [
-  { key: "goal", title: "Quel est votre principal objectif ?" },
-  { key: "timeInFrance", title: "Depuis combien de temps vivez-vous en France ?" },
-  { key: "categories", title: "Quelles démarches souhaitez-vous organiser ?", help: "Plusieurs choix possibles." },
-  { key: "timeframe", title: "Dans quel délai souhaitez-vous avancer ?", help: "Cela sert uniquement à répartir les tâches dans le temps." },
-  { key: "support", title: "Comment souhaitez-vous avancer ?" },
-];
+const stepsByLocale: Record<Locale, Step[]> = {
+  fr: [
+    { key: "goal", title: "Quel est votre principal objectif ?" },
+    { key: "timeInFrance", title: "Depuis combien de temps vivez-vous en France ?" },
+    { key: "categories", title: "Quelles démarches souhaitez-vous organiser ?", help: "Plusieurs choix possibles." },
+    { key: "timeframe", title: "Dans quel délai souhaitez-vous avancer ?", help: "Cela sert uniquement à répartir les tâches dans le temps." },
+    { key: "support", title: "Comment souhaitez-vous avancer ?" },
+  ],
+  en: [
+    { key: "goal", title: "What is your main goal?" },
+    { key: "timeInFrance", title: "How long have you been living in France?" },
+    { key: "categories", title: "Which procedures would you like to organise?", help: "You can choose several." },
+    { key: "timeframe", title: "How soon would you like to move forward?", help: "This is only used to spread the tasks over time." },
+    { key: "support", title: "How would you like to move forward?" },
+  ],
+};
+
+const copy = {
+  fr: {
+    question: (i: number, n: number) => `Question ${i} sur ${n}`,
+    pickCategory: "Choisissez au moins un domaine.",
+    pickAnswer: "Choisissez une réponse pour continuer.",
+    incomplete: "Certaines réponses sont incomplètes. Revenez aux étapes précédentes pour les vérifier.",
+    see: "Voir mon plan d'action",
+    next: "Continuer",
+    previous: "Précédent",
+  },
+  en: {
+    question: (i: number, n: number) => `Question ${i} of ${n}`,
+    pickCategory: "Please choose at least one topic.",
+    pickAnswer: "Please choose an answer to continue.",
+    incomplete: "Some answers are incomplete. Go back to the previous steps to check them.",
+    see: "See my action plan",
+    next: "Continue",
+    previous: "Back",
+  },
+};
 
 function OptionCard({
   selected,
@@ -79,7 +111,19 @@ function OptionCard({
   );
 }
 
-export function Questionnaire({ initial, onComplete }: { initial?: Answers | null; onComplete: (answers: Answers) => void }) {
+export function Questionnaire({
+  initial,
+  onComplete,
+  locale = "fr",
+}: {
+  initial?: Answers | null;
+  onComplete: (answers: Answers) => void;
+  locale?: Locale;
+}) {
+  const steps = stepsByLocale[locale];
+  const t = copy[locale];
+  const lbl = (o: { label: string; labelEn: string }) => (locale === "en" ? o.labelEn : o.label);
+  const hnt = (o: { hint: string; hintEn: string }) => (locale === "en" ? o.hintEn : o.hint);
   const [index, setIndex] = useState(0);
   const [draft, setDraft] = useState<Draft>(initial ?? { categories: [] });
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +159,7 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
     const value = draft[step.key];
     const missing = Array.isArray(value) ? value.length === 0 : !value;
     if (missing) {
-      setError(step.key === "categories" ? "Choisissez au moins un domaine." : "Choisissez une réponse pour continuer.");
+      setError(step.key === "categories" ? t.pickCategory : t.pickAnswer);
       return;
     }
     if (!isLast) {
@@ -124,7 +168,7 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
     }
     const parsed = answersSchema.safeParse(draft);
     if (!parsed.success) {
-      setError("Certaines réponses sont incomplètes. Revenez aux étapes précédentes pour les vérifier.");
+      setError(t.incomplete);
       return;
     }
     onComplete(parsed.data);
@@ -143,7 +187,7 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
     >
       <div className="flex items-center justify-between text-sm text-muted">
         <span>
-          Question {index + 1} sur {steps.length}
+          {t.question(index + 1, steps.length)}
         </span>
         <span>{Math.round((index / steps.length) * 100)} %</span>
       </div>
@@ -162,11 +206,11 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
         <div className={`mt-6 grid gap-3 ${step.key === "categories" ? "sm:grid-cols-2" : ""}`}>
           {step.key === "goal" &&
             goalOptions.map((o) => (
-              <OptionCard key={o.value} name="goal" value={o.value} label={o.label} hint={o.hint} icon={o.emoji} selected={draft.goal === o.value} onSelect={() => set("goal", o.value)} />
+              <OptionCard key={o.value} name="goal" value={o.value} label={lbl(o)} hint={hnt(o)} icon={o.emoji} selected={draft.goal === o.value} onSelect={() => set("goal", o.value)} />
             ))}
           {step.key === "timeInFrance" &&
             timeInFranceOptions.map((o) => (
-              <OptionCard key={o.value} name="timeInFrance" value={o.value} label={o.label} selected={draft.timeInFrance === o.value} onSelect={() => set("timeInFrance", o.value)} />
+              <OptionCard key={o.value} name="timeInFrance" value={o.value} label={lbl(o)} selected={draft.timeInFrance === o.value} onSelect={() => set("timeInFrance", o.value)} />
             ))}
           {step.key === "categories" &&
             categories.map((c) => (
@@ -175,7 +219,7 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
                 type="checkbox"
                 name="categories"
                 value={c.id}
-                label={c.title}
+                label={localizeCategory(c, locale).title}
                 icon={c.emoji}
                 selected={draft.categories.includes(c.id)}
                 onSelect={() => toggleCategory(c.id)}
@@ -183,11 +227,11 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
             ))}
           {step.key === "timeframe" &&
             timeframeOptions.map((o) => (
-              <OptionCard key={o.value} name="timeframe" value={o.value} label={o.label} selected={draft.timeframe === o.value} onSelect={() => set("timeframe", o.value)} />
+              <OptionCard key={o.value} name="timeframe" value={o.value} label={lbl(o)} selected={draft.timeframe === o.value} onSelect={() => set("timeframe", o.value)} />
             ))}
           {step.key === "support" &&
             supportOptions.map((o) => (
-              <OptionCard key={o.value} name="support" value={o.value} label={o.label} hint={o.hint} icon={o.emoji} selected={draft.support === o.value} onSelect={() => set("support", o.value)} />
+              <OptionCard key={o.value} name="support" value={o.value} label={lbl(o)} hint={hnt(o)} icon={o.emoji} selected={draft.support === o.value} onSelect={() => set("support", o.value)} />
             ))}
         </div>
       </fieldset>
@@ -200,10 +244,10 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
 
       <div className="mt-8 flex items-center justify-between gap-3">
         <Button type="button" variant="ghost" onClick={() => setIndex((i) => i - 1)} disabled={index === 0} className={index === 0 ? "invisible" : ""}>
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Précédent
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {t.previous}
         </Button>
         <Button type="submit" size="lg">
-          {isLast ? "Voir mon plan d'action" : "Continuer"} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          {isLast ? t.see : t.next} <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Button>
       </div>
     </form>

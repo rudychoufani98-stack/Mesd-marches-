@@ -17,60 +17,6 @@ export const siteConfig = {
   disclaimer:
     "MesDémarches est un service privé indépendant et ne constitue pas un site officiel de l'administration française.",
   unverifiedNotice: "Information à vérifier auprès de l'organisme compétent.",
-  /**
-   * Positionnement : conseil indépendant en organisation administrative.
-   * MesDémarches n'est pas apporteur d'affaires : aucune commission, aucune mise en relation rémunérée.
-   * À reprendre tel quel partout où le sujet est abordé (cohérence du site).
-   */
-  independence:
-    "Conseil 100 % indépendant : nous ne percevons aucune commission de banques, courtiers, notaires, assureurs ou agences. Vous seul nous rémunérez, et vous choisissez librement vos interlocuteurs.",
-  independenceShort: "Aucune commission, aucun partenaire payant : un conseil 100 % indépendant.",
+  /** Liberté de choix du client (ne dit rien des relations commerciales avec les partenaires). */
+  independence: "Nous vous orientons vers les sources officielles ; vous restez toujours libre de choisir vos interlocuteurs.",
 } as const;
-
-export type NavItem = { href: string; label: string };
-
-export const mainNav: NavItem[] = [
-  { href: "/", label: "Accueil" },
-  { href: "/services", label: "Nos services" },
-  { href: "/guides", label: "Guides pratiques" },
-  { href: "/comment-ca-marche", label: "Comment ça marche" },
-  { href: "/tarifs", label: "Tarifs" },
-];
-
-export const footerNav: { title: string; items: NavItem[] }[] = [
-  {
-    title: "Découvrir",
-    items: [
-      { href: "/services", label: "Nos services" },
-      { href: "/guides", label: "Guides pratiques" },
-      { href: "/comment-ca-marche", label: "Comment ça marche" },
-      { href: "/tarifs", label: "Tarifs" },
-      { href: "/professionnels", label: "Notaires, banques, courtiers" },
-    ],
-  },
-  {
-    title: "Outils",
-    items: [
-      { href: "/plan-action", label: "Créer mon plan d'action" },
-      { href: "/outils/budget", label: "Budget mensuel" },
-      { href: "/rendez-vous", label: "Demander un rendez-vous" },
-    ],
-  },
-  {
-    title: "Aide",
-    items: [
-      { href: "/contact", label: "Contact" },
-      { href: "/faq", label: "FAQ" },
-    ],
-  },
-  {
-    title: "Informations légales",
-    items: [
-      { href: "/mentions-legales", label: "Mentions légales" },
-      { href: "/confidentialite", label: "Politique de confidentialité" },
-      { href: "/cookies", label: "Cookies et stockage local" },
-      { href: "/mes-donnees", label: "Mes données personnelles" },
-      { href: "/cgv", label: "Conditions générales de vente" },
-    ],
-  },
-];

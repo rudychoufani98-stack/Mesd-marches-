@@ -7,7 +7,23 @@ import { readLocal, writeLocal } from "@/lib/storage";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
 /** Checklist interactive. La progression est mémorisée uniquement dans ce navigateur. */
-export function Checklist({ storageKey, items, title = "Ma checklist" }: { storageKey: string; items: ChecklistItem[]; title?: string }) {
+const copy = {
+  fr: { title: "Ma checklist", reset: "Réinitialiser", stored: "Votre progression est enregistrée uniquement sur cet appareil." },
+  en: { title: "My checklist", reset: "Reset", stored: "Your progress is saved on this device only." },
+};
+
+export function Checklist({
+  storageKey,
+  items,
+  title,
+  locale = "fr",
+}: {
+  storageKey: string;
+  items: ChecklistItem[];
+  title?: string;
+  locale?: "fr" | "en";
+}) {
+  const t = copy[locale];
   const [checked, setChecked] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -37,15 +53,15 @@ export function Checklist({ storageKey, items, title = "Ma checklist" }: { stora
     <section aria-labelledby={`checklist-${storageKey}`} className="rounded-card border border-line bg-white p-5 sm:p-6">
       <div className="flex items-center justify-between gap-4">
         <h2 id={`checklist-${storageKey}`} className="text-lg font-semibold text-ink">
-          {title}
+          {title ?? t.title}
         </h2>
         {done > 0 && (
           <button type="button" onClick={reset} className="no-print inline-flex items-center gap-1 text-xs font-medium text-muted hover:text-ink">
-            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" /> Réinitialiser
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" /> {t.reset}
           </button>
         )}
       </div>
-      <ProgressBar value={done} max={items.length} className="mt-4" />
+      <ProgressBar value={done} max={items.length} className="mt-4" locale={locale} />
       <ul className="mt-5 space-y-2">
         {items.map((item) => {
           const isChecked = checked.includes(item.id);
@@ -80,7 +96,7 @@ export function Checklist({ storageKey, items, title = "Ma checklist" }: { stora
           );
         })}
       </ul>
-      <p className="mt-4 text-xs text-muted">Votre progression est enregistrée uniquement sur cet appareil.</p>
+      <p className="mt-4 text-xs text-muted">{t.stored}</p>
     </section>
   );
 }

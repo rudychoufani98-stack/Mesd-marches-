@@ -7,12 +7,40 @@ import { PRIVACY_VERSION } from "@/config/privacy";
 import { siteConfig } from "@/config/site";
 import { getOffer } from "@/lib/data/content";
 import { createPublicClient } from "@/lib/supabase/public";
-import { appointmentSchema, contactSchema, type FormState } from "./schemas";
+import type { Locale } from "@/i18n";
+import { appointmentSchemaFor, contactSchemaFor, type FormState } from "./schemas";
 import { isRateLimited } from "./rate-limit";
 
-const UNAVAILABLE_MESSAGE = siteConfig.contactEmail
-  ? `L'envoi en ligne est momentanément indisponible. Vous pouvez nous écrire à ${siteConfig.contactEmail}.`
-  : "L'envoi en ligne est momentanément indisponible. Merci de réessayer plus tard.";
+const text = {
+  fr: {
+    unavailable: siteConfig.contactEmail
+      ? `L'envoi en ligne est momentanément indisponible. Vous pouvez nous écrire à ${siteConfig.contactEmail}.`
+      : "L'envoi en ligne est momentanément indisponible. Merci de réessayer plus tard.",
+    fix: "Certains champs sont à corriger.",
+    tooMany: "Vous avez envoyé plusieurs demandes récemment. Merci de patienter quelques minutes.",
+    offer: "Choisissez une offre.",
+    contactOk: (ref: string) =>
+      `Merci, votre message a bien été envoyé (référence ${ref}). Nous vous répondrons par e-mail sous 2 jours ouvrés.`,
+    appointmentOk: (ref: string) =>
+      `Merci, votre demande de rendez-vous a bien été enregistrée (référence ${ref}). Nous vous proposerons un créneau par e-mail sous 2 jours ouvrés. Aucun paiement n'est demandé à ce stade.`,
+  },
+  en: {
+    unavailable: siteConfig.contactEmail
+      ? `Online sending is temporarily unavailable. You can email us at ${siteConfig.contactEmail}.`
+      : "Online sending is temporarily unavailable. Please try again later.",
+    fix: "Some fields need to be corrected.",
+    tooMany: "You have sent several requests recently. Please wait a few minutes.",
+    offer: "Please choose an offer.",
+    contactOk: (ref: string) =>
+      `Thank you, your message has been sent (reference ${ref}). We will reply by email within 2 working days.`,
+    appointmentOk: (ref: string) =>
+      `Thank you, your appointment request has been received (reference ${ref}). We will suggest a time slot by email within 2 working days. No payment is requested at this stage.`,
+  },
+} as const;
+
+function localeOf(formData: FormData): Locale {
+  return formData.get("locale") === "en" ? "en" : "fr";
+}
 
 async function clientKey(): Promise<string> {
   const h = await headers();
@@ -22,7 +50,7 @@ async function clientKey(): Promise<string> {
 function formValues(formData: FormData): Record<string, string | string[]> {
   const values: Record<string, string | string[]> = {};
   for (const key of new Set(formData.keys())) {
-    if (key.startsWith("$ACTION") || key === "website") continue;
+    if (key.startsWith("$ACTION") || key === "website" || key === "locale") continue;
     const all = formData.getAll(key).filter((v): v is string => typeof v === "string");
     values[key] = all.length > 1 || key === "slots" ? all : (all[0] ?? "");
   }
@@ -70,6 +98,7 @@ async function store(kind: DeliveryKind, request: Prepared): Promise<string | nu
 async function handle<S extends z.ZodType>(
   kind: DeliveryKind,
   schema: S,
+  locale: Locale,
   formData: FormData,
   prepare: (data: z.infer<S>) => Promise<Prepared | { error: string; field: string }>,
   successMessage: (reference: string) => string,
@@ -84,7 +113,7 @@ async function handle<S extends z.ZodType>(
     if (formData.get("website")) return { status: "success", message: successMessage("—") };
     return {
       status: "error",
-      message: "Certains champs sont à corriger.",
+      message: text[locale].fix,
       fieldErrors: z.flattenError(parsed.error).fieldErrors as FormState["fieldErrors"],
       values,
     };
@@ -92,48 +121,50 @@ async function handle<S extends z.ZodType>(
 
   const prepared = await prepare(parsed.data);
   if ("error" in prepared) {
-    return { status: "error", message: "Certains champs sont à corriger.", fieldErrors: { [prepared.field]: [prepared.error] }, values };
+    return { status: "error", message: text[locale].fix, fieldErrors: { [prepared.field]: [prepared.error] }, values };
   }
 
   if (isRateLimited(`${kind}:${await clientKey()}`)) {
     return {
       status: "error",
-      message: "Vous avez envoyé plusieurs demandes récemment. Merci de patienter quelques minutes.",
+      message: text[locale].tooMany,
       values,
     };
   }
 
   const reference = await store(kind, prepared);
-  if (!reference) return { status: "error", message: UNAVAILABLE_MESSAGE, values };
+  if (!reference) return { status: "error", message: text[locale].unavailable, values };
   return { status: "success", message: successMessage(reference) };
 }
 
 export async function submitContact(_prev: FormState, formData: FormData): Promise<FormState> {
+  const locale = localeOf(formData);
   return handle(
     "contact",
-    contactSchema,
+    contactSchemaFor(locale),
+    locale,
     formData,
-    async (d) => ({ name: d.name, email: d.email, data: { subject: d.subject, message: d.message } }),
-    (ref) =>
-      `Merci, votre message a bien été envoyé (référence ${ref}). Nous vous répondrons par e-mail sous 2 jours ouvrés.`,
+    async (d) => ({ name: d.name, email: d.email, data: { subject: d.subject, message: d.message, language: locale } }),
+    text[locale].contactOk,
   );
 }
 
 export async function submitAppointment(_prev: FormState, formData: FormData): Promise<FormState> {
+  const locale = localeOf(formData);
   return handle(
     "rendez-vous",
-    appointmentSchema,
+    appointmentSchemaFor(locale),
+    locale,
     formData,
     async (d) => {
       const offer = await getOffer(d.offer);
-      if (!offer) return { error: "Choisissez une offre.", field: "offer" };
+      if (!offer) return { error: text[locale].offer, field: "offer" };
       return {
         name: d.name,
         email: d.email,
-        data: { offer: offer.id, offerName: offer.name, mode: d.mode, slots: d.slots, message: d.message ?? "" },
+        data: { offer: offer.id, offerName: offer.name, mode: d.mode, slots: d.slots, message: d.message ?? "", language: locale },
       };
     },
-    (ref) =>
-      `Merci, votre demande de rendez-vous a bien été enregistrée (référence ${ref}). Nous vous proposerons un créneau par e-mail sous 2 jours ouvrés. Aucun paiement n'est demandé à ce stade.`,
+    text[locale].appointmentOk,
   );
 }

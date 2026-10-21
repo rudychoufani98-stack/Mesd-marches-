@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { REQUEST_RETENTION_MONTHS } from "@/config/privacy";
 import type { FormState } from "@/lib/forms/schemas";
+import { href, type Locale } from "@/i18n";
 
 export const inputClasses =
   "mt-1.5 block w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-ink shadow-sm placeholder:text-muted/70 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100 aria-[invalid=true]:border-red-400";
@@ -28,13 +29,13 @@ export function Field({
   label: string;
   error?: string;
   hint?: string;
-  optional?: boolean;
+  optional?: boolean | string;
   children: ReactNode;
 }) {
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-medium text-ink">
-        {label} {optional && <span className="font-normal text-muted">(facultatif)</span>}
+        {label} {optional && <span className="font-normal text-muted">({typeof optional === "string" ? optional : "facultatif"})</span>}
       </label>
       {hint && (
         <p id={`${id}-aide`} className="mt-0.5 text-xs text-muted">
@@ -59,13 +60,18 @@ export function describedBy(id: string, error?: string, hint?: string) {
 export function Honeypot() {
   return (
     <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-      <label htmlFor="website">Ne pas remplir ce champ</label>
+      <label htmlFor="website">Ne pas remplir ce champ / Leave empty</label>
       <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
     </div>
   );
 }
 
-export function ConsentField({ error, defaultChecked }: { error?: string; defaultChecked?: boolean }) {
+/** Langue du formulaire, transmise à l'action serveur pour des messages dans la bonne langue. */
+export function LocaleField({ locale }: { locale: Locale }) {
+  return <input type="hidden" name="locale" value={locale} />;
+}
+
+export function ConsentField({ error, defaultChecked, locale = "fr" }: { error?: string; defaultChecked?: boolean; locale?: Locale }) {
   return (
     <div>
       <label className="flex items-start gap-3 text-sm text-ink">
@@ -77,13 +83,23 @@ export function ConsentField({ error, defaultChecked }: { error?: string; defaul
           aria-describedby={error ? "consent-erreur" : undefined}
           className="mt-0.5 h-4 w-4 shrink-0 rounded border-line accent-brand-700"
         />
-        <span>
-          J&apos;accepte que les informations saisies soient utilisées pour traiter ma demande et me répondre. Elles ne sont
-          ni vendues ni utilisées à des fins publicitaires, et sont supprimées au bout de {REQUEST_RETENTION_MONTHS} mois.{" "}
-          <Link href="/confidentialite" className="font-medium text-brand-700 underline">
-            En savoir plus
-          </Link>
-        </span>
+        {locale === "en" ? (
+          <span>
+            I agree that the information I enter is used to handle my request and reply to me. It is never sold or used for
+            advertising, and it is deleted after {REQUEST_RETENTION_MONTHS} months.{" "}
+            <Link href={href("/confidentialite", locale)} className="font-medium text-brand-700 underline">
+              Learn more
+            </Link>
+          </span>
+        ) : (
+          <span>
+            J&apos;accepte que les informations saisies soient utilisées pour traiter ma demande et me répondre. Elles ne sont
+            ni vendues ni utilisées à des fins publicitaires, et sont supprimées au bout de {REQUEST_RETENTION_MONTHS} mois.{" "}
+            <Link href="/confidentialite" className="font-medium text-brand-700 underline">
+              En savoir plus
+            </Link>
+          </span>
+        )}
       </label>
       {error && (
         <p id="consent-erreur" className="mt-1.5 text-sm text-red-700">
@@ -105,11 +121,11 @@ export function FormStatus({ state }: { state: FormState }) {
   return null;
 }
 
-export function FormSuccess({ message, children }: { message?: string; children?: ReactNode }) {
+export function FormSuccess({ message, children, locale = "fr" }: { message?: string; children?: ReactNode; locale?: Locale }) {
   return (
     <div role="status" className="rounded-card border border-accent-200 bg-accent-50 p-6 sm:p-8">
       <CheckCircle2 className="h-8 w-8 text-accent-600" aria-hidden="true" />
-      <h2 className="mt-3 text-xl font-bold text-ink">Demande envoyée</h2>
+      <h2 className="mt-3 text-xl font-bold text-ink">{locale === "en" ? "Request sent" : "Demande envoyée"}</h2>
       <p className="mt-2 leading-relaxed text-ink">{message}</p>
       {children}
     </div>

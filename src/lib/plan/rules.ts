@@ -1,4 +1,6 @@
 import { getCategory, type CategoryId } from "@/content/categories";
+import { localizeCategory, localizeTask } from "@/content/translations";
+import type { Locale } from "@/i18n";
 import type { OfferId } from "@/config/pricing";
 import { getTask, taskLibrary, type PlanTask } from "./tasks";
 import { getTimeframeWeeks, type Answers } from "./questions";
@@ -12,7 +14,7 @@ export type Rule = {
   id: string;
   when: (a: Answers) => boolean;
   taskIds: string[];
-  reason: (a: Answers) => string;
+  reason: (a: Answers, locale: Locale) => string;
 };
 
 const isRecentArrival = (a: Answers) =>
@@ -33,7 +35,11 @@ const categoryRules: Rule[] = (
   id: `categorie-${category}`,
   when: (a) => a.categories.includes(category),
   taskIds: taskLibrary.filter((t) => t.category === category && t.id !== "etu-sites").map((t) => t.id),
-  reason: () => `Vous avez choisi le domaine « ${getCategory(category)?.title ?? category} ».`,
+  reason: (_a, locale) => {
+    const cat = getCategory(category);
+    const title = cat ? localizeCategory(cat, locale).title : category;
+    return locale === "en" ? `You chose the topic "${title}".` : `Vous avez choisi le domaine « ${title} ».`;
+  },
 }));
 
 export const rules: Rule[] = [
@@ -41,41 +47,46 @@ export const rules: Rule[] = [
     id: "securite-pour-tous",
     when: () => true,
     taskIds: ["num-favoris"],
-    reason: () => "Recommandé à tous pour éviter les faux sites.",
+    reason: (_a, l) => (l === "en" ? "Recommended for everyone to avoid fake websites." : "Recommandé à tous pour éviter les faux sites."),
   },
   ...categoryRules,
   {
     id: "arrivee-recente",
     when: (a) => isRecentArrival(a) || a.goal === "installation",
     taskIds: ["inst-documents", "inst-sejour-info", "inst-adresse", "bq-compte", "sa-affiliation", "inst-permis"],
-    reason: (a) =>
+    reason: (a, l) =>
       a.goal === "installation"
-        ? "Votre objectif est de vous installer en France."
-        : "Votre arrivée en France est récente ou prévue.",
+        ? l === "en"
+          ? "Your goal is to settle in France."
+          : "Votre objectif est de vous installer en France."
+        : l === "en"
+          ? "You have recently arrived in France or are about to."
+          : "Votre arrivée en France est récente ou prévue.",
   },
   {
     id: "objectif-emploi",
     when: (a) => a.goal === "emploi",
     taskIds: ["tr-documents", "tr-fiche-paie"],
-    reason: () => "Votre objectif est de commencer un emploi.",
+    reason: (_a, l) => (l === "en" ? "Your goal is to start a job." : "Votre objectif est de commencer un emploi."),
   },
   {
     id: "objectif-etudes",
     when: (a) => a.goal === "etudes",
     taskIds: ["etu-sites", "sa-affiliation"],
-    reason: () => "Votre objectif est d'étudier en France.",
+    reason: (_a, l) => (l === "en" ? "Your goal is to study in France." : "Votre objectif est d'étudier en France."),
   },
   {
     id: "objectif-famille",
     when: (a) => a.goal === "famille",
     taskIds: ["fam-ecole", "fam-adresse"],
-    reason: () => "Votre objectif est d'organiser les démarches de votre famille.",
+    reason: (_a, l) =>
+      l === "en" ? "Your goal is to organise your family's paperwork." : "Votre objectif est d'organiser les démarches de votre famille.",
   },
   {
     id: "objectif-organisation",
     when: (a) => a.goal === "organisation",
     taskIds: ["num-classement", "bq-budget"],
-    reason: () => "Votre objectif est de mettre de l'ordre dans vos démarches.",
+    reason: (_a, l) => (l === "en" ? "Your goal is to get your paperwork in order." : "Votre objectif est de mettre de l'ordre dans vos démarches."),
   },
 ];
 
@@ -107,14 +118,14 @@ export function recommendOffer(a: Answers): OfferId | null {
   return "bilan";
 }
 
-export function buildPlan(answers: Answers): ActionPlan {
+export function buildPlan(answers: Answers, locale: Locale = "fr"): ActionPlan {
   const reasonsByTask = new Map<string, string[]>();
   const appliedRuleIds: string[] = [];
 
   for (const rule of rules) {
     if (!rule.when(answers)) continue;
     appliedRuleIds.push(rule.id);
-    const reason = rule.reason(answers);
+    const reason = rule.reason(answers, locale);
     for (const id of rule.taskIds) {
       const list = reasonsByTask.get(id) ?? [];
       if (!list.includes(reason)) list.push(reason);
@@ -126,7 +137,7 @@ export function buildPlan(answers: Answers): ActionPlan {
 
   const tasks: PlannedTask[] = [...reasonsByTask.entries()]
     .map(([id, reasons]) => {
-      const task = getTask(id);
+      const task = localizeTask(getTask(id), locale);
       return { ...task, reasons, suggestedWeek: suggestedWeek(task.phase, horizonWeeks) };
     })
     .sort((a, b) => a.phase - b.phase || a.order - b.order);

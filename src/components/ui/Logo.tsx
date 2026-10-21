@@ -33,8 +33,9 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
 }
 
 export function Logo({ href = "/", className = "" }: { href?: string; className?: string }) {
+  const label = href.startsWith("/en") ? "MesDémarches, back to home" : "MesDémarches, retour à l'accueil";
   return (
-    <Link href={href} className={`inline-flex items-center gap-2.5 ${className}`} aria-label="MesDémarches, retour à l'accueil">
+    <Link href={href} className={`inline-flex items-center gap-2.5 ${className}`} aria-label={label}>
       <LogoMark />
       <span className="text-[1.2rem] font-semibold tracking-tight text-ink">
         Mes<span className="font-extrabold text-brand-700">Démarches</span>

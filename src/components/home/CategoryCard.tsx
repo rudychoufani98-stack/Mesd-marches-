@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Category } from "@/content/categories";
 
-export function CategoryCard({ category, href }: { category: Category; href: string }) {
+export function CategoryCard({ category, href, ctaLabel = "Découvrir" }: { category: Category; href: string; ctaLabel?: string }) {
   return (
     <Link
       href={href}
@@ -17,7 +17,7 @@ export function CategoryCard({ category, href }: { category: Category; href: str
       <h3 className="mt-4 font-semibold text-ink">{category.title}</h3>
       <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted">{category.description}</p>
       <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
-        Découvrir <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        {ctaLabel} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
       </span>
     </Link>
   );

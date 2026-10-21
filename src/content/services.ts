@@ -224,7 +224,6 @@ export const serviceDomains: ServiceDomain[] = [
     ],
     limits: [
       "Nous ne recommandons aucun crédit, aucune banque et aucun produit financier.",
-      "Nous ne mettons pas en relation avec des prêteurs et ne percevons aucune rémunération d'établissements financiers.",
       "Nous ne fournissons pas de conseil en investissement.",
     ],
     sourceIds: ["banque-france", "mesquestionsdargent", "sp-argent"],

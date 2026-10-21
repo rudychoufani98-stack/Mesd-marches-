@@ -14,18 +14,22 @@
 
 ## 2. Qualification juridique des prestations
 
-**Positionnement retenu (21/10/2026) : conseiller indépendant, PAS apporteur d'affaires.**
-- Le client est la seule source de revenus ; aucune commission, rétrocession ou rémunération de partenaires
-  (banques, courtiers, notaires, assureurs, agences). Texte de référence : `siteConfig.independence`.
-- Aucune transmission de coordonnées à un professionnel sans accord exprès du client.
-- Ce positionnement évite le statut IOBSP / intermédiaire d'assurance lié aux commissions, MAIS le
-  « conseil » reste encadré par d'autres règles, à faire valider par un avocat :
-  - **conseil en crédit** : une recommandation personnalisée sur un contrat de crédit est réservée à
-    certains professionnels, même sans commission → rester sur la pédagogie et l'organisation ;
-  - **consultation juridique** : réservée aux professions habilitées (avocats, notaires…) → ne pas
-    analyser la situation juridique d'un client ni rédiger d'actes ;
-  - **conseil fiscal / en investissement** : idem, rester général.
-- Formulation conseillée : « accompagnement à l'organisation des démarches administratives ».
+**Modèle visé (21/10/2026) : revenus des clients ET de partenaires (banques, courtiers, notaires…),
+de façon légale sans statut contraignant.** Le site ne fait donc AUCUNE promesse « sans commission ».
+Pistes à faire valider par un avocat avant toute rémunération par un partenaire :
+- **Indicateur (banque/crédit, assurance)** : une simple mise en relation (transmettre les coordonnées
+  d'un client consentant, sans présenter d'offre ni aider à monter le dossier de crédit) peut être
+  rémunérée sans inscription ORIAS (art. R. 519-2 C. mon. fin. pour la banque). Dès qu'on présente,
+  conseille ou aide à conclure → statut IOBSP / intermédiaire d'assurance obligatoire.
+- **Rémunération forfaitaire non liée aux clients** : publicité ou mise en avant clairement signalée,
+  atelier ou formation facturé au partenaire, prestation B2B (ex. employeur qui paie l'installation
+  de ses salariés). À vérifier : règles de publicité pour le crédit.
+- **Notaires et avocats** : leurs règles déontologiques encadrent strictement la rémunération
+  d'apporteurs d'affaires → privilégier des partenariats sans rémunération ou facturer un service.
+- **Agences immobilières** : partage d'honoraires encadré par la loi Hoguet.
+- **Transparence** : si un partenaire vous rémunère, l'indiquer clairement au client avant toute
+  mise en relation, et ne transmettre ses coordonnées qu'avec son accord exprès (RGPD).
+- Dans tous les cas : pas de conseil personnalisé en crédit, pas de consultation juridique.
 
 - [ ] Faire qualifier les prestations (information, organisation, orientation) et vérifier
       qu'elles ne relèvent pas d'une activité réglementée (conseil juridique, intermédiation

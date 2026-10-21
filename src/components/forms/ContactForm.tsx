@@ -3,18 +3,45 @@
 import { useActionState } from "react";
 import { Send } from "lucide-react";
 import { submitContact } from "@/lib/forms/actions";
-import { contactSubjects, initialFormState } from "@/lib/forms/schemas";
+import { contactSubjects, initialFormState, optionLabel } from "@/lib/forms/schemas";
+import { href, type Locale } from "@/i18n";
 import { Button, ButtonLink } from "@/components/ui/primitives";
-import { ConsentField, describedBy, Field, fieldError, FormStatus, FormSuccess, Honeypot, inputClasses, previous } from "./fields";
+import { ConsentField, describedBy, Field, fieldError, FormStatus, FormSuccess, Honeypot, inputClasses, LocaleField, previous } from "./fields";
 
-export function ContactForm({ defaultSubject }: { defaultSubject?: string } = {}) {
+const copy = {
+  fr: {
+    browse: "Parcourir les guides en attendant",
+    name: "Votre nom",
+    email: "Votre adresse e-mail",
+    subject: "Sujet",
+    choose: "Choisissez un sujet",
+    message: "Votre message",
+    hint: "N'indiquez pas de numéro de sécurité sociale, de numéro fiscal, de coordonnées bancaires ni de mot de passe.",
+    sending: "Envoi en cours…",
+    send: "Envoyer mon message",
+  },
+  en: {
+    browse: "Browse the guides in the meantime",
+    name: "Your name",
+    email: "Your email address",
+    subject: "Subject",
+    choose: "Choose a subject",
+    message: "Your message",
+    hint: "Please do not include any social security number, tax number, bank details or password.",
+    sending: "Sending…",
+    send: "Send my message",
+  },
+};
+
+export function ContactForm({ defaultSubject, locale = "fr" }: { defaultSubject?: string; locale?: Locale } = {}) {
   const [state, action, pending] = useActionState(submitContact, initialFormState);
+  const t = copy[locale];
 
   if (state.status === "success") {
     return (
-      <FormSuccess message={state.message}>
-        <ButtonLink href="/guides" variant="secondary" className="mt-5">
-          Parcourir les guides en attendant
+      <FormSuccess message={state.message} locale={locale}>
+        <ButtonLink href={href("/guides", locale)} variant="secondary" className="mt-5">
+          {t.browse}
         </ButtonLink>
       </FormSuccess>
     );
@@ -26,8 +53,9 @@ export function ContactForm({ defaultSubject }: { defaultSubject?: string } = {}
     <form action={action} noValidate className="relative space-y-5 rounded-card border border-line bg-white p-5 sm:p-7">
       <FormStatus state={state} />
       <Honeypot />
+      <LocaleField locale={locale} />
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field id="name" label="Votre nom" error={e("name")}>
+        <Field id="name" label={t.name} error={e("name")}>
           <input
             id="name"
             name="name"
@@ -41,7 +69,7 @@ export function ContactForm({ defaultSubject }: { defaultSubject?: string } = {}
             className={inputClasses}
           />
         </Field>
-        <Field id="email" label="Votre adresse e-mail" error={e("email")}>
+        <Field id="email" label={t.email} error={e("email")}>
           <input
             id="email"
             name="email"
@@ -56,7 +84,7 @@ export function ContactForm({ defaultSubject }: { defaultSubject?: string } = {}
           />
         </Field>
       </div>
-      <Field id="subject" label="Sujet" error={e("subject")}>
+      <Field id="subject" label={t.subject} error={e("subject")}>
         <select
           id="subject"
           name="subject"
@@ -67,20 +95,20 @@ export function ContactForm({ defaultSubject }: { defaultSubject?: string } = {}
           className={inputClasses}
         >
           <option value="" disabled>
-            Choisissez un sujet
+            {t.choose}
           </option>
           {contactSubjects.map((s) => (
             <option key={s.value} value={s.value}>
-              {s.label}
+              {optionLabel(s, locale)}
             </option>
           ))}
         </select>
       </Field>
       <Field
         id="message"
-        label="Votre message"
+        label={t.message}
         error={e("message")}
-        hint="N'indiquez pas de numéro de sécurité sociale, de numéro fiscal, de coordonnées bancaires ni de mot de passe."
+        hint={t.hint}
       >
         <textarea
           id="message"
@@ -94,9 +122,9 @@ export function ContactForm({ defaultSubject }: { defaultSubject?: string } = {}
           className={inputClasses}
         />
       </Field>
-      <ConsentField error={e("consent")} defaultChecked={previous(state, "consent") === "on"} />
+      <ConsentField error={e("consent")} defaultChecked={previous(state, "consent") === "on"} locale={locale} />
       <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
-        <Send className="h-4 w-4" aria-hidden="true" /> {pending ? "Envoi en cours…" : "Envoyer mon message"}
+        <Send className="h-4 w-4" aria-hidden="true" /> {pending ? t.sending : t.send}
       </Button>
     </form>
   );

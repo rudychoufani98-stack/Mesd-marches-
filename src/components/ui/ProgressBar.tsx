@@ -1,10 +1,10 @@
-export function ProgressBar({ value, max, className = "" }: { value: number; max: number; className?: string }) {
+export function ProgressBar({ value, max, className = "", locale = "fr" }: { value: number; max: number; className?: string; locale?: "fr" | "en" }) {
   const percent = max === 0 ? 0 : Math.round((value / max) * 100);
   return (
     <div className={className}>
       <div className="flex items-center justify-between text-xs font-medium text-muted">
         <span>
-          {value} sur {max} terminée{value > 1 ? "s" : ""}
+          {locale === "en" ? `${value} of ${max} done` : `${value} sur ${max} terminée${value > 1 ? "s" : ""}`}
         </span>
         <span>{percent} %</span>
       </div>
@@ -14,7 +14,7 @@ export function ProgressBar({ value, max, className = "" }: { value: number; max
         aria-valuemin={0}
         aria-valuemax={max}
         aria-valuenow={value}
-        aria-label="Progression"
+        aria-label={locale === "en" ? "Progress" : "Progression"}
       >
         <div className="h-full rounded-full bg-accent-400 transition-[width] duration-300" style={{ width: `${percent}%` }} />
       </div>
