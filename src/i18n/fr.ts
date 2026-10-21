@@ -21,7 +21,6 @@ export const fr = {
   nav: [
     { href: "/", label: "Accueil" },
     { href: "/services", label: "Nos services" },
-    { href: "/guides", label: "Guides pratiques" },
     { href: "/comment-ca-marche", label: "Comment ça marche" },
     { href: "/tarifs", label: "Tarifs" },
   ],
@@ -35,7 +34,6 @@ export const fr = {
         title: "Découvrir",
         items: [
           { href: "/services", label: "Nos services" },
-          { href: "/guides", label: "Guides pratiques" },
           { href: "/comment-ca-marche", label: "Comment ça marche" },
           { href: "/tarifs", label: "Tarifs" },
           { href: "/professionnels", label: "Notaires, banques, courtiers" },
@@ -44,7 +42,6 @@ export const fr = {
       {
         title: "Outils",
         items: [
-          { href: "/plan-action", label: "Créer mon plan d'action" },
           { href: "/outils/budget", label: "Budget mensuel" },
           { href: "/rendez-vous", label: "Demander un rendez-vous" },
         ],
@@ -71,7 +68,7 @@ export const fr = {
   cookieNotice: {
     region: "Information sur les cookies",
     title: "Aucun cookie publicitaire ni de mesure d'audience.",
-    text: "Votre plan d'action et vos checklists sont enregistrés uniquement sur votre appareil.",
+    text: "Seuls des cookies techniques indispensables sont utilisés.",
     more: "En savoir plus",
     ok: "J'ai compris",
   },
@@ -81,7 +78,7 @@ export const fr = {
     unverifiedNotice: "Information à vérifier auprès de l'organisme compétent.",
     defaultTitle: "MesDémarches — Organisez vos démarches en France",
     description:
-      "MesDémarches est un service privé d'accompagnement qui vous aide à organiser vos démarches administratives et pratiques en France : plans d'action, checklists et liens vers les sources officielles.",
+      "MesDémarches est un service privé d'accompagnement qui vous aide à organiser vos démarches administratives en France, avec un conseiller dédié.",
   },
 };
 

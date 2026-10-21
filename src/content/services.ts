@@ -54,7 +54,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Une liste structurée des démarches généralement rencontrées lors d'une installation, à adapter à votre situation.",
         format: "guide",
-        href: "/guides/premieres-demarches-installation",
         active: true,
       },
       {
@@ -63,7 +62,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Identifier ce qui conditionne le reste (adresse, compte bancaire, documents d'identité) pour avancer dans le bon ordre.",
         format: "outil",
-        href: "/plan-action",
         active: true,
       },
       {
@@ -81,7 +79,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Une méthode simple pour classer vos justificatifs, papier et numériques, et les retrouver rapidement.",
         format: "guide",
-        href: "/guides/organiser-ses-documents-numeriques",
         active: true,
       },
       {
@@ -90,7 +87,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Savoir si votre permis doit être échangé, dans quel délai, et préparer la démarche officielle sans passer par un site payant.",
         format: "guide",
-        href: "/guides/permis-de-conduire-etranger",
         active: true,
       },
       {
@@ -99,7 +95,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Les sites officiels à connaître, avec une explication de leur rôle.",
         format: "guide",
-        href: "/guides/premieres-demarches-installation",
         active: true,
       },
     ],
@@ -125,7 +120,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Les pièces habituellement demandées et les ressources publiques pour constituer votre dossier.",
         format: "guide",
-        href: "/guides/preparer-dossier-locatif",
         active: true,
       },
       {
@@ -134,7 +128,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "De la visite à la remise des clés : bail, état des lieux, dépôt de garantie, expliqués simplement.",
         format: "guide",
-        href: "/guides/preparer-dossier-locatif",
         active: true,
       },
       {
@@ -143,7 +136,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Énergie, internet, assurance, changement d'adresse : une liste pour ne rien oublier.",
         format: "guide",
-        href: "/guides/checklist-demenagement",
         active: true,
       },
       {
@@ -152,7 +144,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Comprendre le rôle de l'assurance habitation et des contrats d'énergie, sans recommandation commerciale.",
         format: "guide",
-        href: "/guides/checklist-demenagement",
         active: true,
       },
       {
@@ -160,7 +151,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Repérage des ressources officielles",
         description: "Les sites publics à consulter pour le logement et les aides.",
         format: "guide",
-        href: "/guides/preparer-dossier-locatif",
         active: true,
       },
     ],
@@ -185,7 +175,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Comprendre les démarches pour ouvrir un compte",
         description: "Les étapes habituelles et les justificatifs généralement demandés.",
         format: "guide",
-        href: "/guides/comprendre-ouverture-compte-bancaire",
         active: true,
       },
       {
@@ -193,7 +182,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Glossaire bancaire",
         description: "RIB, IBAN, découvert, frais de tenue de compte : les mots expliqués.",
         format: "guide",
-        href: "/guides/comprendre-ouverture-compte-bancaire",
         active: true,
       },
       {
@@ -202,7 +190,6 @@ export const serviceDomains: ServiceDomain[] = [
         description:
           "Une explication pédagogique pour savoir lire une offre de crédit. Aucune recommandation personnalisée.",
         format: "guide",
-        href: "/guides/comprendre-le-cout-d-un-credit",
         active: true,
       },
       {
@@ -210,7 +197,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Questions à poser à un conseiller bancaire",
         description: "Une liste de questions pour préparer votre rendez-vous.",
         format: "guide",
-        href: "/guides/comprendre-ouverture-compte-bancaire",
         active: true,
       },
       {
@@ -243,7 +229,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Organisation des documents liés à l'embauche",
         description: "Ce qui est généralement demandé et ce qu'il faut conserver.",
         format: "guide",
-        href: "/guides/comprendre-sa-fiche-de-paie",
         active: true,
       },
       {
@@ -251,7 +236,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Les rubriques d'une fiche de paie expliquées",
         description: "Brut, cotisations, net, prélèvement à la source : lecture guidée.",
         format: "guide",
-        href: "/guides/comprendre-sa-fiche-de-paie",
         active: true,
       },
       {
@@ -259,7 +243,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Glossaire des termes professionnels",
         description: "Les termes courants du contrat et de la paie, expliqués simplement.",
         format: "guide",
-        href: "/guides/comprendre-sa-fiche-de-paie",
         active: true,
       },
       {
@@ -293,7 +276,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Orientation vers les sites officiels",
         description: "Quel organisme fait quoi, et où trouver l'information à jour.",
         format: "guide",
-        href: "/guides/s-orienter-protection-sociale",
         active: true,
       },
       {
@@ -301,7 +283,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Checklists documentaires générales",
         description: "Les documents habituellement utiles pour vos démarches de santé.",
         format: "guide",
-        href: "/guides/s-orienter-protection-sociale",
         active: true,
       },
       {
@@ -309,7 +290,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Explication des étapes administratives usuelles",
         description: "Les grandes étapes, présentées de façon générale.",
         format: "guide",
-        href: "/guides/s-orienter-protection-sociale",
         active: true,
       },
     ],
@@ -342,7 +322,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Checklist de documents pour préparer une déclaration",
         description: "Les documents généralement utiles à rassembler avant de déclarer.",
         format: "guide",
-        href: "/guides/preparer-sa-declaration-de-revenus",
         active: true,
       },
       {
@@ -350,7 +329,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Glossaire fiscal pédagogique",
         description: "Foyer fiscal, prélèvement à la source, avis d'imposition : les termes expliqués.",
         format: "guide",
-        href: "/guides/preparer-sa-declaration-de-revenus",
         active: true,
       },
       {
@@ -358,7 +336,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Liens vers les services officiels",
         description: "Les espaces en ligne de l'administration fiscale.",
         format: "guide",
-        href: "/guides/preparer-sa-declaration-de-revenus",
         active: true,
       },
     ],
@@ -391,7 +368,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Checklist de déménagement",
         description: "Avant, pendant et après le déménagement.",
         format: "guide",
-        href: "/guides/checklist-demenagement",
         active: true,
       },
       {
@@ -399,7 +375,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Contrats de téléphone et d'internet",
         description: "Les points à vérifier avant de signer un contrat.",
         format: "guide",
-        href: "/guides/checklist-demenagement",
         active: true,
       },
       {
@@ -407,7 +382,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Électricité, gaz et assurance habitation",
         description: "Comprendre les contrats et où trouver une information neutre.",
         format: "guide",
-        href: "/guides/checklist-demenagement",
         active: true,
       },
       {
@@ -415,7 +389,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Prévention des arnaques administratives",
         description: "Reconnaître les faux sites, faux appels et messages frauduleux.",
         format: "guide",
-        href: "/guides/eviter-les-arnaques-administratives",
         active: true,
       },
     ],
@@ -439,7 +412,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Repérage des portails officiels",
         description: "Comment reconnaître un site officiel et éviter les intermédiaires trompeurs.",
         format: "guide",
-        href: "/guides/eviter-les-arnaques-administratives",
         active: true,
       },
       {
@@ -447,7 +419,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Conseils de sécurité numérique",
         description: "Mots de passe, double authentification, messages suspects.",
         format: "guide",
-        href: "/guides/organiser-ses-documents-numeriques",
         active: true,
       },
       {
@@ -455,7 +426,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Organisation des documents",
         description: "Une arborescence simple pour vos fichiers.",
         format: "guide",
-        href: "/guides/organiser-ses-documents-numeriques",
         active: true,
       },
       {
@@ -463,7 +433,6 @@ export const serviceDomains: ServiceDomain[] = [
         title: "Télécharger et classer les justificatifs",
         description: "Nommer, ranger et sauvegarder vos documents.",
         format: "guide",
-        href: "/guides/organiser-ses-documents-numeriques",
         active: true,
       },
     ],

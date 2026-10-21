@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, CheckCircle2, XCircle } from "lucide-react";
-import { siteConfig } from "@/config/site";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { alternates, href, type Locale } from "@/i18n";
 import { ButtonLink, Container, PageHeader } from "@/components/ui/primitives";
 
@@ -10,99 +9,64 @@ const copy = {
   fr: {
     title: "Comment ça marche",
     metaDescription:
-      "Décrivez votre situation, recevez un plan d'action organisé et avancez étape par étape. Découvrez la méthode MesDémarches et ses limites.",
-    heading: "Une méthode simple pour avancer sereinement",
-    promise: siteConfig.promise,
+      "Un appel offert, un dossier préparé avec votre conseiller, un suivi jusqu'au bout : la méthode MesDémarches pour réussir vos démarches en France.",
+    heading: "Votre conseiller vous accompagne, du premier appel à la dernière démarche",
+    promise: "Une méthode simple, pensée pour les étrangers et les expatriés : vous savez quoi faire, votre dossier est prêt, vous avancez.",
     steps: [
       {
-        emoji: "💬",
-        title: "Vous décrivez votre situation",
-        text: "Cinq questions simples : votre objectif, depuis combien de temps vous êtes en France, les domaines concernés, votre délai et la façon dont vous souhaitez avancer. Aucun document, aucun numéro personnel.",
+        title: "L'appel offert",
+        text: "15 minutes par téléphone ou en visio. Vous nous expliquez votre situation, on identifie ensemble ce qui est urgent et ce qu'il faut faire en premier.",
       },
       {
-        emoji: "🗺️",
-        title: "Vous recevez un plan d'action organisé",
-        text: "Des règles d'organisation définies à l'avance sélectionnent les tâches pertinentes et les classent dans un ordre logique : d'abord ce qui conditionne la suite, puis la mise en place, puis l'organisation dans la durée. Chaque tâche indique pourquoi elle vous est proposée.",
+        title: "Votre dossier, préparé avec vous",
+        text: "Liste de pièces personnalisée, ordre des étapes, relecture de chaque document : tout est prêt avant le dépôt.",
       },
       {
-        emoji: "✅",
-        title: "Vous avancez étape par étape",
-        text: "Cochez les tâches au fur et à mesure, consultez les guides pratiques et les sources officielles. Votre progression est conservée sur votre appareil.",
-      },
-      {
-        emoji: "🙋",
-        title: "Si vous le souhaitez, un accompagnement humain",
-        text: "Un rendez-vous permet de faire le point, d'ajuster votre plan et de répondre à vos questions d'organisation.",
+        title: "Vous avancez, accompagné·e",
+        text: "Chaque étape est claire. Votre conseiller répond à vos questions et reste à vos côtés jusqu'au bout de la démarche.",
       },
     ],
-    weDoTitle: "Ce que nous faisons",
+    weDoTitle: "Avec votre conseiller",
     weDo: [
-      "Vous aider à lister et prioriser vos démarches",
-      "Expliquer les notions et le vocabulaire administratif",
-      "Vous orienter vers les sites officiels qui font référence",
-      "Vous aider à préparer et classer vos documents",
-      "Vous aider à préparer vos rendez-vous (banque, notaire, propriétaire…) et les questions à poser",
+      "Un interlocuteur unique, en français ou en anglais",
+      "Vos démarches prioritaires identifiées dès le premier appel",
+      "Un dossier complet, relu avant chaque envoi",
+      "Des réponses rapides à toutes vos questions",
+      "Une préparation à vos rendez-vous (préfecture, banque, propriétaire…)",
+      "Un prix fixe, connu dès le départ",
     ],
-    weDontTitle: "Ce que nous ne faisons pas",
-    weDont: [
-      "Réaliser les démarches à votre place",
-      "Représenter une administration ou parler en son nom",
-      "Fournir un conseil juridique, fiscal ou financier personnalisé",
-      "Garantir le résultat d'une démarche",
-      "Vous recommander un crédit, une banque ou un produit financier",
-      "Vous demander vos mots de passe ou codes d'accès",
-    ],
-    publicHelp:
-      "Besoin d'un accompagnement public et gratuit ? Les espaces France services accueillent le public pour de nombreuses démarches.",
-    cta: "Créer mon plan d'action",
+    cta: "Réserver mon appel offert",
   },
   en: {
     title: "How it works",
     metaDescription:
-      "Describe your situation, receive an organised action plan and move forward step by step. Discover the MesDémarches method and its limits.",
-    heading: "A simple method to move forward with peace of mind",
-    promise: "We help you organise your procedures in France, understand the steps and move forward at your own pace.",
+      "A free call, a file prepared with your advisor, support all the way: the MesDémarches method for getting your French paperwork done.",
+    heading: "Your advisor supports you, from the first call to the last step",
+    promise: "A simple method designed for foreigners and expats: you know what to do, your file is ready, you move forward.",
     steps: [
       {
-        emoji: "💬",
-        title: "You describe your situation",
-        text: "Five simple questions: your goal, how long you have been in France, the areas concerned, your timeframe and how you would like to proceed. No documents, no personal numbers.",
+        title: "The free call",
+        text: "15 minutes by phone or video. You tell us about your situation, and together we identify what is urgent and what to do first.",
       },
       {
-        emoji: "🗺️",
-        title: "You receive an organised action plan",
-        text: "Organisation rules defined in advance select the relevant tasks and put them in a logical order: first what everything else depends on, then getting set up, then longer-term organisation. Each task explains why it is suggested to you.",
+        title: "Your file, prepared with you",
+        text: "A personalised document list, the order of steps, a review of every document: everything is ready before you submit.",
       },
       {
-        emoji: "✅",
-        title: "You move forward step by step",
-        text: "Tick off tasks as you go and consult the practical guides and official sources. Your progress is kept on your device.",
-      },
-      {
-        emoji: "🙋",
-        title: "If you wish, support from a person",
-        text: "An appointment lets you take stock, adjust your plan and get answers to your questions about getting organised.",
+        title: "You move forward, supported",
+        text: "Every step is clear. Your advisor answers your questions and stays by your side until the procedure is done.",
       },
     ],
-    weDoTitle: "What we do",
+    weDoTitle: "With your advisor",
     weDo: [
-      "Help you list and prioritise your procedures",
-      "Explain administrative concepts and vocabulary",
-      "Direct you to the authoritative official websites",
-      "Help you prepare and file your documents",
-      "Help you prepare for your appointments (bank, notary, landlord…) and the questions to ask",
+      "One point of contact, in English or French",
+      "Your priority procedures identified from the first call",
+      "A complete file, reviewed before anything is sent",
+      "Quick answers to all your questions",
+      "Preparation for your appointments (prefecture, bank, landlord…)",
+      "A fixed price, known from the start",
     ],
-    weDontTitle: "What we don't do",
-    weDont: [
-      "Carry out procedures on your behalf",
-      "Represent a government body or speak on its behalf",
-      "Provide personalised legal, tax or financial advice",
-      "Guarantee the outcome of a procedure",
-      "Recommend a loan, a bank or a financial product to you",
-      "Ask for your passwords or access codes",
-    ],
-    publicHelp: "Need free public support? France services centres welcome the public for many procedures.",
-    cta: "Create my action plan",
+    cta: "Book my free call",
   },
 };
 
@@ -117,57 +81,29 @@ export function HowItWorksView({ locale }: { locale: Locale }) {
     <>
       <PageHeader eyebrow={t.title} title={t.heading} description={t.promise} />
       <Container className="py-12 sm:py-16">
-        <ol className="relative space-y-8 border-l-2 border-brand-100 pl-8">
+        <ol className="grid gap-10 md:grid-cols-3">
           {t.steps.map((s, i) => (
-            <li key={s.title} className="relative">
-              <span className="absolute -left-[2.85rem] inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-700 text-sm font-bold text-white ring-4 ring-white">
-                {i + 1}
-              </span>
-              <h2 className="text-xl font-bold text-ink">
-                <span aria-hidden="true" className="mr-2">
-                  {s.emoji}
-                </span>
-                {s.title}
-              </h2>
-              <p className="mt-2 max-w-2xl leading-relaxed text-muted">{s.text}</p>
+            <li key={s.title} className="border-t-2 border-brand-700 pt-6">
+              <span className="font-display text-5xl font-light text-brand-700">0{i + 1}</span>
+              <h2 className="mt-3 text-xl font-bold text-ink">{s.title}</h2>
+              <p className="mt-2 leading-relaxed text-muted">{s.text}</p>
             </li>
           ))}
         </ol>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2">
-          <section className="rounded-card border border-line bg-white p-6">
-            <h2 className="text-lg font-bold text-ink">
-              <span aria-hidden="true">👍</span> {t.weDoTitle}
-            </h2>
-            <ul className="mt-4 space-y-3">
-              {t.weDo.map((i) => (
-                <li key={i} className="flex gap-2 text-sm text-ink">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent-500" aria-hidden="true" /> {i}
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section className="rounded-card border border-line bg-white p-6">
-            <h2 className="text-lg font-bold text-ink">
-              <span aria-hidden="true">✋</span> {t.weDontTitle}
-            </h2>
-            <ul className="mt-4 space-y-3">
-              {t.weDont.map((i) => (
-                <li key={i} className="flex gap-2 text-sm text-ink">
-                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-muted" aria-hidden="true" /> {i}
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-
-        <p className="mt-8 text-sm text-muted">{t.publicHelp}</p>
-
-        <div className="mt-12 text-center">
-          <ButtonLink href={href("/plan-action", locale)} size="lg">
+        <section className="mt-16 rounded-[1.5rem] bg-brand-950 p-8 text-white sm:p-10">
+          <h2 className="font-display text-3xl font-medium">{t.weDoTitle}</h2>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+            {t.weDo.map((i) => (
+              <li key={i} className="flex gap-3 text-brand-100">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-gold-300" aria-hidden="true" /> {i}
+              </li>
+            ))}
+          </ul>
+          <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`} size="lg" variant="secondary" className="mt-8">
             {t.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </ButtonLink>
-        </div>
+        </section>
       </Container>
     </>
   );

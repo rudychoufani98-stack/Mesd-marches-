@@ -6,14 +6,13 @@ import Link from "next/link";
 import { computeSelection, formatEuros, formatPrice, type Offer, type OfferKind } from "@/config/pricing";
 import { submitAppointment } from "@/lib/forms/actions";
 import { appointmentModes, appointmentSlots, initialFormState } from "@/lib/forms/schemas";
-import { Button, ButtonLink } from "@/components/ui/primitives";
+import { Button } from "@/components/ui/primitives";
 import { ConsentField, describedBy, Field, fieldError, FormStatus, FormSuccess, Honeypot, inputClasses, LocaleField, previous } from "./fields";
 import { href, type Locale } from "@/i18n";
 import { optionLabel } from "@/lib/forms/schemas";
 
 const copy = {
   fr: {
-    plan: "Préparer mon plan d'action en attendant",
     offer: "Ce qui vous intéresse",
     chooseOffer: "Choisissez une démarche ou une formule",
     yourSelection: "Votre sélection",
@@ -33,7 +32,6 @@ const copy = {
     send: "Envoyer ma demande",
   },
   en: {
-    plan: "Prepare my action plan in the meantime",
     offer: "What are you interested in?",
     chooseOffer: "Choose a procedure or an option",
     yourSelection: "Your selection",
@@ -81,11 +79,7 @@ export function AppointmentForm({
 
   if (state.status === "success") {
     return (
-      <FormSuccess message={state.message} locale={locale}>
-        <ButtonLink href={href("/plan-action", locale)} variant="secondary" className="mt-5">
-          {t.plan}
-        </ButtonLink>
-      </FormSuccess>
+      <FormSuccess message={state.message} locale={locale} />
     );
   }
 

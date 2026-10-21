@@ -10,16 +10,16 @@ const copy = {
     title: "Connexion",
     metaDescription: "L'espace client MesDémarches arrive bientôt.",
     heading: "L'espace client arrive bientôt",
-    text: "Les comptes personnels ne sont pas encore ouverts. En attendant, votre plan d'action et votre progression sont enregistrés directement sur votre appareil, sans création de compte.",
-    plan: "Accéder à mon plan d'action",
+    text: "Les comptes personnels ne sont pas encore ouverts. En attendant, votre conseiller vous accompagne par e-mail et par téléphone.",
+    plan: "Réserver mon appel offert",
     contact: "Nous contacter",
   },
   en: {
     title: "Log in",
     metaDescription: "The MesDémarches client area is coming soon.",
     heading: "The client area is coming soon",
-    text: "Personal accounts are not open yet. In the meantime, your action plan and your progress are saved directly on your device, without creating an account.",
-    plan: "Go to my action plan",
+    text: "Personal accounts are not open yet. In the meantime, your advisor supports you by email and phone.",
+    plan: "Book my free call",
     contact: "Contact us",
   },
 } as const;
@@ -40,7 +40,7 @@ export function LoginView({ locale }: { locale: Locale }) {
         <h1 className="mt-5 text-2xl font-bold text-ink">{t.heading}</h1>
         <p className="mt-3 leading-relaxed text-muted">{t.text}</p>
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <ButtonLink href={href("/plan-action", locale)}>{t.plan}</ButtonLink>
+          <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`}>{t.plan}</ButtonLink>
           <ButtonLink href={href("/contact", locale)} variant="secondary">
             {t.contact}
           </ButtonLink>

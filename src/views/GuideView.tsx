@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock } from "lucide-react";
-import { siteConfig } from "@/config/site";
 import { getCategory } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
-import { alternates, href, localeTags, type Locale } from "@/i18n";
-import { getDomainByCategory, getGuide, getOffers, getVisibleGuides } from "@/lib/data/content";
+import { href, type Locale } from "@/i18n";
+import { getDomainByCategory, getGuide, getOffers } from "@/lib/data/content";
 import { formatPrice } from "@/config/pricing";
 import { Checklist } from "@/components/guides/Checklist";
 import { formatDate, SourceList, VerificationStatus } from "@/components/guides/shared";
 import { Badge, ButtonLink, Container } from "@/components/ui/primitives";
-import { jsonLd } from "@/lib/seo";
+import { canReadGuide, guideKey } from "@/lib/guideAccess";
+import { PageSkeleton } from "@/components/ui/PageSkeleton";
 
 /** Démarche payante correspondant à chaque guide (les autres guides renvoient vers l'appel gratuit). */
 const GUIDE_OFFERS: Record<string, string> = {
@@ -74,16 +75,29 @@ const copy = {
   },
 };
 
-export async function guideMetadata(slug: string, locale: Locale): Promise<Metadata> {
-  const guide = await getGuide(slug, locale);
-  if (!guide) return {};
-  return {
-    title: guide.title,
-    description: guide.description,
-    alternates: alternates(`/guides/${guide.slug}`, locale),
-    robots: guide.status === "draft" ? { index: false, follow: false } : undefined,
-    openGraph: { type: "article", title: guide.title, description: guide.description, modifiedTime: guide.updatedAt },
-  };
+export function privateGuideMetadata(locale: Locale): Metadata {
+  return { title: locale === "en" ? "Client guide" : "Guide client", robots: { index: false, follow: false } };
+}
+
+type GuideRouteProps = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  locale: Locale;
+};
+
+/** Point d'entrée des routes : vérifie la clé du lien client avant d'afficher le guide. */
+export function PrivateGuideView(props: GuideRouteProps) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <GuideGate {...props} />
+    </Suspense>
+  );
+}
+
+async function GuideGate({ params, searchParams, locale }: GuideRouteProps) {
+  const [{ slug }, sp] = await Promise.all([params, searchParams]);
+  if (!canReadGuide(slug, sp.cle)) notFound();
+  return <GuideView slug={slug} locale={locale} />;
 }
 
 export async function GuideView({ slug, locale }: { slug: string; locale: Locale }) {
@@ -92,46 +106,13 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
   if (!guide) notFound();
   const category = localizeCategory(getCategory(guide.category)!, locale);
   const domain = await getDomainByCategory(guide.category, locale);
-  const [allGuides, offers] = await Promise.all([getVisibleGuides(locale), getOffers(locale)]);
-  const related = allGuides
-    .filter((g) => g.slug !== guide.slug && g.status !== "draft")
-    .sort((a, b) => Number(b.category === guide.category) - Number(a.category === guide.category))
-    .slice(0, 3);
+  const offers = await getOffers(locale);
   const stepOffer = offers.find((o) => o.kind === "demarche" && o.id === GUIDE_OFFERS[guide.slug]);
-  const base = siteConfig.url.replace(/\/$/, "");
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: c.home, item: base + href("/", locale) },
-      { "@type": "ListItem", position: 2, name: c.guides, item: base + href("/guides", locale) },
-      { "@type": "ListItem", position: 3, name: guide.title, item: base + href(`/guides/${guide.slug}`, locale) },
-    ],
-  };
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: guide.title,
-    description: guide.description,
-    dateModified: guide.updatedAt,
-    inLanguage: localeTags[locale],
-    publisher: { "@type": "Organization", name: siteConfig.name },
-  };
-
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(structuredData)} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbJsonLd)} />
       <div className="border-b border-line bg-surface">
         <Container className="py-10 sm:py-14">
-          <nav aria-label={c.breadcrumbLabel} className="text-sm text-muted">
-            <Link href={href("/guides", locale)} className="inline-block py-2 hover:text-brand-700">
-              {c.guides}
-            </Link>{" "}
-            / <span className="text-ink">{category.shortTitle}</span>
-          </nav>
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             <Badge>
               <span aria-hidden="true" className="mr-1">
                 {category.emoji}
@@ -154,7 +135,7 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
           {c.translationNote && (
             <p className="mt-3 text-xs text-muted">
               {c.translationNote}{" "}
-              <Link href={`/guides/${guide.slug}`} hrefLang="fr" className="font-medium text-brand-700 underline">
+              <Link href={`/guides/${guide.slug}?cle=${guideKey(guide.slug) ?? ""}`} hrefLang="fr" className="font-medium text-brand-700 underline">
                 Version française
               </Link>
             </p>
@@ -212,28 +193,6 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
             </div>
           </section>
 
-          {related.length > 0 && (
-            <section aria-labelledby="a-lire-aussi">
-              <h2 id="a-lire-aussi" className="text-2xl font-bold text-ink">
-                {c.related}
-              </h2>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-3">
-                {related.map((g) => (
-                  <li key={g.slug}>
-                    <Link
-                      href={href(`/guides/${g.slug}`, locale)}
-                      className="block h-full rounded-card border border-line bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_8px_24px_rgba(22,32,58,0.07)]"
-                    >
-                      <span className="text-2xl" aria-hidden="true">
-                        {getCategory(g.category)?.emoji}
-                      </span>
-                      <span className="mt-2 block font-semibold leading-snug text-ink">{g.title}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">

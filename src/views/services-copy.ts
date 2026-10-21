@@ -1,16 +1,14 @@
 import type { Locale } from "@/i18n";
-import type { ServiceFormat } from "@/content/services";
 
 /** Libellés partagés par les pages Services (liste et détail). */
 export const servicesCopy = {
   fr: {
-    formats: { guide: "Guide gratuit", outil: "Outil gratuit", accompagnement: "Avec accompagnement" } as Record<ServiceFormat, string>,
-    cta: { guide: "Lire le guide", outil: "Utiliser l'outil", accompagnement: "Voir les offres" } as Record<ServiceFormat, string>,
+    cta: "Être accompagné·e",
     eyebrow: "Catalogue",
     title: "Nos services",
-    description: "Des guides et outils gratuits pour comprendre et organiser vos démarches, et un accompagnement humain en option.",
+    description: "Un conseiller dédié pour chacune de vos démarches en France. Choisissez votre domaine, on s'occupe du reste avec vous.",
     metaDescription:
-      "Guides gratuits, outils et accompagnement humain pour organiser vos démarches en France : installation, logement, banque, travail, santé, impôts, famille et numérique.",
+      "Accompagnement personnalisé pour étrangers et expatriés en France : installation, titre de séjour, logement, banque, travail, santé, impôts et numérique.",
     filters: "Filtres",
     allDomains: "Tous les domaines",
     allFormats: "Tous les formats",
@@ -23,17 +21,16 @@ export const servicesCopy = {
     sources: "Sources officielles utiles",
     limits: "Les limites de ce service",
     helpTitle: "Besoin d'y voir plus clair ?",
-    helpText: "Créez votre plan d'action gratuit en quelques questions.",
-    helpCta: "Créer mon plan d'action",
+    helpText: "15 minutes offertes avec un conseiller pour savoir exactement quoi faire.",
+    helpCta: "Réserver mon appel offert",
   },
   en: {
-    formats: { guide: "Free guide", outil: "Free tool", accompagnement: "With personal support" } as Record<ServiceFormat, string>,
-    cta: { guide: "Read the guide", outil: "Use the tool", accompagnement: "See our offers" } as Record<ServiceFormat, string>,
+    cta: "Get support",
     eyebrow: "Catalogue",
     title: "Our services",
-    description: "Free guides and tools to understand and organise your procedures, with optional one-to-one support.",
+    description: "A dedicated advisor for each of your procedures in France. Pick your topic, we handle the rest with you.",
     metaDescription:
-      "Free guides, tools and personal support to organise your procedures in France: settling in, housing, banking, work, health, tax, family and digital.",
+      "Personal support for foreigners and expats in France: settling in, residence permits, housing, banking, work, health, tax and digital.",
     filters: "Filters",
     allDomains: "All topics",
     allFormats: "All formats",
@@ -46,7 +43,7 @@ export const servicesCopy = {
     sources: "Useful official sources",
     limits: "The limits of this service",
     helpTitle: "Need a clearer picture?",
-    helpText: "Create your free action plan in a few questions.",
-    helpCta: "Create my action plan",
+    helpText: "15 free minutes with an advisor to know exactly what to do.",
+    helpCta: "Book my free call",
   },
 } satisfies Record<Locale, unknown>;

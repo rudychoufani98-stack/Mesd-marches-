@@ -4,11 +4,9 @@ import type { Category, CategoryId } from "./categories";
 import type { Guide } from "./guides";
 import type { ServiceDomain } from "./services";
 import type { OfficialSource, SourceId } from "./sources";
-import type { PlanTask } from "@/lib/plan/tasks";
 import { categoriesEn } from "./en/categories";
 import { servicesEn } from "./en/services";
 import { guidesEn } from "./en/guides";
-import { tasksEn } from "./en/tasks";
 import { offersEn } from "./en/offers";
 import { sourcesEn } from "./en/sources";
 
@@ -34,8 +32,6 @@ export type GuideText = Pick<Guide, "title" | "description" | "intro" | "steps" 
   /** Libellés traduits, indexés par l'identifiant de la case de la version française. */
   checklist: Record<string, string>;
 };
-
-export type TaskText = Pick<PlanTask, "title" | "description" | "documents">;
 
 export type OfferText = Pick<Offer, "name" | "tagline" | "duration" | "includes" | "excludes" | "responseTime" | "cancellation">;
 
@@ -73,11 +69,6 @@ export function localizeGuide(g: Guide, locale: Locale): Guide | null {
     glossary: t.glossary,
     checklist: g.checklist.map((c) => ({ id: c.id, label: t.checklist[c.id] ?? c.label })),
   };
-}
-
-export function localizeTask<T extends PlanTask>(task: T, locale: Locale): T {
-  const t = locale === "en" ? tasksEn[task.id] : undefined;
-  return t ? { ...task, ...t } : task;
 }
 
 /** Le prix et la facturation viennent toujours de la base ; seuls les textes sont traduits. */

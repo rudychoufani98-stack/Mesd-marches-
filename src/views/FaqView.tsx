@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { lowestDemarchePrice, type Offer } from "@/config/pricing";
 import { getOffers } from "@/lib/data/content";
-import { alternates, getDictionary, href, type Locale } from "@/i18n";
+import { alternates, href, type Locale } from "@/i18n";
 import { Container, PageHeader } from "@/components/ui/primitives";
 import { formatOfferPrice } from "./shared";
 import { jsonLd } from "@/lib/seo";
@@ -32,135 +32,40 @@ const linkClass = "font-medium text-brand-700 underline";
 type Faq = { q: string; a: ReactNode; text: string };
 
 function buildFaqs(offers: Offer[], locale: Locale): Faq[] {
-  const disclaimer = getDictionary(locale).footer.disclaimer;
   const lowest = lowestDemarchePrice(offers);
   const from = lowest !== null ? formatOfferPrice({ ...offers[0], price: lowest, billing: "unique" }, locale) : "";
   const offerList =
     locale === "en"
-      ? `a free 15-minute discovery call, then one price per procedure${from ? ` (from ${from})` : ""}, plus a Moving to France bundle and a monthly subscription`
-      : `un appel découverte gratuit de 15 minutes, puis un prix par démarche${from ? ` (à partir de ${from})` : ""}, ainsi qu'un Pack Arrivée et un abonnement mensuel`;
-  const franceServicesLink = (
-    <a href="https://www.france-services.gouv.fr/" target="_blank" rel="noopener noreferrer" className={linkClass}>
-      france-services.gouv.fr
-    </a>
+      ? `a free 15-minute discovery call, then one fixed price per procedure${from ? ` (from ${from})` : ""}, plus a Moving to France bundle and a monthly subscription`
+      : `un appel découverte offert de 15 minutes, puis un prix fixe par démarche${from ? ` (à partir de ${from})` : ""}, ainsi qu'un Pack Arrivée et un abonnement mensuel`;
+  const pricingLink = (label: string) => (
+    <Link href={href("/tarifs", locale)} className={linkClass}>
+      {label}
+    </Link>
   );
+  const plain = (text: string): Faq["a"] => <>{text}</>;
+  const faq = (q: string, text: string, a?: ReactNode): Faq => ({ q, text, a: a ?? plain(text) });
 
   if (locale === "en") {
     return [
-      {
-        q: "Is MesDémarches an official website?",
-        text: `No. ${disclaimer} Official procedures are carried out on the websites of public bodies, to which we direct you.`,
-        a: (
-          <>
-            No. {disclaimer} Official procedures are carried out on the websites of public bodies, to which we direct you.
-          </>
-        ),
-      },
-      {
-        q: "Are the guides and the action plan free?",
-        text: "Yes. The guides, checklists, action plan and budget tool are free and require no sign-up.",
-        a: <>Yes. The guides, checklists, action plan and budget tool are free and require no sign-up.</>,
-      },
-      {
-        q: "How much does the support cost?",
-        text: `We offer ${offerList}.`,
-        a: (
-          <>
-            We offer {offerList}. Full details are on the{" "}
-            <Link href={href("/tarifs", locale)} className={linkClass}>
-              Pricing page
-            </Link>
-            .
-          </>
-        ),
-      },
-      {
-        q: "Do you carry out the procedures for me?",
-        text: "No. We help you understand, organise and plan your procedures, but you carry them out yourself with the relevant bodies.",
-        a: <>No. We help you understand, organise and plan your procedures, but you carry them out yourself with the relevant bodies.</>,
-      },
-      {
-        q: "Can you tell me what I am entitled to or what my obligations are?",
-        text: "No. Only the relevant bodies can determine your rights and obligations. We tell you where to find out.",
-        a: <>No. Only the relevant bodies can determine your rights and obligations. We tell you where to find out.</>,
-      },
-      {
-        q: "Are my answers to the questionnaire sent anywhere?",
-        text: "No. Your action plan and your progress are saved only in your browser.",
-        a: <>No. Your action plan and your progress are saved only in your browser.</>,
-      },
-      {
-        q: "Will you ask for my passwords?",
-        text: "Never. Do not share your login details for government websites with anyone.",
-        a: <>Never. Do not share your login details for government websites with anyone.</>,
-      },
-      {
-        q: "Is there free public support?",
-        text: "Yes. France services centres offer free public support for many procedures.",
-        a: <>Yes. France services centres offer free public support for many procedures ({franceServicesLink}).</>,
-      },
+      faq("What is MesDémarches?", "A private advisory service: a dedicated advisor supports foreigners, expats and newcomers with all their administrative procedures in France."),
+      faq("How much does it cost?", `We offer ${offerList}.`, <>We offer {offerList}. See the {pricingLink("Pricing page")}.</>),
+      faq("How does the support work?", "It starts with a free 15-minute call. Your advisor then prepares your file with you (documents, order of steps, review) and stays available until the procedure is done."),
+      faq("Can you help with my residence permit or naturalisation?", "Yes. We prepare your residence permit or naturalisation file with you: documents, translations, online submission and interview preparation."),
+      faq("I don't speak French well. Is that a problem?", "Not at all. All our support is available in English as well as French."),
+      faq("I don't live in Paris, or I haven't arrived in France yet.", "No problem: everything happens by phone or video, wherever you are in France or abroad."),
+      faq("Is my data protected?", "Yes. Your file stays strictly confidential, your data is never sold, and we never ask for your passwords."),
     ];
   }
 
   return [
-    {
-      q: "MesDémarches est-il un site officiel ?",
-      text: `Non. ${disclaimer} Les démarches officielles se font sur les sites des organismes publics, vers lesquels nous vous orientons.`,
-      a: (
-        <>
-          Non. {disclaimer} Les démarches officielles se font sur les sites des organismes publics, vers lesquels
-          nous vous orientons.
-        </>
-      ),
-    },
-    {
-      q: "Les guides et le plan d'action sont-ils gratuits ?",
-      text: "Oui. Les guides, les checklists, le plan d'action et l'outil de budget sont gratuits et sans inscription.",
-      a: <>Oui. Les guides, les checklists, le plan d&apos;action et l&apos;outil de budget sont gratuits et sans inscription.</>,
-    },
-    {
-      q: "Combien coûte l'accompagnement ?",
-      text: `Nous proposons ${offerList}.`,
-      a: (
-        <>
-          Nous proposons {offerList}. Le détail figure sur la{" "}
-          <Link href={href("/tarifs", locale)} className={linkClass}>
-            page Tarifs
-          </Link>
-          .
-        </>
-      ),
-    },
-    {
-      q: "Faites-vous les démarches à ma place ?",
-      text: "Non. Nous vous aidons à comprendre, organiser et planifier vos démarches, mais vous les réalisez vous-même auprès des organismes compétents.",
-      a: <>Non. Nous vous aidons à comprendre, organiser et planifier vos démarches, mais vous les réalisez vous-même auprès des organismes compétents.</>,
-    },
-    {
-      q: "Pouvez-vous me dire à quoi j'ai droit ou quelles sont mes obligations ?",
-      text: "Non. Seuls les organismes compétents peuvent déterminer vos droits et obligations. Nous vous indiquons où vous renseigner.",
-      a: <>Non. Seuls les organismes compétents peuvent déterminer vos droits et obligations. Nous vous indiquons où vous renseigner.</>,
-    },
-    {
-      q: "Mes réponses au questionnaire sont-elles envoyées quelque part ?",
-      text: "Non. Votre plan d'action et votre progression sont enregistrés uniquement dans votre navigateur.",
-      a: <>Non. Votre plan d&apos;action et votre progression sont enregistrés uniquement dans votre navigateur.</>,
-    },
-    {
-      q: "Me demanderez-vous mes mots de passe ?",
-      text: "Jamais. Ne communiquez vos identifiants de connexion aux sites administratifs à personne.",
-      a: <>Jamais. Ne communiquez vos identifiants de connexion aux sites administratifs à personne.</>,
-    },
-    {
-      q: "Existe-t-il un accompagnement public gratuit ?",
-      text: "Oui. Les espaces France services proposent un accompagnement public et gratuit pour de nombreuses démarches.",
-      a: (
-        <>
-          Oui. Les espaces France services proposent un accompagnement public et gratuit pour de nombreuses démarches (
-          {franceServicesLink}).
-        </>
-      ),
-    },
+    faq("Qu'est-ce que MesDémarches ?", "Un service de conseil privé : un conseiller dédié accompagne les étrangers, expatriés et nouveaux arrivants dans toutes leurs démarches administratives en France."),
+    faq("Combien ça coûte ?", `Nous proposons ${offerList}.`, <>Nous proposons {offerList}. Voir la {pricingLink("page Tarifs")}.</>),
+    faq("Comment se passe l'accompagnement ?", "Tout commence par un appel offert de 15 minutes. Votre conseiller prépare ensuite votre dossier avec vous (pièces, ordre des étapes, relecture) et reste disponible jusqu'au bout de la démarche."),
+    faq("Pouvez-vous m'aider pour mon titre de séjour ou ma naturalisation ?", "Oui. Nous préparons avec vous votre dossier de titre de séjour ou de naturalisation : pièces, traductions, dépôt en ligne et préparation à l'entretien."),
+    faq("Je ne parle pas bien français, est-ce un problème ?", "Pas du tout. Tout l'accompagnement est possible en anglais comme en français."),
+    faq("Je n'habite pas à Paris, ou je ne suis pas encore arrivé·e en France.", "Aucun souci : tout se fait par téléphone ou en visio, où que vous soyez en France ou à l'étranger."),
+    faq("Mes données sont-elles protégées ?", "Oui. Votre dossier reste strictement confidentiel, vos données ne sont jamais vendues et nous ne vous demandons jamais vos mots de passe."),
   ];
 }
 

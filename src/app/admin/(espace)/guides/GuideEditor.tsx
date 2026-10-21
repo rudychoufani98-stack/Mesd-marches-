@@ -34,7 +34,7 @@ export function GuideEditor({ guide, sources }: { guide?: Guide; sources: Source
                 <>
                   <input type="hidden" name="slug" value={guide.slug} />
                   <p id="slug" className="mt-1 break-all rounded-lg bg-surface px-3 py-2 text-sm text-muted">
-                    /guides/{guide.slug}
+                    /guides/{guide.slug} · privé, accessible uniquement par lien client
                   </p>
                 </>
               )}

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
+import { guideClientPath } from "@/lib/guideAccess";
+import { CopyLinkButton } from "@/components/admin/CopyLinkButton";
 import { officialSources } from "@/content/sources";
 import { deleteGuide } from "@/lib/admin/actions";
 import { guideFromRow, type GuideRow } from "@/lib/data/mappers";
@@ -17,6 +19,8 @@ export default async function EditGuidePage({ params, searchParams }: PageProps<
   const { data } = await supabase.from("guides").select("*").eq("slug", slug).maybeSingle();
   const guide = data ? guideFromRow(data as GuideRow) : null;
   if (!guide) notFound();
+  const clientFr = guideClientPath(guide.slug, "fr");
+  const clientEn = guideClientPath(guide.slug, "en");
   const sources = Object.values(officialSources).map(({ id, name, url }) => ({ id, name, url }));
 
   return (
@@ -25,10 +29,14 @@ export default async function EditGuidePage({ params, searchParams }: PageProps<
         ← Tous les guides
       </Link>
       <AdminTitle title={guide.title}>
-        {guide.status === "published" && (
-          <Link href={`/guides/${guide.slug}`} target="_blank" className="inline-flex min-h-10 items-center gap-1 text-sm font-medium text-brand-700 hover:underline">
-            Voir sur le site <ExternalLink className="h-4 w-4" aria-hidden="true" />
-          </Link>
+        {guide.status === "published" && clientFr && clientEn && (
+          <div className="flex flex-wrap items-center gap-2">
+            <CopyLinkButton path={clientFr} label="Lien client (FR)" />
+            <CopyLinkButton path={clientEn} label="Lien client (EN)" />
+            <Link href={clientFr} target="_blank" className="inline-flex min-h-10 items-center gap-1 text-sm font-medium text-brand-700 hover:underline">
+              Ouvrir <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         )}
       </AdminTitle>
       {sp.cree === "1" && (

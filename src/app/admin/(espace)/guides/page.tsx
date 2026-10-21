@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/supabase/server";
 import { AdminTitle, formatDateTime, Panel } from "@/components/admin/ui";
 import { Badge, ButtonLink } from "@/components/ui/primitives";
 import { ImportDefaultsForm } from "../ImportDefaultsForm";
+import { guideLinksEnabled } from "@/lib/guideAccess";
 
 export const metadata = { title: "Guides" };
 
@@ -23,13 +24,22 @@ export default async function AdminGuidesPage() {
   return (
     <>
       <AdminTitle
-        title="Guides pratiques"
-        description="Un guide en brouillon n'est pas visible sur le site. Renseignez la date de vérification après avoir relu le guide face à ses sources."
+        title="Guides clients"
+        description="Les guides ne sont plus publics : ouvrez un guide et copiez son « Lien client » pour l'envoyer à un client qui a payé. Un guide en brouillon n'est jamais accessible."
       >
         <ButtonLink href="/admin/guides/nouveau">
           <Plus className="h-4 w-4" aria-hidden="true" /> Nouveau guide
         </ButtonLink>
       </AdminTitle>
+
+      {!guideLinksEnabled() && (
+        <Panel className="mb-6 border-amber-200 bg-amber-50">
+          <p className="text-sm text-amber-900">
+            <strong>Liens clients désactivés.</strong> Ajoutez la variable <code>GUIDES_LINK_SECRET</code> dans Vercel (Settings → Environment
+            Variables) avec une longue phrase secrète de votre choix, puis redéployez.
+          </p>
+        </Panel>
+      )}
 
       {missing.length > 0 && guides.length > 0 && (
         <Panel className="mb-6 border-brand-200 bg-brand-50/40">

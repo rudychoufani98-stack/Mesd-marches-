@@ -23,7 +23,6 @@ export const en: Dictionary = {
   nav: [
     { href: "/", label: "Home" },
     { href: "/services", label: "Our services" },
-    { href: "/guides", label: "Practical guides" },
     { href: "/comment-ca-marche", label: "How it works" },
     { href: "/tarifs", label: "Pricing" },
   ],
@@ -37,7 +36,6 @@ export const en: Dictionary = {
         title: "Discover",
         items: [
           { href: "/services", label: "Our services" },
-          { href: "/guides", label: "Practical guides" },
           { href: "/comment-ca-marche", label: "How it works" },
           { href: "/tarifs", label: "Pricing" },
           { href: "/professionnels", label: "Notaries, banks, brokers" },
@@ -46,7 +44,6 @@ export const en: Dictionary = {
       {
         title: "Tools",
         items: [
-          { href: "/plan-action", label: "Create my action plan" },
           { href: "/outils/budget", label: "Monthly budget" },
           { href: "/rendez-vous", label: "Book an appointment" },
         ],
@@ -73,7 +70,7 @@ export const en: Dictionary = {
   cookieNotice: {
     region: "Cookie information",
     title: "No advertising or audience-tracking cookies.",
-    text: "Your action plan and checklists are stored only on your device.",
+    text: "Only essential technical cookies are used.",
     more: "Learn more",
     ok: "Got it",
   },
@@ -83,6 +80,6 @@ export const en: Dictionary = {
     unverifiedNotice: "Information to be checked with the relevant authority.",
     defaultTitle: "MesDémarches — Organise your paperwork in France",
     description:
-      "MesDémarches is a private support service that helps you organise your administrative and practical procedures in France: action plans, checklists and links to official sources.",
+      "MesDémarches is a private support service that helps you organise your administrative procedures in France, with a dedicated advisor.",
   },
 };

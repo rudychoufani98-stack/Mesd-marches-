@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { defaultOffers } from "@/config/pricing";
-import { taskLibrary } from "@/lib/plan/tasks";
 import { categories } from "./categories";
 import { defaultGuides } from "./guides";
 import { serviceDomains } from "./services";
@@ -10,7 +9,6 @@ import { guidesEn } from "./en/guides";
 import { offersEn } from "./en/offers";
 import { servicesEn } from "./en/services";
 import { sourcesEn } from "./en/sources";
-import { tasksEn } from "./en/tasks";
 import { en } from "@/i18n/en";
 import { fr } from "@/i18n/fr";
 import { href, stripLocale, switchLocalePath } from "@/i18n";
@@ -37,14 +35,6 @@ describe("traductions anglaises", () => {
       expect(t.steps).toHaveLength(g.steps.length);
       expect(t.glossary ?? []).toHaveLength((g.glossary ?? []).length);
       g.checklist.forEach((c) => expect(t.checklist[c.id], `${g.slug}/${c.id}`).toBeTruthy());
-    });
-  });
-
-  it("couvrent toutes les tâches du plan d'action", () => {
-    taskLibrary.forEach((task) => {
-      const t = tasksEn[task.id];
-      expect(t, task.id).toBeDefined();
-      expect(t.documents).toHaveLength(task.documents.length);
     });
   });
 

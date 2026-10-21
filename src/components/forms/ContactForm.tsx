@@ -4,13 +4,12 @@ import { useActionState } from "react";
 import { Send } from "lucide-react";
 import { submitContact } from "@/lib/forms/actions";
 import { contactSubjects, initialFormState, optionLabel } from "@/lib/forms/schemas";
-import { href, type Locale } from "@/i18n";
-import { Button, ButtonLink } from "@/components/ui/primitives";
+import type { Locale } from "@/i18n";
+import { Button } from "@/components/ui/primitives";
 import { ConsentField, describedBy, Field, fieldError, FormStatus, FormSuccess, Honeypot, inputClasses, LocaleField, previous } from "./fields";
 
 const copy = {
   fr: {
-    browse: "Parcourir les guides en attendant",
     name: "Votre nom",
     email: "Votre adresse e-mail",
     subject: "Sujet",
@@ -21,7 +20,6 @@ const copy = {
     send: "Envoyer mon message",
   },
   en: {
-    browse: "Browse the guides in the meantime",
     name: "Your name",
     email: "Your email address",
     subject: "Subject",
@@ -39,11 +37,7 @@ export function ContactForm({ defaultSubject, locale = "fr" }: { defaultSubject?
 
   if (state.status === "success") {
     return (
-      <FormSuccess message={state.message} locale={locale}>
-        <ButtonLink href={href("/guides", locale)} variant="secondary" className="mt-5">
-          {t.browse}
-        </ButtonLink>
-      </FormSuccess>
+      <FormSuccess message={state.message} locale={locale} />
     );
   }
 

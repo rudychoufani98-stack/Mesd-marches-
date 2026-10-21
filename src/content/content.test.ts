@@ -3,7 +3,6 @@ import { categories } from "./categories";
 import { defaultGuides as guides } from "./guides";
 import { officialSources } from "./sources";
 import { serviceDomains } from "./services";
-import { taskLibrary, taskOffers } from "@/lib/plan/tasks";
 import { defaultOffers as offers } from "@/config/pricing";
 
 const ALLOWED_HOSTS = [
@@ -68,7 +67,7 @@ describe("services", () => {
   });
 
   it("pointent vers des guides publiés ou des pages existantes", () => {
-    const pages = new Set(["/plan-action", "/tarifs", "/outils/budget"]);
+    const pages = new Set(["/tarifs", "/outils/budget", "/rendez-vous"]);
     serviceDomains.forEach((d) =>
       d.items.forEach((item) => {
         if (!item.href) return;
@@ -82,25 +81,11 @@ describe("services", () => {
   });
 });
 
-describe("tâches du plan", () => {
-  const published = new Set(guides.filter((g) => g.status === "published").map((g) => g.slug));
-  it("citent des sources du registre et des guides publiés", () => {
-    taskLibrary.forEach((t) => {
-      t.sourceIds.forEach((id) => expect(officialSources).toHaveProperty(id));
-      if (t.guideSlug) expect(published.has(t.guideSlug), t.id).toBe(true);
-    });
-  });
-});
-
 describe("tarifs", () => {
   it("ont des identifiants uniques et un seul appel gratuit", () => {
     expect(new Set(offers.map((o) => o.id)).size).toBe(offers.length);
     offers.forEach((o) => expect(o.price === 0).toBe(o.kind === "decouverte"));
     expect(offers.filter((o) => o.kind === "decouverte")).toHaveLength(1);
-  });
-  it("relient chaque démarche du plan à une offre existante", () => {
-    Object.values(taskOffers).forEach((id) => expect(offers.map((o) => o.id)).toContain(id));
-    Object.keys(taskOffers).forEach((id) => expect(taskLibrary.map((t) => t.id)).toContain(id));
   });
   it("rattachent chaque démarche à un domaine", () => {
     offers.filter((o) => o.kind === "demarche").forEach((o) => expect(o.category, o.id).toBeTruthy());

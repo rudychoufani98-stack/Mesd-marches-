@@ -5,9 +5,9 @@ import { ArrowRight } from "lucide-react";
 import { getCategory } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
 import { alternates, href, type Locale } from "@/i18n";
-import { getDomainBySlug, getPublishedGuides } from "@/lib/data/content";
-import { GuideCard, SourceList } from "@/components/guides/shared";
-import { Badge, ButtonLink, Container } from "@/components/ui/primitives";
+import { getDomainBySlug } from "@/lib/data/content";
+import { SourceList } from "@/components/guides/shared";
+import { ButtonLink, Container } from "@/components/ui/primitives";
 import { servicesCopy } from "./services-copy";
 
 export async function serviceDomainMetadata(slug: string, locale: Locale): Promise<Metadata> {
@@ -26,7 +26,6 @@ export async function ServiceDomainView({ slug, locale }: { slug: string; locale
   const domain = await getDomainBySlug(slug, locale);
   if (!domain) notFound();
   const category = localizeCategory(getCategory(domain.category)!, locale);
-  const relatedGuides = (await getPublishedGuides(locale)).filter((g) => g.category === domain.category);
 
   return (
     <>
@@ -63,32 +62,16 @@ export async function ServiceDomainView({ slug, locale }: { slug: string; locale
                   <li key={item.id} className="rounded-card border border-line bg-white p-5">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <h3 className="font-semibold text-ink">{item.title}</h3>
-                      <Badge tone={item.format === "accompagnement" ? "accent" : "brand"}>{c.formats[item.format]}</Badge>
                     </div>
                     <p className="mt-1.5 text-sm leading-relaxed text-muted">{item.description}</p>
-                    {item.href && (
-                      <Link href={href(item.href, locale)} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
-                        {c.cta[item.format]}
-                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    )}
+                    <Link href={`${href("/rendez-vous", locale)}?offre=decouverte`} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
+                      {c.cta}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
                   </li>
                 ))}
             </ul>
           </section>
-
-          {relatedGuides.length > 0 && (
-            <section aria-labelledby="guides-associes">
-              <h2 id="guides-associes" className="text-xl font-bold text-ink">
-                {c.relatedGuides}
-              </h2>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                {relatedGuides.map((g) => (
-                  <GuideCard key={g.slug} guide={g} locale={locale} />
-                ))}
-              </div>
-            </section>
-          )}
 
           <section aria-labelledby="sources">
             <h2 id="sources" className="text-xl font-bold text-ink">
@@ -104,7 +87,7 @@ export async function ServiceDomainView({ slug, locale }: { slug: string; locale
           <div className="rounded-card bg-brand-900 p-5 text-white">
             <h2 className="font-semibold">{c.helpTitle}</h2>
             <p className="mt-2 text-sm text-brand-200">{c.helpText}</p>
-            <ButtonLink href={href("/plan-action", locale)} variant="secondary" className="mt-4 w-full">
+            <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`} variant="secondary" className="mt-4 w-full">
               {c.helpCta}
             </ButtonLink>
           </div>
