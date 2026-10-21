@@ -66,7 +66,7 @@ export function Header() {
                 <Link
                   href={href(item.href, locale)}
                   aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                  className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink aria-[current=page]:text-brand-700"
+                  className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink aria-[current=page]:bg-brand-50 aria-[current=page]:font-semibold aria-[current=page]:text-brand-700 aria-[current=page]:shadow-[inset_0_-2px_0_var(--color-brand-600)]"
                 >
                   {item.label}
                 </Link>
@@ -104,7 +104,7 @@ export function Header() {
                 <Link
                   href={href(item.href, locale)}
                   aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                  className="block rounded-lg px-3 py-3 font-medium text-ink hover:bg-surface aria-[current=page]:bg-brand-50 aria-[current=page]:text-brand-700"
+                  className="block rounded-lg px-3 py-3 font-medium text-ink hover:bg-surface aria-[current=page]:bg-brand-50 aria-[current=page]:font-semibold aria-[current=page]:text-brand-700 aria-[current=page]:shadow-[inset_3px_0_0_var(--color-brand-600)]"
                 >
                   {item.label}
                 </Link>

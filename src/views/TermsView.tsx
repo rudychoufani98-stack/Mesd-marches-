@@ -83,7 +83,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             </ul>
           </section>
           <section>
-            <h2>6. Abonnement « Suivi administratif »</h2>
+            <h2>6. Abonnement « {offers.find((o) => o.kind === "abonnement")?.name ?? "Abonnement"} »</h2>
             <p>
               Sans engagement de durée, résiliable à tout moment, effet à la fin de la période mensuelle en cours.{" "}
               <Placeholder>modalités de résiliation en ligne et de reconduction à valider au regard de la réglementation applicable</Placeholder>
@@ -156,7 +156,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             </ul>
           </section>
           <section>
-            <h2>6. &ldquo;{offers.find((o) => o.id === "suivi")?.name ?? "Administrative follow-up"}&rdquo; subscription</h2>
+            <h2>6. &ldquo;{offers.find((o) => o.kind === "abonnement")?.name ?? "Subscription"}&rdquo; subscription</h2>
             <p>
               No minimum term, can be cancelled at any time, taking effect at the end of the current monthly period.{" "}
               <Placeholder>online cancellation and renewal terms to be validated against the applicable regulations</Placeholder>

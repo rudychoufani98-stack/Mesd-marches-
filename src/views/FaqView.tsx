@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import type { Offer } from "@/config/pricing";
+import { lowestDemarchePrice, type Offer } from "@/config/pricing";
 import { getOffers } from "@/lib/data/content";
 import { alternates, getDictionary, href, type Locale } from "@/i18n";
 import { Container, PageHeader } from "@/components/ui/primitives";
 import { formatOfferPrice } from "./shared";
+import { jsonLd } from "@/lib/seo";
 
 const PATH = "/faq";
 
@@ -32,7 +33,12 @@ type Faq = { q: string; a: ReactNode; text: string };
 
 function buildFaqs(offers: Offer[], locale: Locale): Faq[] {
   const disclaimer = getDictionary(locale).footer.disclaimer;
-  const offerList = offers.map((o) => `${o.name} (${formatOfferPrice(o, locale)})`).join(", ");
+  const lowest = lowestDemarchePrice(offers);
+  const from = lowest !== null ? formatOfferPrice({ ...offers[0], price: lowest, billing: "unique" }, locale) : "";
+  const offerList =
+    locale === "en"
+      ? `a free 15-minute discovery call, then one price per procedure${from ? ` (from ${from})` : ""}, plus a Moving to France bundle and a monthly subscription`
+      : `un appel découverte gratuit de 15 minutes, puis un prix par démarche${from ? ` (à partir de ${from})` : ""}, ainsi qu'un Pack Arrivée et un abonnement mensuel`;
   const franceServicesLink = (
     <a href="https://www.france-services.gouv.fr/" target="_blank" rel="noopener noreferrer" className={linkClass}>
       france-services.gouv.fr
@@ -57,10 +63,10 @@ function buildFaqs(offers: Offer[], locale: Locale): Faq[] {
       },
       {
         q: "How much does the support cost?",
-        text: `Our offers: ${offerList}.`,
+        text: `We offer ${offerList}.`,
         a: (
           <>
-            Our offers: {offerList}. Full details are on the{" "}
+            We offer {offerList}. Full details are on the{" "}
             <Link href={href("/tarifs", locale)} className={linkClass}>
               Pricing page
             </Link>
@@ -114,10 +120,10 @@ function buildFaqs(offers: Offer[], locale: Locale): Faq[] {
     },
     {
       q: "Combien coûte l'accompagnement ?",
-      text: `Nos offres : ${offerList}.`,
+      text: `Nous proposons ${offerList}.`,
       a: (
         <>
-          Nos offres : {offerList}. Le détail figure sur la{" "}
+          Nous proposons {offerList}. Le détail figure sur la{" "}
           <Link href={href("/tarifs", locale)} className={linkClass}>
             page Tarifs
           </Link>
@@ -166,7 +172,7 @@ export function faqMetadata(locale: Locale): Metadata {
 export async function FaqView({ locale }: { locale: Locale }) {
   const t = copy[locale];
   const faqs = buildFaqs(await getOffers(locale), locale);
-  const jsonLd = {
+  const structuredData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     inLanguage: locale === "en" ? "en-GB" : "fr-FR",
@@ -174,7 +180,7 @@ export async function FaqView({ locale }: { locale: Locale }) {
   };
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(structuredData)} />
       <PageHeader eyebrow={t.eyebrow} title={t.title} />
       <Container className="py-10 sm:py-14">
         <div className="mx-auto max-w-3xl divide-y divide-line rounded-card border border-line bg-white">

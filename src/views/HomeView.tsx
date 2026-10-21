@@ -1,177 +1,203 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { categories } from "@/content/categories";
+import { formatPrice, lowestDemarchePrice } from "@/config/pricing";
+import { categories, getCategory } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
-import { alternates, getDictionary, href, type Locale } from "@/i18n";
-import { getActiveDomains } from "@/lib/data/content";
+import { alternates, getDictionary, href, localeTags, type Locale } from "@/i18n";
+import { getActiveDomains, getOffers, getPublishedGuides } from "@/lib/data/content";
 import { CategoryCard } from "@/components/home/CategoryCard";
 import { HeroIllustration } from "@/components/home/HeroIllustration";
+import { GuideCard } from "@/components/guides/shared";
 import { ButtonLink, Container, SectionHeading } from "@/components/ui/primitives";
+import { jsonLd } from "@/lib/seo";
+
+/** Guides mis en avant sur l'accueil (les plus recherchés par les nouveaux arrivants). */
+const FEATURED_GUIDES = [
+  "premieres-demarches-installation",
+  "preparer-dossier-locatif",
+  "comprendre-ouverture-compte-bancaire",
+  "s-orienter-protection-sociale",
+  "permis-de-conduire-etranger",
+  "preparer-sa-declaration-de-revenus",
+];
 
 const copy = {
   fr: {
-    badge: "Bienvenue ! Service privé et indépendant d'accompagnement",
-    title: "Vos démarches en France, ",
-    titleAccent: "en toute simplicité.",
+    metaTitle: "Aide aux démarches administratives en France pour étrangers et expatriés | MesDémarches",
+    metaDescription:
+      "Perdu dans la paperasse française ? MesDémarches guide les étrangers, expatriés et nouveaux arrivants : logement, compte bancaire, Sécurité sociale, CAF, impôts, permis de conduire. Premier appel gratuit, puis dès 15 € la démarche.",
+    badge: "Étrangers, expatriés, nouveaux arrivants : on est là pour vous",
+    title: "Perdu dans les démarches en France ? ",
+    titleAccent: "On vous guide, pas à pas.",
     subtitle:
-      "Un plan clair, des étapes organisées et des ressources utiles pour avancer sereinement dans vos démarches administratives.",
-    chips: [
-      { emoji: "✅", label: "Checklists à cocher" },
-      { emoji: "🗓️", label: "Calendrier clair" },
-      { emoji: "🔗", label: "Sources officielles" },
+      "Logement, banque, Sécurité sociale, CAF, impôts, permis de conduire… Un conseiller vous explique quoi faire, dans quel ordre, et prépare chaque démarche avec vous.",
+    chipsLabel: "En bref",
+    chips: (from: string) => [
+      { emoji: "🎁", label: "Premier appel gratuit" },
+      { emoji: "💶", label: `Dès ${from} la démarche` },
+      { emoji: "💬", label: "En français ou en anglais" },
+      { emoji: "🔒", label: "Vos données protégées" },
     ],
-    chipsLabel: "Points forts",
-    cta: "Organiser mes démarches",
-    ctaSecondary: "Découvrir nos services",
-    free: "Plan d'action et guides gratuits, sans inscription.",
-    forWhoEyebrow: "Pour qui ?",
-    forWhoTitle: "Vous vous reconnaissez ?",
-    audiences: [
-      { emoji: "🧳", title: "Vous arrivez en France", text: "Logement, compte bancaire, assurance maladie : par quoi commencer ?" },
-      { emoji: "💼", title: "Vous commencez un emploi", text: "Documents d'embauche, fiche de paie, prélèvement à la source." },
-      { emoji: "🎓", title: "Vous êtes étudiant·e", text: "Les bons sites, les bonnes étapes, sans vous perdre." },
-      { emoji: "👨‍👩‍👧", title: "Vous organisez votre famille", text: "École, déménagement, contrats du quotidien." },
-    ],
+    cta: "Réserver mon appel gratuit",
+    ctaSecondary: "Faire mon plan gratuit",
+    stepsTitle: "Les démarches qu'on prépare avec vous",
+    stepsText: "Choisissez ce qui vous bloque : on vous aide à le régler, à prix fixe.",
+    seeAll: "Voir tous les tarifs",
     howEyebrow: "Comment ça marche ?",
-    howTitle: "Trois étapes pour y voir clair",
+    howTitle: "Simple comme un coup de fil",
     stepLabel: "Étape",
-    steps: [
+    how: [
+      { emoji: "📞", title: "Un appel gratuit de 15 min", text: "Vous nous racontez votre situation. On identifie ensemble ce qui est urgent." },
+      { emoji: "🗂️", title: "On prépare votre démarche", text: "Liste des documents, étapes dans l'ordre, relecture : vous savez exactement quoi faire." },
+      { emoji: "✅", title: "Vous avancez sereinement", text: "Vous faites la démarche sur le site officiel, en confiance. On reste là pour vos questions." },
+    ],
+    guidesTitle: "Nos guides gratuits pour s'installer en France",
+    guidesText: "Des explications simples et les liens vers les sites officiels, pour avancer seul·e si vous préférez.",
+    allGuides: "Tous les guides",
+    domainsTitle: "Toutes les démarches, par thème",
+    discover: "Découvrir",
+    faqTitle: "Questions fréquentes",
+    faq: (from: string) => [
       {
-        emoji: "💬",
-        title: "Vous décrivez votre situation",
-        text: "Cinq questions simples sur votre objectif, votre délai et les domaines qui vous concernent. Aucun document demandé.",
+        q: "Qu'est-ce que MesDémarches ?",
+        a: "Un service d'accompagnement qui aide les étrangers, expatriés et nouveaux arrivants à comprendre et organiser leurs démarches administratives en France. C'est un service privé, pas un site officiel de l'administration.",
       },
       {
-        emoji: "🗺️",
-        title: "Vous recevez un plan d'action clair",
-        text: "Les tâches dans un ordre logique, avec les documents à préparer et les liens vers les sources officielles.",
+        q: "Je viens d'arriver en France, par où commencer ?",
+        a: "En général : vos documents personnels, un justificatif d'adresse, un compte bancaire et l'Assurance Maladie. Notre plan d'action gratuit vous donne l'ordre adapté à votre situation, et l'appel découverte est gratuit.",
       },
-      { emoji: "✅", title: "Vous avancez étape par étape", text: "Cochez vos tâches, suivez votre progression et consultez les guides à votre rythme." },
+      {
+        q: "Combien ça coûte ?",
+        a: `Le premier appel de 15 minutes est gratuit. Ensuite, chaque démarche accompagnée coûte à partir de ${from}, ou vous pouvez choisir le Pack Arrivée.`,
+      },
+      {
+        q: "Faites-vous les démarches à ma place ?",
+        a: "Non : on prépare tout avec vous et vous faites la démarche vous-même sur le site officiel. Vous gardez la main sur vos comptes, et on ne vous demande jamais vos mots de passe.",
+      },
     ],
-    tryFree: "Essayer gratuitement",
-    domainsEyebrow: "Nos domaines d'accompagnement",
-    domainsTitle: "Toutes vos démarches, rangées par thème",
-    domainsText: "Choisissez un domaine pour découvrir les guides, les outils et l'accompagnement proposés.",
-    whyEyebrow: "Pourquoi MesDémarches ?",
-    whyTitle: "Une méthode simple, honnête et à votre rythme",
-    reasons: [
-      { emoji: "🧭", title: "Un parcours structuré", text: "Des étapes claires, dans un ordre logique, pour savoir quoi faire et quand." },
-      { emoji: "📖", title: "Des explications simples", text: "Un vocabulaire accessible et des glossaires pour chaque notion." },
-      { emoji: "🔗", title: "Les sources officielles", text: "Chaque guide renvoie vers les sites publics qui font référence." },
-      { emoji: "🙋", title: "Un humain si besoin", text: "Les guides sont gratuits. Un rendez-vous est possible quand vous le souhaitez." },
-      { emoji: "💶", title: "Des tarifs transparents", text: "Ce qui est inclus et ce qui ne l'est pas est écrit noir sur blanc." },
-      { emoji: "🔒", title: "Vos données protégées", text: "Aucun cookie publicitaire, votre plan reste sur votre appareil." },
-    ],
-    startTitle: "Par où commencer ?",
-    startText: "Décrivez les démarches que vous devez organiser et découvrez les prochaines étapes possibles.",
-    startCta: "Créer mon plan d'action",
+    startTitle: "Une question sur vos démarches ?",
+    startText: "Parlez-en gratuitement avec un conseiller. 15 minutes, sans engagement.",
   },
   en: {
-    badge: "Welcome! An independent, private support service",
-    title: "Your paperwork in France, ",
-    titleAccent: "made simple.",
-    subtitle: "A clear plan, organised steps and useful resources to move forward calmly with your administrative procedures.",
-    chips: [
-      { emoji: "✅", label: "Tick-off checklists" },
-      { emoji: "🗓️", label: "Clear timeline" },
-      { emoji: "🔗", label: "Official sources" },
+    metaTitle: "Help with French paperwork for foreigners and expats | MesDémarches",
+    metaDescription:
+      "Lost in French bureaucracy? MesDémarches helps foreigners, expats and newcomers in France: housing, bank account, health insurance, CAF, taxes, driving licence. Free first call, then from €15 per procedure.",
+    badge: "Foreigners, expats, newcomers: we're here for you",
+    title: "Lost in French paperwork? ",
+    titleAccent: "We guide you, step by step.",
+    subtitle:
+      "Housing, bank account, health insurance, CAF, taxes, driving licence… An advisor tells you what to do, in what order, and prepares each procedure with you.",
+    chipsLabel: "At a glance",
+    chips: (from: string) => [
+      { emoji: "🎁", label: "Free first call" },
+      { emoji: "💶", label: `From ${from} per procedure` },
+      { emoji: "💬", label: "In English or French" },
+      { emoji: "🔒", label: "Your data protected" },
     ],
-    chipsLabel: "Highlights",
-    cta: "Organise my paperwork",
-    ctaSecondary: "Discover our services",
-    free: "Free action plan and guides, no sign-up needed.",
-    forWhoEyebrow: "Who is it for?",
-    forWhoTitle: "Does this sound like you?",
-    audiences: [
-      { emoji: "🧳", title: "You're moving to France", text: "Housing, bank account, health insurance: where do you start?" },
-      { emoji: "💼", title: "You're starting a job", text: "Hiring documents, payslip (fiche de paie), withholding tax." },
-      { emoji: "🎓", title: "You're a student", text: "The right websites and the right steps, without getting lost." },
-      { emoji: "👨‍👩‍👧", title: "You're organising your family", text: "School, moving house, everyday contracts." },
-    ],
+    cta: "Book my free call",
+    ctaSecondary: "Get my free plan",
+    stepsTitle: "The procedures we prepare with you",
+    stepsText: "Pick what's holding you back: we help you sort it out, at a fixed price.",
+    seeAll: "See all prices",
     howEyebrow: "How does it work?",
-    howTitle: "Three steps to see clearly",
+    howTitle: "As simple as a phone call",
     stepLabel: "Step",
-    steps: [
+    how: [
+      { emoji: "📞", title: "A free 15-minute call", text: "You tell us about your situation. Together we work out what's urgent." },
+      { emoji: "🗂️", title: "We prepare your procedure", text: "Documents list, steps in order, review: you know exactly what to do." },
+      { emoji: "✅", title: "You move forward with confidence", text: "You complete the procedure on the official website. We're still here for your questions." },
+    ],
+    guidesTitle: "Our free guides to settling in France",
+    guidesText: "Simple explanations and links to official websites, if you'd rather go it alone.",
+    allGuides: "All guides",
+    domainsTitle: "Every procedure, by topic",
+    discover: "Discover",
+    faqTitle: "Frequently asked questions",
+    faq: (from: string) => [
       {
-        emoji: "💬",
-        title: "You describe your situation",
-        text: "Five simple questions about your goal, your timeframe and the areas that concern you. No documents required.",
+        q: "What is MesDémarches?",
+        a: "A support service that helps foreigners, expats and newcomers understand and organise their administrative procedures in France. It is a private service, not an official government website.",
       },
       {
-        emoji: "🗺️",
-        title: "You get a clear action plan",
-        text: "Tasks in a logical order, with the documents to prepare and links to official sources.",
+        q: "I've just moved to France: where do I start?",
+        a: "Usually: your personal documents, proof of address, a bank account and health insurance. Our free action plan gives you the right order for your situation, and the discovery call is free.",
       },
-      { emoji: "✅", title: "You move forward step by step", text: "Tick off your tasks, track your progress and read the guides at your own pace." },
+      {
+        q: "How much does it cost?",
+        a: `The first 15-minute call is free. After that, each supported procedure costs from ${from}, or you can choose the Moving to France bundle.`,
+      },
+      {
+        q: "Do you do the procedures for me?",
+        a: "No: we prepare everything with you and you complete the procedure yourself on the official website. You stay in control of your accounts, and we never ask for your passwords.",
+      },
     ],
-    tryFree: "Try it for free",
-    domainsEyebrow: "What we can help with",
-    domainsTitle: "All your procedures, organised by topic",
-    domainsText: "Choose a topic to discover the guides, tools and support available.",
-    whyEyebrow: "Why MesDémarches?",
-    whyTitle: "A simple, honest method, at your own pace",
-    reasons: [
-      { emoji: "🧭", title: "A structured path", text: "Clear steps, in a logical order, so you know what to do and when." },
-      { emoji: "📖", title: "Simple explanations", text: "Plain language and glossaries for every key term." },
-      { emoji: "🔗", title: "Official sources", text: "Every guide links to the public websites that are the reference." },
-      { emoji: "🙋", title: "A real person if needed", text: "The guides are free. You can book an appointment whenever you like." },
-      { emoji: "💶", title: "Transparent pricing", text: "What's included and what isn't is written down in black and white." },
-      { emoji: "🔒", title: "Your data protected", text: "No advertising cookies; your plan stays on your device." },
-    ],
-    startTitle: "Where do I start?",
-    startText: "Describe the procedures you need to organise and discover the possible next steps.",
-    startCta: "Create my action plan",
+    startTitle: "A question about your paperwork?",
+    startText: "Talk it through with an advisor for free. 15 minutes, no commitment.",
   },
 };
 
 export function homeMetadata(locale: Locale): Metadata {
-  const t = getDictionary(locale);
+  const c = copy[locale];
   return {
-    title: { absolute: t.site.defaultTitle },
-    description: t.site.description,
+    title: { absolute: c.metaTitle },
+    description: c.metaDescription,
     alternates: alternates("/", locale),
-    openGraph: { locale: locale === "en" ? "en_GB" : "fr_FR", title: t.site.defaultTitle, description: t.site.description },
+    openGraph: { locale: locale === "en" ? "en_GB" : "fr_FR", title: c.metaTitle, description: c.metaDescription },
   };
 }
 
 export async function HomeView({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const dict = getDictionary(locale);
-  const domains = await getActiveDomains(locale);
+  const [domains, offers, guides] = await Promise.all([getActiveDomains(locale), getOffers(locale), getPublishedGuides(locale)]);
+  const steps = offers.filter((o) => o.kind === "demarche");
+  const discovery = offers.find((o) => o.kind === "decouverte");
+  const lowest = lowestDemarchePrice(offers);
+  const from = lowest !== null && steps[0] ? formatPrice({ ...steps[0], price: lowest }, locale) : "15 €";
+  const featured = FEATURED_GUIDES.map((slug) => guides.find((g) => g.slug === slug)).filter((g) => g !== undefined).slice(0, 6);
+  const faq = c.faq(from);
+  const bookFree = `${href("/rendez-vous", locale)}${discovery ? `?offre=${discovery.id}` : ""}`;
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    inLanguage: localeTags[locale],
+    mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  };
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqJsonLd)} />
+
       <section className="relative overflow-hidden">
         <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-accent-100/60 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-40 h-96 w-96 rounded-full bg-brand-100/60 blur-3xl" />
-        <Container className="relative grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-[1.05fr_1fr] lg:py-24">
+        <Container className="relative grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:py-24">
           <div className="animate-fade-up">
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-white/80 px-3 py-1 text-xs font-medium text-muted backdrop-blur">
               <span aria-hidden="true">👋</span> {c.badge}
             </p>
             <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-ink sm:text-5xl">
               {c.title}
-              <span className="text-brand-700">{c.titleAccent}</span> <span aria-hidden="true">✨</span>
+              <span className="text-brand-700">{c.titleAccent}</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">{c.subtitle}</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href={bookFree} size="lg">
+                <span aria-hidden="true">📞</span> {c.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </ButtonLink>
+              <ButtonLink href={href("/plan-action", locale)} size="lg" variant="secondary">
+                {c.ctaSecondary}
+              </ButtonLink>
+            </div>
             <ul className="mt-6 flex flex-wrap gap-2" aria-label={c.chipsLabel}>
-              {c.chips.map((chip) => (
+              {c.chips(from).map((chip) => (
                 <li key={chip.label} className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-ink shadow-sm ring-1 ring-line">
                   <span aria-hidden="true">{chip.emoji}</span> {chip.label}
                 </li>
               ))}
             </ul>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={href("/plan-action", locale)} size="lg">
-                <span aria-hidden="true">🚀</span> {c.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </ButtonLink>
-              <ButtonLink href={href("/services", locale)} size="lg" variant="secondary">
-                {c.ctaSecondary}
-              </ButtonLink>
-            </div>
-            <p className="mt-4 text-sm text-muted">
-              <span aria-hidden="true">🎁</span> {c.free}
-            </p>
           </div>
           <div className="mx-auto w-full max-w-md lg:max-w-none">
             <HeroIllustration />
@@ -179,32 +205,50 @@ export async function HomeView({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <section className="py-14 sm:py-16" aria-labelledby="pour-qui">
-        <Container>
-          <div id="pour-qui">
-            <SectionHeading eyebrow={c.forWhoEyebrow} title={c.forWhoTitle} align="center" />
-          </div>
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {c.audiences.map((a) => (
-              <li key={a.title} className="rounded-card border border-line bg-white p-5 text-center transition-shadow hover:shadow-[0_12px_30px_rgba(22,32,58,0.07)]">
-                <span className="text-4xl" aria-hidden="true">
-                  {a.emoji}
-                </span>
-                <h3 className="mt-3 font-semibold text-ink">{a.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted">{a.text}</p>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </section>
+      {steps.length > 0 && (
+        <section className="bg-surface py-16 sm:py-20" aria-labelledby="demarches">
+          <Container>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div id="demarches">
+                <SectionHeading title={c.stepsTitle} description={c.stepsText} />
+              </div>
+              <Link href={href("/tarifs", locale)} className="inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
+                {c.seeAll} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {steps.map((o) => {
+                const category = o.category ? getCategory(o.category) : undefined;
+                return (
+                  <li key={o.id}>
+                    <Link
+                      href={`${href("/rendez-vous", locale)}?offre=${o.id}`}
+                      className="group flex h-full items-center gap-4 rounded-card border border-line bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_8px_24px_rgba(22,32,58,0.07)]"
+                    >
+                      <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-accent-50 text-2xl" aria-hidden="true">
+                        {category?.emoji ?? "📌"}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-semibold leading-snug text-ink group-hover:text-brand-700">{o.name}</span>
+                        <span className="mt-0.5 block text-sm text-muted">{o.tagline}</span>
+                      </span>
+                      <span className="shrink-0 text-lg font-extrabold text-ink">{formatPrice(o, locale)}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </Container>
+        </section>
+      )}
 
-      <section className="bg-surface py-16 sm:py-20" aria-labelledby="comment">
+      <section className="py-16 sm:py-20" aria-labelledby="comment">
         <Container>
           <div id="comment">
             <SectionHeading eyebrow={c.howEyebrow} title={c.howTitle} align="center" />
           </div>
           <ol className="mt-12 grid gap-6 md:grid-cols-3">
-            {c.steps.map((step, i) => (
+            {c.how.map((step, i) => (
               <li key={step.title} className="relative rounded-card border border-line bg-white p-6">
                 <span className="absolute right-5 top-4 text-5xl font-extrabold text-brand-50" aria-hidden="true">
                   {i + 1}
@@ -223,16 +267,36 @@ export async function HomeView({ locale }: { locale: Locale }) {
             ))}
           </ol>
           <div className="mt-10 text-center">
-            <ButtonLink href={href("/plan-action", locale)} size="lg">
-              {c.tryFree} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <ButtonLink href={bookFree} size="lg">
+              {c.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </ButtonLink>
           </div>
         </Container>
       </section>
 
+      {featured.length > 0 && (
+        <section className="bg-surface py-16 sm:py-20" aria-labelledby="guides-gratuits">
+          <Container>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div id="guides-gratuits">
+                <SectionHeading title={c.guidesTitle} description={c.guidesText} />
+              </div>
+              <Link href={href("/guides", locale)} className="inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
+                {c.allGuides} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featured.map((g) => (
+                <GuideCard key={g.slug} guide={g} locale={locale} />
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
+
       <section className="py-16 sm:py-20">
         <Container>
-          <SectionHeading eyebrow={c.domainsEyebrow} title={c.domainsTitle} description={c.domainsText} />
+          <SectionHeading title={c.domainsTitle} />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {categories.map((raw) => {
               const category = localizeCategory(raw, locale);
@@ -242,7 +306,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
                   key={raw.id}
                   category={category}
                   href={href(domain ? `/services/${domain.slug}` : "/services", locale)}
-                  ctaLabel={locale === "en" ? "Discover" : "Découvrir"}
+                  ctaLabel={c.discover}
                 />
               );
             })}
@@ -250,40 +314,39 @@ export async function HomeView({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <section className="bg-brand-900 py-16 text-white sm:py-20">
+      <section className="bg-surface py-16 sm:py-20" aria-labelledby="faq-accueil">
         <Container>
-          <div className="max-w-2xl">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-accent-300">{c.whyEyebrow}</p>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{c.whyTitle}</h2>
-          </div>
-          <ul className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {c.reasons.map((r) => (
-              <li key={r.title} className="flex gap-4">
-                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-xl" aria-hidden="true">
-                  {r.emoji}
-                </span>
-                <div>
-                  <h3 className="font-semibold">{r.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-brand-200">{r.text}</p>
-                </div>
-              </li>
+          <h2 id="faq-accueil" className="text-center text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+            {c.faqTitle}
+          </h2>
+          <div className="mx-auto mt-10 max-w-3xl divide-y divide-line rounded-card border border-line bg-white">
+            {faq.map((f) => (
+              <details key={f.q} className="group p-5 sm:p-6">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink">
+                  <h3 className="text-base">{f.q}</h3>
+                  <span className="text-xl text-brand-700 transition-transform group-open:rotate-45" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 leading-relaxed text-muted">{f.a}</p>
+              </details>
             ))}
-          </ul>
-          <p className="mt-10 max-w-3xl text-sm text-brand-300">{dict.footer.disclaimer}</p>
+          </div>
         </Container>
       </section>
 
       <section className="py-16 sm:py-20">
         <Container>
-          <div className="rounded-[1.5rem] border border-line bg-gradient-to-br from-brand-50 to-accent-50 px-6 py-12 text-center sm:px-12">
+          <div className="rounded-[1.5rem] bg-brand-900 px-6 py-12 text-center text-white sm:px-12">
             <span className="text-4xl" aria-hidden="true">
-              🧭
+              📞
             </span>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{c.startTitle}</h2>
-            <p className="mx-auto mt-3 max-w-xl text-muted">{c.startText}</p>
-            <ButtonLink href={href("/plan-action", locale)} size="lg" className="mt-7">
-              {c.startCta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">{c.startTitle}</h2>
+            <p className="mx-auto mt-3 max-w-xl text-brand-200">{c.startText}</p>
+            <ButtonLink href={bookFree} size="lg" variant="secondary" className="mt-7">
+              {c.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </ButtonLink>
+            <p className="mx-auto mt-8 max-w-2xl text-xs text-brand-300">{dict.footer.disclaimer}</p>
           </div>
         </Container>
       </section>

@@ -5,7 +5,8 @@ import { z } from "zod";
 import { deliverWithoutDatabase, newReference, notifyStoredRequest, type DeliveryKind } from "@/integrations/delivery";
 import { PRIVACY_VERSION } from "@/config/privacy";
 import { siteConfig } from "@/config/site";
-import { getOffer } from "@/lib/data/content";
+import { getOffer, getOffers } from "@/lib/data/content";
+import { computeSelection } from "@/config/pricing";
 import { createPublicClient } from "@/lib/supabase/public";
 import type { Locale } from "@/i18n";
 import { appointmentSchemaFor, contactSchemaFor, type FormState } from "./schemas";
@@ -52,7 +53,7 @@ function formValues(formData: FormData): Record<string, string | string[]> {
   for (const key of new Set(formData.keys())) {
     if (key.startsWith("$ACTION") || key === "website" || key === "locale") continue;
     const all = formData.getAll(key).filter((v): v is string => typeof v === "string");
-    values[key] = all.length > 1 || key === "slots" ? all : (all[0] ?? "");
+    values[key] = all.length > 1 || key === "slots" || key === "selection" ? all : (all[0] ?? "");
   }
   return values;
 }
@@ -105,7 +106,10 @@ async function handle<S extends z.ZodType>(
 ): Promise<FormState> {
   const values = formValues(formData);
   const raw: Record<string, unknown> = { ...values, website: formData.get("website") ?? undefined };
-  if (kind === "rendez-vous") raw.slots = formData.getAll("slots");
+  if (kind === "rendez-vous") {
+    raw.slots = formData.getAll("slots");
+    raw.selection = formData.getAll("selection");
+  }
 
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
@@ -157,6 +161,29 @@ export async function submitAppointment(_prev: FormState, formData: FormData): P
     locale,
     formData,
     async (d) => {
+      if (d.offer === "selection") {
+        // Le total est recalculé ici : on ne fait jamais confiance au prix envoyé par le navigateur.
+        const offers = await getOffers();
+        const totals = computeSelection(offers, d.selection ?? []);
+        if (totals.count === 0) return { error: text[locale].offer, field: "offer" };
+        const names = offers.filter((o) => o.kind === "demarche" && d.selection?.includes(o.id)).map((o) => o.name);
+        return {
+          name: d.name,
+          email: d.email,
+          data: {
+            offer: "selection",
+            offerName: `Sélection de ${totals.count} démarche(s)`,
+            selection: names,
+            subtotal: totals.subtotal,
+            discountPercent: totals.discountPercent,
+            total: totals.total,
+            mode: d.mode,
+            slots: d.slots,
+            message: d.message ?? "",
+            language: locale,
+          },
+        };
+      }
       const offer = await getOffer(d.offer);
       if (!offer) return { error: text[locale].offer, field: "offer" };
       return {

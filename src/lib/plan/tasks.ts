@@ -371,3 +371,25 @@ export function getTask(id: string): PlanTask {
   if (!task) throw new Error(`Tâche inconnue : ${id}`);
   return task;
 }
+
+/**
+ * Démarche accompagnée (offre payante à l'unité) correspondant à chaque tâche du plan :
+ * le plan propose « être aidé pour cette démarche » avec le bon prix.
+ */
+export const taskOffers: Record<string, string> = {
+  "inst-permis": "d-permis",
+  "log-dossier": "d-dossier-location",
+  "log-garantie": "d-dossier-location",
+  "log-aides": "d-aide-logement",
+  "log-assurance": "d-emmenagement",
+  "fam-contrats": "d-emmenagement",
+  "bq-compte": "d-compte-bancaire",
+  "sa-affiliation": "d-assurance-maladie",
+  "sa-compte": "d-assurance-maladie",
+  "tr-documents": "d-emploi",
+  "tr-fiche-paie": "d-emploi",
+  "imp-espace": "d-impots",
+  "imp-documents": "d-impots",
+  "fam-ecole": "d-ecole",
+  "num-securite": "d-comptes-en-ligne",
+};

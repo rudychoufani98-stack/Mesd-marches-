@@ -45,7 +45,9 @@ async function FormWithOffer({ locale, searchParams }: { locale: Locale; searchP
   const sp = await searchParams;
   const offers = await getOffers(locale);
   const offer = typeof sp.offre === "string" ? offers.find((o) => o.id === sp.offre) : undefined;
-  return <AppointmentForm offers={offers} defaultOffer={offer?.id} locale={locale} />;
+  const fallback = offers.find((o) => o.kind === "decouverte")?.id;
+  const selectionIds = typeof sp.offres === "string" ? sp.offres.split(",").filter(Boolean).slice(0, 20) : [];
+  return <AppointmentForm offers={offers} defaultOffer={offer?.id ?? fallback} selectionIds={selectionIds} locale={locale} />;
 }
 
 export function AppointmentView({ locale, searchParams }: { locale: Locale; searchParams: SearchParams }) {

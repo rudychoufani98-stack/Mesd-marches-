@@ -3,7 +3,7 @@ import { categories } from "./categories";
 import { defaultGuides as guides } from "./guides";
 import { officialSources } from "./sources";
 import { serviceDomains } from "./services";
-import { taskLibrary } from "@/lib/plan/tasks";
+import { taskLibrary, taskOffers } from "@/lib/plan/tasks";
 import { defaultOffers as offers } from "@/config/pricing";
 
 const ALLOWED_HOSTS = [
@@ -93,8 +93,34 @@ describe("tâches du plan", () => {
 });
 
 describe("tarifs", () => {
-  it("ont des prix positifs et des identifiants uniques", () => {
+  it("ont des identifiants uniques et un seul appel gratuit", () => {
     expect(new Set(offers.map((o) => o.id)).size).toBe(offers.length);
-    offers.forEach((o) => expect(o.price).toBeGreaterThan(0));
+    offers.forEach((o) => expect(o.price === 0).toBe(o.kind === "decouverte"));
+    expect(offers.filter((o) => o.kind === "decouverte")).toHaveLength(1);
+  });
+  it("relient chaque démarche du plan à une offre existante", () => {
+    Object.values(taskOffers).forEach((id) => expect(offers.map((o) => o.id)).toContain(id));
+    Object.keys(taskOffers).forEach((id) => expect(taskLibrary.map((t) => t.id)).toContain(id));
+  });
+  it("rattachent chaque démarche à un domaine", () => {
+    offers.filter((o) => o.kind === "demarche").forEach((o) => expect(o.category, o.id).toBeTruthy());
+  });
+});
+
+describe("sélecteur de démarches", () => {
+  it("applique la remise selon le nombre de démarches", async () => {
+    const { computeSelection } = await import("@/config/pricing");
+    const steps = offers.filter((o) => o.kind === "demarche");
+    expect(computeSelection(offers, [steps[0].id]).discountPercent).toBe(0);
+    expect(computeSelection(offers, steps.slice(0, 2).map((o) => o.id)).discountPercent).toBe(10);
+    expect(computeSelection(offers, steps.slice(0, 3).map((o) => o.id)).discountPercent).toBe(15);
+    const five = computeSelection(offers, steps.slice(0, 5).map((o) => o.id));
+    expect(five.discountPercent).toBe(25);
+    expect(five.total).toBe(Math.floor(five.subtotal * 0.75));
+    expect(five.subtotal - five.discount).toBe(five.total);
+  });
+  it("ignore les offres qui ne sont pas des démarches", async () => {
+    const { computeSelection } = await import("@/config/pricing");
+    expect(computeSelection(offers, ["decouverte", "pack-arrivee", "abonnement"]).count).toBe(0);
   });
 });

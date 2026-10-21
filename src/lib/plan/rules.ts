@@ -1,7 +1,6 @@
 import { getCategory, type CategoryId } from "@/content/categories";
 import { localizeCategory, localizeTask } from "@/content/translations";
 import type { Locale } from "@/i18n";
-import type { OfferId } from "@/config/pricing";
 import { getTask, taskLibrary, type PlanTask } from "./tasks";
 import { getTimeframeWeeks, type Answers } from "./questions";
 
@@ -101,7 +100,7 @@ export type ActionPlan = {
   documents: string[];
   sourceIds: PlanTask["sourceIds"];
   horizonWeeks: number;
-  recommendedOffer: OfferId | null;
+  recommendedOffer: string | null;
   appliedRuleIds: string[];
 };
 
@@ -111,11 +110,12 @@ function suggestedWeek(phase: PlanTask["phase"], horizonWeeks: number): number {
   return horizonWeeks;
 }
 
-export function recommendOffer(a: Answers): OfferId | null {
+/** Offre suggérée à la fin du plan (identifiants des offres par défaut). */
+export function recommendOffer(a: Answers): string | null {
   if (a.support !== "accompagnement") return null;
-  if (isRecentArrival(a) || a.goal === "installation") return "installation";
-  if (a.categories.length >= 4 && a.timeframe !== "2-semaines") return "suivi";
-  return "bilan";
+  if (isRecentArrival(a) || a.goal === "installation") return "pack-arrivee";
+  if (a.categories.length >= 4 && a.timeframe !== "2-semaines") return "abonnement";
+  return "decouverte";
 }
 
 export function buildPlan(answers: Answers, locale: Locale = "fr"): ActionPlan {

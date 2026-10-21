@@ -111,6 +111,8 @@ export async function importDefaults(): Promise<AdminResult> {
 
 const offerSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]{2,40}$/),
+  kind: z.enum(["decouverte", "demarche", "pack", "abonnement"]),
+  category: z.union([z.literal(""), z.enum(categories.map((c) => c.id) as [CategoryId, ...CategoryId[]])]),
   sort: z.coerce.number().int().min(0).max(100),
   name: z.string().trim().min(2, "Nom trop court.").max(80),
   tagline: z.string().trim().max(160),
@@ -118,7 +120,7 @@ const offerSchema = z.object({
     .string()
     .trim()
     .transform((v) => Number(v.replace(/\s/g, "").replace(",", ".")))
-    .pipe(z.number({ error: "Prix invalide." }).positive("Le prix doit être positif.").max(9999, "Prix trop élevé.")),
+    .pipe(z.number({ error: "Prix invalide." }).min(0, "Le prix ne peut pas être négatif.").max(9999, "Prix trop élevé.")),
   billing: z.enum(["unique", "mensuel"]),
   duration: z.string().trim().max(120),
   includes: z.string().max(3000),
@@ -141,6 +143,8 @@ export async function saveOffer(_prev: AdminResult, formData: FormData): Promise
     offerToRow(
       {
         id: d.id,
+        kind: d.kind,
+        ...(d.category ? { category: d.category } : {}),
         name: d.name,
         tagline: d.tagline,
         price: Math.round(d.price * 100) / 100,

@@ -84,16 +84,16 @@ describe("recommendOffer", () => {
   it("ne recommande rien si la personne choisit les guides", () => {
     expect(recommendOffer(base)).toBeNull();
   });
-  it("recommande l'offre Installation pour une arrivée récente", () => {
-    expect(recommendOffer({ ...base, support: "accompagnement", timeInFrance: "pas-encore" })).toBe("installation");
+  it("recommande le Pack Arrivée pour une arrivée récente", () => {
+    expect(recommendOffer({ ...base, support: "accompagnement", timeInFrance: "pas-encore" })).toBe("pack-arrivee");
   });
-  it("recommande le Suivi pour de nombreux domaines", () => {
+  it("recommande l'abonnement pour de nombreux domaines", () => {
     expect(
       recommendOffer({ ...base, support: "accompagnement", categories: ["banque", "impots", "famille", "sante"] }),
-    ).toBe("suivi");
+    ).toBe("abonnement");
   });
-  it("recommande le Bilan par défaut", () => {
-    expect(recommendOffer({ ...base, support: "accompagnement" })).toBe("bilan");
+  it("recommande l'appel découverte par défaut", () => {
+    expect(recommendOffer({ ...base, support: "accompagnement" })).toBe("decouverte");
   });
 });
 

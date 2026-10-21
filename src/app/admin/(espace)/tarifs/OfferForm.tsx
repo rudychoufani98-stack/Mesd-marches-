@@ -4,6 +4,8 @@ import type { Offer } from "@/config/pricing";
 import { saveOffer } from "@/lib/admin/actions";
 import { adminInput, adminLabel, AdminForm, FieldError, ResultMessage, SubmitButton } from "@/components/admin/forms";
 
+const kindLabels = { decouverte: "Appel gratuit", demarche: "Démarche", pack: "Pack", abonnement: "Abonnement" } as const;
+
 export function OfferForm({ offer, sort, active }: { offer: Offer; sort: number; active: boolean }) {
   const id = (name: string) => `${offer.id}-${name}`;
   return (
@@ -12,8 +14,13 @@ export function OfferForm({ offer, sort, active }: { offer: Offer; sort: number;
         <>
           <input type="hidden" name="id" value={offer.id} />
           <input type="hidden" name="sort" value={sort} />
+          <input type="hidden" name="kind" value={offer.kind} />
+          <input type="hidden" name="category" value={offer.category ?? ""} />
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold text-ink">{offer.name}</h2>
+            <h2 className="text-lg font-semibold text-ink">
+              {offer.name}{" "}
+              <span className="ml-1 rounded-full bg-surface px-2 py-0.5 align-middle text-xs font-medium text-muted">{kindLabels[offer.kind]}</span>
+            </h2>
             <label className="inline-flex min-h-10 items-center gap-2 text-sm text-ink">
               <input type="checkbox" name="active" defaultChecked={active} className="h-4 w-4 accent-brand-700" />
               Offre visible sur le site
@@ -31,7 +38,7 @@ export function OfferForm({ offer, sort, active }: { offer: Offer; sort: number;
             <div className="grid grid-cols-[1fr_auto] gap-3">
               <div>
                 <label htmlFor={id("price")} className={adminLabel}>
-                  Prix TTC (€)
+                  Prix TTC (€, 0 = gratuit)
                 </label>
                 <input id={id("price")} name="price" inputMode="decimal" defaultValue={String(offer.price).replace(".", ",")} className={adminInput} required />
                 <FieldError result={r} name="price" />

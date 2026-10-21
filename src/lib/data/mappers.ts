@@ -1,4 +1,4 @@
-import type { Offer } from "@/config/pricing";
+import type { Offer, OfferKind } from "@/config/pricing";
 import { isCategoryId } from "@/content/categories";
 import type { ChecklistItem, GlossaryEntry, Guide, GuideStep } from "@/content/guides";
 import { officialSources, type SourceId } from "@/content/sources";
@@ -7,6 +7,9 @@ import { officialSources, type SourceId } from "@/content/sources";
 
 export type OfferRow = {
   id: string;
+  /** Absent tant que la migration « prix par démarche » n'est pas appliquée. */
+  kind?: OfferKind | null;
+  category?: string | null;
   name: string;
   tagline: string;
   price: number | string;
@@ -40,6 +43,8 @@ export type GuideRow = {
 export function offerFromRow(r: OfferRow): Offer {
   return {
     id: r.id,
+    kind: r.kind ?? "pack",
+    ...(r.category && isCategoryId(r.category) ? { category: r.category } : {}),
     name: r.name,
     tagline: r.tagline,
     price: Number(r.price),
@@ -56,6 +61,8 @@ export function offerFromRow(r: OfferRow): Offer {
 export function offerToRow(o: Offer, sort: number, active = true): OfferRow {
   return {
     id: o.id,
+    kind: o.kind,
+    category: o.category ?? null,
     name: o.name,
     tagline: o.tagline,
     price: o.price,

@@ -6,10 +6,12 @@ import { siteConfig } from "@/config/site";
 import { getCategory } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
 import { alternates, getDictionary, href, localeTags, type Locale } from "@/i18n";
-import { getDomainByCategory, getGuide } from "@/lib/data/content";
+import { getDomainByCategory, getGuide, getOffers, getVisibleGuides } from "@/lib/data/content";
+import { formatPrice } from "@/config/pricing";
 import { Checklist } from "@/components/guides/Checklist";
 import { formatDate, SourceList, VerificationStatus } from "@/components/guides/shared";
 import { Badge, ButtonLink, Container, Notice } from "@/components/ui/primitives";
+import { jsonLd } from "@/lib/seo";
 
 const copy = {
   fr: {
@@ -28,6 +30,9 @@ const copy = {
     helpText: "Un rendez-vous permet de faire le point sur vos priorités et de construire un plan adapté.",
     book: "Demander un rendez-vous",
     seeDomain: "Voir le domaine",
+    home: "Accueil",
+    related: "À lire aussi",
+    helpWith: "Être aidé·e pour cette démarche",
     translationNote: null as string | null,
   },
   en: {
@@ -46,6 +51,9 @@ const copy = {
     helpText: "An appointment helps you review your priorities and build a plan that suits you.",
     book: "Book an appointment",
     seeDomain: "See the topic",
+    home: "Home",
+    related: "Related guides",
+    helpWith: "Get help with this procedure",
     translationNote: "This guide is a translation of the French version, which is the reference.",
   },
 };
@@ -69,8 +77,24 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
   if (!guide) notFound();
   const category = localizeCategory(getCategory(guide.category)!, locale);
   const domain = await getDomainByCategory(guide.category, locale);
+  const [allGuides, offers] = await Promise.all([getVisibleGuides(locale), getOffers(locale)]);
+  const related = allGuides
+    .filter((g) => g.slug !== guide.slug && g.status !== "draft")
+    .sort((a, b) => Number(b.category === guide.category) - Number(a.category === guide.category))
+    .slice(0, 3);
+  const stepOffer = offers.find((o) => o.kind === "demarche" && o.category === guide.category);
+  const base = siteConfig.url.replace(/\/$/, "");
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: c.home, item: base + href("/", locale) },
+      { "@type": "ListItem", position: 2, name: c.guides, item: base + href("/guides", locale) },
+      { "@type": "ListItem", position: 3, name: guide.title, item: base + href(`/guides/${guide.slug}`, locale) },
+    ],
+  };
 
-  const jsonLd = {
+  const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: guide.title,
@@ -82,7 +106,8 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
 
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(structuredData)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbJsonLd)} />
       <div className="border-b border-line bg-surface">
         <Container className="py-10 sm:py-14">
           <nav aria-label={c.breadcrumbLabel} className="text-sm text-muted">
@@ -172,6 +197,29 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
               <SourceList ids={guide.sourceIds} locale={locale} />
             </div>
           </section>
+
+          {related.length > 0 && (
+            <section aria-labelledby="a-lire-aussi">
+              <h2 id="a-lire-aussi" className="text-2xl font-bold text-ink">
+                {c.related}
+              </h2>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+                {related.map((g) => (
+                  <li key={g.slug}>
+                    <Link
+                      href={href(`/guides/${g.slug}`, locale)}
+                      className="block h-full rounded-card border border-line bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_8px_24px_rgba(22,32,58,0.07)]"
+                    >
+                      <span className="text-2xl" aria-hidden="true">
+                        {getCategory(g.category)?.emoji}
+                      </span>
+                      <span className="mt-2 block font-semibold leading-snug text-ink">{g.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
@@ -180,7 +228,13 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
             <h2 className="font-semibold text-ink">{c.helpTitle}</h2>
             <p className="mt-2 text-sm text-muted">{c.helpText}</p>
             <div className="mt-4 flex flex-col gap-2">
-              <ButtonLink href={href("/rendez-vous", locale)}>{c.book}</ButtonLink>
+              {stepOffer ? (
+                <ButtonLink href={`${href("/rendez-vous", locale)}?offre=${stepOffer.id}`}>
+                  {c.helpWith} · {formatPrice(stepOffer, locale)}
+                </ButtonLink>
+              ) : (
+                <ButtonLink href={href("/rendez-vous", locale)}>{c.book}</ButtonLink>
+              )}
               {domain && (
                 <ButtonLink href={href(`/services/${domain.slug}`, locale)} variant="secondary">
                   {c.seeDomain} {category.shortTitle}

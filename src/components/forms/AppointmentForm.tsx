@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { CalendarCheck } from "lucide-react";
-import { formatPrice, type Offer } from "@/config/pricing";
+import Link from "next/link";
+import { computeSelection, formatEuros, formatPrice, type Offer, type OfferKind } from "@/config/pricing";
 import { submitAppointment } from "@/lib/forms/actions";
 import { appointmentModes, appointmentSlots, initialFormState } from "@/lib/forms/schemas";
 import { Button, ButtonLink } from "@/components/ui/primitives";
@@ -13,7 +14,11 @@ import { optionLabel } from "@/lib/forms/schemas";
 const copy = {
   fr: {
     plan: "Préparer mon plan d'action en attendant",
-    offer: "Offre souhaitée",
+    offer: "Ce qui vous intéresse",
+    chooseOffer: "Choisissez une démarche ou une formule",
+    yourSelection: "Votre sélection",
+    editSelection: "Modifier",
+    total: "Total",
     name: "Votre nom",
     email: "Votre adresse e-mail",
     mode: "Mode de rendez-vous",
@@ -27,7 +32,11 @@ const copy = {
   },
   en: {
     plan: "Prepare my action plan in the meantime",
-    offer: "Which offer?",
+    offer: "What are you interested in?",
+    chooseOffer: "Choose a procedure or an option",
+    yourSelection: "Your selection",
+    editSelection: "Edit",
+    total: "Total",
     name: "Your name",
     email: "Your email address",
     mode: "How would you like to meet?",
@@ -43,7 +52,26 @@ const copy = {
 
 const groupError = "mt-1.5 text-sm text-red-700";
 
-export function AppointmentForm({ offers, defaultOffer, locale = "fr" }: { offers: Offer[]; defaultOffer?: string; locale?: Locale }) {
+const offerGroups: { key: string; kinds: OfferKind[]; label: Record<Locale, string> }[] = [
+  { key: "free", kinds: ["decouverte"], label: { fr: "Pour commencer", en: "To start" } },
+  { key: "steps", kinds: ["demarche"], label: { fr: "À la démarche", en: "Per procedure" } },
+  { key: "bundles", kinds: ["pack", "abonnement"], label: { fr: "Pack et abonnement", en: "Bundle and subscription" } },
+];
+
+export function AppointmentForm({
+  offers,
+  defaultOffer,
+  selectionIds = [],
+  locale = "fr",
+}: {
+  offers: Offer[];
+  defaultOffer?: string;
+  /** Démarches choisies dans le sélecteur de la page Tarifs. */
+  selectionIds?: string[];
+  locale?: Locale;
+}) {
+  const selection = offers.filter((o) => o.kind === "demarche" && selectionIds.includes(o.id));
+  const totals = computeSelection(offers, selectionIds);
   const t = copy[locale];
   const [state, action, pending] = useActionState(submitAppointment, initialFormState);
 
@@ -68,31 +96,65 @@ export function AppointmentForm({ offers, defaultOffer, locale = "fr" }: { offer
       <Honeypot />
       <LocaleField locale={locale} />
 
-      <fieldset aria-describedby={e("offer") ? "offer-erreur" : undefined}>
-        <legend className="text-sm font-medium text-ink">{t.offer}</legend>
-        <div className="mt-2 grid gap-2">
-          {offers.map((o) => (
-            <label
-              key={o.id}
-              className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-line p-3 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50"
-            >
-              <span className="flex items-center gap-3">
-                <input type="radio" name="offer" value={o.id} defaultChecked={prevOffer === o.id} className="h-4 w-4 accent-brand-700" />
-                <span>
-                  <span className="block font-medium text-ink">{o.name}</span>
-                  <span className="block text-xs text-muted">{o.duration}</span>
-                </span>
-              </span>
-              <span className="text-sm font-semibold text-ink">{formatPrice(o, locale)}</span>
-            </label>
+      {selection.length > 0 ? (
+        <div className="rounded-card border border-brand-200 bg-brand-50/50 p-4">
+          <input type="hidden" name="offer" value="selection" />
+          {selection.map((o) => (
+            <input key={o.id} type="hidden" name="selection" value={o.id} />
           ))}
-        </div>
-        {e("offer") && (
-          <p id="offer-erreur" className={groupError}>
-            {e("offer")}
+          <p className="flex items-center justify-between gap-3 text-sm font-semibold text-ink">
+            <span>
+              <span aria-hidden="true">🛍️</span> {t.yourSelection}
+            </span>
+            <Link href={`${href("/tarifs", locale)}#a-la-demarche`} className="text-xs font-medium text-brand-700 underline">
+              {t.editSelection}
+            </Link>
           </p>
-        )}
-      </fieldset>
+          <ul className="mt-2 space-y-1 text-sm">
+            {selection.map((o) => (
+              <li key={o.id} className="flex justify-between gap-3">
+                <span className="text-ink">{o.name}</span>
+                <span className="shrink-0 text-muted">{formatPrice(o, locale)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 flex justify-between border-t border-brand-100 pt-2 text-sm font-bold text-ink">
+            <span>
+              {t.total}
+              {totals.discountPercent > 0 ? ` (−${totals.discountPercent} %)` : ""}
+            </span>
+            <span>{formatEuros(totals.total, locale)}</span>
+          </p>
+          {e("offer") && <p className={groupError}>{e("offer")}</p>}
+        </div>
+      ) : (
+        <Field id="offer" label={t.offer} error={e("offer")}>
+          <select
+            id="offer"
+            name="offer"
+            defaultValue={prevOffer ?? ""}
+            aria-invalid={e("offer") ? true : undefined}
+            aria-describedby={describedBy("offer", e("offer"))}
+            className={inputClasses}
+          >
+            <option value="" disabled>
+              {t.chooseOffer}
+            </option>
+            {offerGroups.map((g) => {
+              const list = offers.filter((o) => g.kinds.includes(o.kind));
+              return list.length ? (
+                <optgroup key={g.key} label={g.label[locale]}>
+                  {list.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.name} — {formatPrice(o, locale)}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null;
+            })}
+          </select>
+        </Field>
+      )}
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field id="name" label={t.name} error={e("name")}>

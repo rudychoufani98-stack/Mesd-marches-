@@ -9,6 +9,7 @@ import { getSources } from "@/content/sources";
 import { localizeCategory, localizeSource } from "@/content/translations";
 import { getDictionary, href, type Locale } from "@/i18n";
 import { buildPlan } from "@/lib/plan/rules";
+import { taskOffers } from "@/lib/plan/tasks";
 import type { Answers } from "@/lib/plan/questions";
 import { Badge, Button, ButtonLink, Notice } from "@/components/ui/primitives";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -38,6 +39,7 @@ const copy = {
     tool: "Outil",
     newTab: "(nouvel onglet)",
     why: "Pourquoi cette tâche ?",
+    getHelp: "Être aidé·e pour cette démarche",
     docsTitle: "Documents à préparer",
     docsText: "Liste indicative : les documents exacts dépendent de chaque organisme.",
     resources: "Ressources officielles",
@@ -76,6 +78,7 @@ const copy = {
     tool: "Tool",
     newTab: "(opens in a new tab)",
     why: "Why this task?",
+    getHelp: "Get help with this step",
     docsTitle: "Documents to prepare",
     docsText: "For guidance only: the exact documents depend on each organisation.",
     resources: "Official resources",
@@ -227,6 +230,18 @@ export function ActionPlanView({
                             </a>
                           ))}
                         </div>
+
+                        {(() => {
+                          const helpOffer = offers.find((o) => o.id === taskOffers[task.id]);
+                          return helpOffer ? (
+                            <Link
+                              href={`${href("/rendez-vous", locale)}?offre=${helpOffer.id}`}
+                              className="no-print mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-full bg-accent-50 px-3 text-sm font-semibold text-accent-700 hover:bg-accent-100"
+                            >
+                              <span aria-hidden="true">🙋</span> {t.getHelp} · {formatPrice(helpOffer, locale)}
+                            </Link>
+                          ) : null;
+                        })()}
 
                         <details className="mt-3 text-xs text-muted">
                           <summary className="inline-flex min-h-9 cursor-pointer select-none items-center hover:text-ink">{t.why}</summary>
