@@ -4,7 +4,7 @@ import type { Dictionary } from "./fr";
 export const en: Dictionary = {
   common: {
     skipToContent: "Skip to content",
-    primaryCta: "Organise my paperwork",
+    primaryCta: "📞 Free call",
     login: "Log in",
     openMenu: "Open menu",
     closeMenu: "Close menu",

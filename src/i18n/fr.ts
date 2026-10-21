@@ -2,7 +2,7 @@
 export const fr = {
   common: {
     skipToContent: "Aller au contenu",
-    primaryCta: "Organiser mes démarches",
+    primaryCta: "📞 Appel gratuit",
     login: "Connexion",
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",

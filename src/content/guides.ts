@@ -561,4 +561,99 @@ export const defaultGuides: Guide[] = [
     status: "draft",
     updatedAt: "2026-10-21",
   },
+  {
+    slug: "comprendre-titre-de-sejour",
+    title: "Titre de séjour : comment ça marche, simplement",
+    description:
+      "Visa long séjour, première carte, renouvellement : les grandes étapes expliquées simplement, et où faire la démarche officielle.",
+    category: "installation",
+    readingMinutes: 4,
+    intro:
+      "Le titre de séjour est le document qui vous autorise à vivre en France au-delà d'un court séjour. Ce guide explique le fonctionnement général, en quelques étapes. Il ne remplace ni l'information officielle ni un avocat : chaque situation (études, travail, famille…) a ses propres règles.",
+    steps: [
+      {
+        title: "Visa, titre de séjour : quelle différence ?",
+        body: "Le visa vous permet d'entrer en France. Le titre de séjour vous permet d'y rester. Certains visas de long séjour valent titre de séjour pendant leur première année, à condition d'être validés en ligne après votre arrivée.",
+      },
+      {
+        title: "Votre situation décide de tout",
+        body: "Études, travail, famille, talent… Le type de titre, les documents à fournir et la durée dépendent du motif de votre séjour. Repérez d'abord votre cas sur Service Public.",
+      },
+      {
+        title: "La démarche se fait (presque toujours) en ligne",
+        body: "La plupart des demandes passent par le site officiel ANEF (Administration numérique pour les étrangers en France). Vous y créez votre compte, déposez vos documents scannés et suivez votre dossier.",
+      },
+      {
+        title: "Anticipez le renouvellement",
+        body: "Un titre de séjour a une date de fin. Le renouvellement se demande à l'avance, dans les délais indiqués sur le site officiel : notez la date dans votre calendrier dès que vous recevez votre titre.",
+      },
+      {
+        title: "Gardez une preuve à chaque étape",
+        body: "Conservez les confirmations de dépôt et les attestations reçues : elles prouvent que votre demande est en cours. Méfiez-vous des sites qui font payer l'accès à la démarche : elle se fait sur le site officiel.",
+      },
+    ],
+    checklist: [
+      { id: "motif", label: "Je connais le motif de mon séjour (études, travail, famille…)" },
+      { id: "fiche", label: "J'ai lu la fiche Service Public qui correspond à mon cas" },
+      { id: "compte-anef", label: "J'ai créé mon compte sur le site officiel ANEF" },
+      { id: "scans", label: "Mes documents sont scannés de façon lisible" },
+      { id: "date-fin", label: "La date de fin de mon titre est notée dans mon calendrier" },
+    ],
+    glossary: [
+      { term: "ANEF", definition: "Administration numérique pour les étrangers en France : le site officiel des démarches de séjour." },
+      { term: "VLS-TS", definition: "Visa de long séjour valant titre de séjour, à valider en ligne après l'arrivée." },
+      { term: "Récépissé", definition: "Document qui atteste qu'une demande de titre de séjour est en cours d'examen." },
+    ],
+    sourceIds: ["sp-titre-sejour", "anef", "sp-etranger"],
+    lastVerified: null,
+    status: "published",
+    updatedAt: "2026-10-21",
+  },
+  {
+    slug: "comprendre-nationalite-francaise",
+    title: "Nationalité française : comment ça marche, simplement",
+    description:
+      "Naturalisation, mariage, naissance en France : les grandes voies pour devenir français·e, expliquées simplement.",
+    category: "installation",
+    readingMinutes: 4,
+    intro:
+      "Il existe plusieurs façons de devenir français·e. Ce guide présente les grandes voies et le déroulement général. Les conditions exactes sont fixées par la loi et évoluent : vérifiez toujours votre cas sur Service Public.",
+    steps: [
+      {
+        title: "Les grandes voies",
+        body: "Les plus courantes : la naturalisation (après plusieurs années de résidence en France), la déclaration après un mariage avec un·e Français·e, et l'acquisition liée à une naissance ou une enfance passée en France.",
+      },
+      {
+        title: "La naturalisation, en bref",
+        body: "Elle est accordée par décret. Il faut notamment résider en France depuis un certain nombre d'années, être bien intégré·e, connaître la langue française au niveau demandé et les valeurs de la République. Ce n'est pas un droit automatique : l'administration décide.",
+      },
+      {
+        title: "Préparer son dossier",
+        body: "Actes d'état civil (souvent traduits), justificatifs de résidence, de ressources, diplôme ou attestation de niveau de français… La liste dépend de votre situation : suivez celle de la fiche officielle.",
+      },
+      {
+        title: "Déposer la demande",
+        body: "La demande se fait en ligne sur le site officiel ANEF dans la plupart des cas. Un entretien d'assimilation est ensuite organisé : il porte sur votre parcours, la langue et la vie en France.",
+      },
+      {
+        title: "Être patient·e",
+        body: "L'instruction prend souvent de longs mois. Gardez vos justificatifs à jour et signalez tout changement de situation (adresse, emploi, famille).",
+      },
+    ],
+    checklist: [
+      { id: "voie", label: "J'ai identifié la voie qui correspond à ma situation" },
+      { id: "conditions", label: "J'ai vérifié les conditions sur Service Public" },
+      { id: "etat-civil", label: "Mes actes d'état civil sont rassemblés (et traduits si besoin)" },
+      { id: "francais", label: "Je sais quel justificatif de niveau de français fournir" },
+      { id: "entretien", label: "Je me prépare à l'entretien (parcours, langue, vie en France)" },
+    ],
+    glossary: [
+      { term: "Naturalisation par décret", definition: "Décision de l'État qui accorde la nationalité française à une personne étrangère qui la demande." },
+      { term: "Entretien d'assimilation", definition: "Rendez-vous en préfecture pour vérifier l'intégration du demandeur." },
+    ],
+    sourceIds: ["sp-nationalite", "sp-naturalisation", "anef"],
+    lastVerified: null,
+    status: "published",
+    updatedAt: "2026-10-21",
+  },
 ];

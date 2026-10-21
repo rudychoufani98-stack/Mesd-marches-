@@ -43,4 +43,7 @@ export const sourcesEn: Partial<Record<SourceId, SourceText>> = {
   "energie-info": { label: "Information website of the national energy ombudsman" },
   signalconso: { label: "Report a problem with a business" },
   urssaf: { label: "Social contributions" },
+  "sp-titre-sejour": { label: "Residence permits and travel documents for foreign nationals in France" },
+  "sp-nationalite": { label: "How to become French: naturalisation, marriage, birth and residence in France" },
+  "sp-naturalisation": { label: "Conditions and procedure for French naturalisation" },
 };

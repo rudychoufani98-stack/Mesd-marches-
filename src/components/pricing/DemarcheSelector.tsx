@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Check, Plus, ShoppingBag } from "lucide-react";
 import { bundleDiscounts, computeSelection, formatEuros, formatPrice, type Offer } from "@/config/pricing";
 import { getCategory } from "@/content/categories";
+import { getDemarcheGoal } from "@/content/demarcheGoals";
 import { href, type Locale } from "@/i18n";
 
 const copy = {
@@ -69,6 +70,7 @@ export function DemarcheSelector({ offers, pack, locale }: { offers: Offer[]; pa
           {offers.map((o) => {
             const isOn = selected.includes(o.id);
             const category = o.category ? getCategory(o.category) : undefined;
+            const goal = getDemarcheGoal(o.id, locale);
             return (
               <li key={o.id}>
                 <button
@@ -83,8 +85,8 @@ export function DemarcheSelector({ offers, pack, locale }: { offers: Offer[]; pa
                     {category?.emoji ?? "📌"}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block font-semibold leading-snug text-ink">{o.name}</span>
-                    <span className="mt-0.5 block text-sm text-muted">{o.tagline}</span>
+                    <span className="block font-semibold leading-snug text-ink">{goal?.goal ?? o.name}</span>
+                    <span className="mt-0.5 block text-sm text-muted">{goal?.why ?? o.tagline}</span>
                     <span className="mt-3 flex items-center justify-between gap-2">
                       <span className="text-lg font-extrabold text-ink">{formatPrice(o, locale)}</span>
                       <span

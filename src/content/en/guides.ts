@@ -495,4 +495,85 @@ export const guidesEn: Record<string, GuideText> = {
     },
     glossary: [],
   },
+  "comprendre-titre-de-sejour": {
+    title: "Residence permits in France: how it works, simply",
+    description:
+      "Long-stay visa, first card, renewal: the main steps explained simply, and where to apply officially.",
+    intro:
+      "A residence permit (titre de séjour) is the document that allows you to live in France beyond a short stay. This guide explains how it generally works, in a few steps. It does not replace official information or a lawyer: each situation (studies, work, family…) has its own rules.",
+    steps: [
+      {
+        title: "Visa vs residence permit: what's the difference?",
+        body: "A visa lets you enter France. A residence permit lets you stay. Some long-stay visas count as a residence permit for their first year, provided you validate them online after you arrive.",
+      },
+      {
+        title: "Your situation decides everything",
+        body: "Studies, work, family, talent… The type of permit, the documents required and its length depend on why you are staying. Start by finding your case on Service Public.",
+      },
+      {
+        title: "The application is (almost always) online",
+        body: "Most applications go through the official ANEF website (Administration numérique pour les étrangers en France). You create an account, upload scanned documents and track your file there.",
+      },
+      {
+        title: "Plan your renewal ahead",
+        body: "A residence permit has an end date. Renewal must be requested in advance, within the time frame shown on the official website: put the date in your calendar as soon as you receive your permit.",
+      },
+      {
+        title: "Keep proof at every step",
+        body: "Keep the submission confirmations and certificates you receive: they prove your application is in progress. Beware of websites charging for access to the procedure: it is done on the official website.",
+      },
+    ],
+    checklist: {
+      motif: "I know the reason for my stay (studies, work, family…)",
+      fiche: "I have read the Service Public page that matches my case",
+      "compte-anef": "I have created my account on the official ANEF website",
+      scans: "My documents are clearly scanned",
+      "date-fin": "My permit's end date is in my calendar",
+    },
+    glossary: [
+      { term: "ANEF", definition: "Administration numérique pour les étrangers en France: the official website for residence procedures." },
+      { term: "VLS-TS", definition: "Long-stay visa that counts as a residence permit, to be validated online after arrival." },
+      { term: "Récépissé", definition: "A document certifying that a residence permit application is being processed." },
+    ],
+  },
+  "comprendre-nationalite-francaise": {
+    title: "French nationality: how it works, simply",
+    description:
+      "Naturalisation, marriage, birth in France: the main routes to becoming French, explained simply.",
+    intro:
+      "There are several ways to become French. This guide presents the main routes and how the process generally works. The exact conditions are set by law and change over time: always check your case on Service Public.",
+    steps: [
+      {
+        title: "The main routes",
+        body: "The most common are: naturalisation (after several years living in France), a declaration after marrying a French citizen, and acquisition linked to being born or growing up in France.",
+      },
+      {
+        title: "Naturalisation in a nutshell",
+        body: "It is granted by decree. You must notably have lived in France for a certain number of years, be well integrated, speak French at the required level and know the values of the Republic. It is not an automatic right: the administration decides.",
+      },
+      {
+        title: "Preparing your file",
+        body: "Civil status records (often translated), proof of residence and income, a diploma or French language certificate… The list depends on your situation: follow the one on the official page.",
+      },
+      {
+        title: "Submitting the application",
+        body: "In most cases, the application is made online on the official ANEF website. An assimilation interview is then arranged: it covers your background, the language and life in France.",
+      },
+      {
+        title: "Be patient",
+        body: "Processing often takes many months. Keep your documents up to date and report any change in your situation (address, job, family).",
+      },
+    ],
+    checklist: {
+      voie: "I have identified the route that matches my situation",
+      conditions: "I have checked the conditions on Service Public",
+      "etat-civil": "My civil status records are gathered (and translated if needed)",
+      francais: "I know which French language certificate to provide",
+      entretien: "I am preparing for the interview (background, language, life in France)",
+    },
+    glossary: [
+      { term: "Naturalisation by decree (naturalisation par décret)", definition: "A State decision granting French nationality to a foreign national who applies for it." },
+      { term: "Assimilation interview (entretien d'assimilation)", definition: "An appointment at the prefecture to check the applicant's integration." },
+    ],
+  },
 };

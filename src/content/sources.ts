@@ -200,6 +200,27 @@ export const officialSources = {
     url: "https://www.franceconnect.gouv.fr/",
     linkCheckedOn: CHECKED,
   },
+  "sp-titre-sejour": {
+    id: "sp-titre-sejour",
+    name: "Service Public — Titres de séjour",
+    label: "Titres, cartes de séjour et documents de circulation pour étranger en France",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N110",
+    linkCheckedOn: CHECKED,
+  },
+  "sp-nationalite": {
+    id: "sp-nationalite",
+    name: "Service Public — Nationalité française",
+    label: "Comment devenir français : naturalisation, mariage, naissance et résidence en France",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N111",
+    linkCheckedOn: CHECKED,
+  },
+  "sp-naturalisation": {
+    id: "sp-naturalisation",
+    name: "Service Public — Naturalisation par décret",
+    label: "Conditions et démarche de la naturalisation française",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F2213",
+    linkCheckedOn: CHECKED,
+  },
   anef: {
     id: "anef",
     name: "Administration numérique pour les étrangers en France",

@@ -13,6 +13,18 @@ import { formatDate, SourceList, VerificationStatus } from "@/components/guides/
 import { Badge, ButtonLink, Container, Notice } from "@/components/ui/primitives";
 import { jsonLd } from "@/lib/seo";
 
+/** Démarche payante correspondant à chaque guide (les autres guides renvoient vers l'appel gratuit). */
+const GUIDE_OFFERS: Record<string, string> = {
+  "permis-de-conduire-etranger": "d-permis",
+  "preparer-dossier-locatif": "d-dossier-location",
+  "comprendre-ouverture-compte-bancaire": "d-compte-bancaire",
+  "s-orienter-protection-sociale": "d-assurance-maladie",
+  "preparer-sa-declaration-de-revenus": "d-impots",
+  "comprendre-sa-fiche-de-paie": "d-emploi",
+  "checklist-demenagement": "d-emmenagement",
+  "organiser-ses-documents-numeriques": "d-comptes-en-ligne",
+};
+
 const copy = {
   fr: {
     breadcrumbLabel: "Fil d'Ariane",
@@ -28,7 +40,8 @@ const copy = {
     sourcesText: "Consultez ces sites pour obtenir l'information à jour et adaptée à votre situation.",
     helpTitle: "Besoin d'un coup de main ?",
     helpText: "Un rendez-vous permet de faire le point sur vos priorités et de construire un plan adapté.",
-    book: "Demander un rendez-vous",
+    book: "Poser ma question (appel gratuit)",
+    checklist: "Ma checklist",
     seeDomain: "Voir le domaine",
     home: "Accueil",
     related: "À lire aussi",
@@ -49,7 +62,8 @@ const copy = {
     sourcesText: "These official websites are in French. Check them for up-to-date information that fits your situation.",
     helpTitle: "Need a hand?",
     helpText: "An appointment helps you review your priorities and build a plan that suits you.",
-    book: "Book an appointment",
+    book: "Ask my question (free call)",
+    checklist: "My checklist",
     seeDomain: "See the topic",
     home: "Home",
     related: "Related guides",
@@ -82,7 +96,7 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
     .filter((g) => g.slug !== guide.slug && g.status !== "draft")
     .sort((a, b) => Number(b.category === guide.category) - Number(a.category === guide.category))
     .slice(0, 3);
-  const stepOffer = offers.find((o) => o.kind === "demarche" && o.category === guide.category);
+  const stepOffer = offers.find((o) => o.kind === "demarche" && o.id === GUIDE_OFFERS[guide.slug]);
   const base = siteConfig.url.replace(/\/$/, "");
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -223,7 +237,6 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-          <Checklist storageKey={`guide:${guide.slug}`} items={guide.checklist} locale={locale} />
           <div className="rounded-card border border-line bg-surface p-5">
             <h2 className="font-semibold text-ink">{c.helpTitle}</h2>
             <p className="mt-2 text-sm text-muted">{c.helpText}</p>
@@ -233,7 +246,7 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
                   {c.helpWith} · {formatPrice(stepOffer, locale)}
                 </ButtonLink>
               ) : (
-                <ButtonLink href={href("/rendez-vous", locale)}>{c.book}</ButtonLink>
+                <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`}>{c.book}</ButtonLink>
               )}
               {domain && (
                 <ButtonLink href={href(`/services/${domain.slug}`, locale)} variant="secondary">
@@ -242,6 +255,19 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
               )}
             </div>
           </div>
+          <details className="group rounded-card border border-line bg-white">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 font-semibold text-ink">
+              <span>
+                <span aria-hidden="true">✅</span> {c.checklist} ({guide.checklist.length})
+              </span>
+              <span className="text-xl text-brand-700 transition-transform group-open:rotate-45" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <div className="px-2 pb-2">
+              <Checklist storageKey={`guide:${guide.slug}`} items={guide.checklist} locale={locale} />
+            </div>
+          </details>
         </aside>
       </Container>
     </article>

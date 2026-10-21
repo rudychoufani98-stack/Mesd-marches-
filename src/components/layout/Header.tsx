@@ -80,7 +80,7 @@ export function Header() {
             <Link href={href("/connexion", locale)} className="rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-surface hover:text-ink">
               {t.common.login}
             </Link>
-            <ButtonLink href={href("/plan-action", locale)}>{t.common.primaryCta}</ButtonLink>
+            <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`} className="whitespace-nowrap">{t.common.primaryCta}</ButtonLink>
           </div>
           <LanguageSwitch pathname={pathname} />
           <button
@@ -116,7 +116,7 @@ export function Header() {
               </Link>
             </li>
             <li className="pt-2">
-              <ButtonLink href={href("/plan-action", locale)} size="lg" className="w-full">
+              <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`} size="lg" className="w-full">
                 {t.common.primaryCta}
               </ButtonLink>
             </li>
