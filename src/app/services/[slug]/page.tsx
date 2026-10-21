@@ -37,7 +37,7 @@ export default async function ServiceDomainPage({ params }: PageProps<"/services
       <div className="border-b border-line bg-surface">
         <Container className="py-12 sm:py-16">
           <nav aria-label="Fil d'Ariane" className="text-sm text-muted">
-            <Link href="/services" className="hover:text-brand-700">
+            <Link href="/services" className="inline-block py-2 hover:text-brand-700">
               Nos services
             </Link>{" "}
             / <span className="text-ink">{category.title}</span>

@@ -43,7 +43,7 @@ function LineEditor({ title, lines, onChange, addLabel }: { title: string; lines
               value={line.label}
               maxLength={60}
               onChange={(e) => onChange(lines.map((l) => (l.id === line.id ? { ...l, label: e.target.value } : l)))}
-              className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2 text-sm focus:border-brand-400 focus:outline-none"
+              className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2 text-base focus:border-brand-400 focus:outline-none sm:text-sm"
             />
             <label className="sr-only" htmlFor={`${baseId}-a-${line.id}`}>
               Montant mensuel pour {line.label || `la ligne ${i + 1}`}, en euros
@@ -55,7 +55,7 @@ function LineEditor({ title, lines, onChange, addLabel }: { title: string; lines
                 placeholder="0"
                 value={line.amount}
                 onChange={(e) => onChange(lines.map((l) => (l.id === line.id ? { ...l, amount: e.target.value.replace(/[^\d.,\s]/g, "") } : l)))}
-                className="w-full rounded-lg border border-line py-2 pl-3 pr-7 text-right text-sm focus:border-brand-400 focus:outline-none"
+                className="w-full rounded-lg border border-line py-2 pl-3 pr-7 text-right text-base focus:border-brand-400 focus:outline-none sm:text-sm"
               />
               <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted" aria-hidden="true">
                 €

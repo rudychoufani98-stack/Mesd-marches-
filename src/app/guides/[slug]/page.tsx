@@ -50,7 +50,7 @@ export default async function GuidePage({ params }: PageProps<"/guides/[slug]">)
       <div className="border-b border-line bg-surface">
         <Container className="py-10 sm:py-14">
           <nav aria-label="Fil d'Ariane" className="text-sm text-muted">
-            <Link href="/guides" className="hover:text-brand-700">
+            <Link href="/guides" className="inline-block py-2 hover:text-brand-700">
               Guides pratiques
             </Link>{" "}
             / <span className="text-ink">{category.shortTitle}</span>

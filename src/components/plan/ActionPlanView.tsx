@@ -97,7 +97,7 @@ export function ActionPlanView({
                       />
                       <label
                         htmlFor={`tache-${task.id}`}
-                        className={`mt-0.5 inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-brand-400 peer-focus-visible:ring-offset-2 ${
+                        className={`inline-flex h-8 w-8 shrink-0 cursor-pointer sm:mt-0.5 sm:h-6 sm:w-6 items-center justify-center rounded-md border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-brand-400 peer-focus-visible:ring-offset-2 ${
                           isDone ? "border-accent-500 bg-accent-500 text-white" : "border-brand-200 bg-white hover:border-brand-400"
                         }`}
                       >
@@ -130,19 +130,19 @@ export function ActionPlanView({
                           </p>
                         ) : null}
 
-                        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-0 text-sm">
                           {task.guideSlug && (
-                            <Link href={`/guides/${task.guideSlug}`} className="inline-flex items-center gap-1 font-medium text-brand-700 hover:underline">
+                            <Link href={`/guides/${task.guideSlug}`} className="inline-flex min-h-9 items-center gap-1 font-medium text-brand-700 hover:underline">
                               <BookOpen className="h-4 w-4" aria-hidden="true" /> Guide pratique
                             </Link>
                           )}
                           {task.toolHref && (
-                            <Link href={task.toolHref} className="inline-flex items-center gap-1 font-medium text-brand-700 hover:underline">
+                            <Link href={task.toolHref} className="inline-flex min-h-9 items-center gap-1 font-medium text-brand-700 hover:underline">
                               <Wrench className="h-4 w-4" aria-hidden="true" /> Outil
                             </Link>
                           )}
                           {getSources(task.sourceIds).map((s) => (
-                            <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-700 hover:underline">
+                            <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center font-medium text-brand-700 hover:underline">
                               {s.name}
                               <span className="sr-only"> (nouvel onglet)</span>
                             </a>
@@ -150,7 +150,7 @@ export function ActionPlanView({
                         </div>
 
                         <details className="mt-3 text-xs text-muted">
-                          <summary className="cursor-pointer select-none hover:text-ink">Pourquoi cette tâche ?</summary>
+                          <summary className="inline-flex min-h-9 cursor-pointer select-none items-center hover:text-ink">Pourquoi cette tâche ?</summary>
                           <ul className="mt-1.5 list-inside list-disc space-y-0.5">
                             {task.reasons.map((r) => (
                               <li key={r}>{r}</li>
@@ -189,7 +189,7 @@ export function ActionPlanView({
         <ul className="mt-4 grid gap-2 sm:grid-cols-2">
           {getSources(plan.sourceIds).map((s) => (
             <li key={s.id}>
-              <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-brand-700 hover:underline">
+              <a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center text-sm font-medium text-brand-700 hover:underline">
                 {s.name}
               </a>
               <span className="block text-xs text-muted">{s.label}</span>
