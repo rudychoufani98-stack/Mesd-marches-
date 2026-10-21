@@ -82,7 +82,7 @@ export function PrivacyView({ locale }: { locale: Locale }) {
             <h2>Destinataires et sous-traitants</h2>
             <p>
               Vos données sont destinées uniquement à l&apos;équipe MesDémarches, seule à avoir accès à l&apos;espace de gestion.
-              Prestataires techniques : hébergement du site (Vercel), base de données (Supabase){" "}
+              Prestataires techniques : hébergement du site (Vercel), base de données (Supabase), paiement en ligne (Stripe, qui traite directement vos données de carte) et prise de rendez-vous (Calendly, après un paiement){" "}
               <Placeholder>préciser la région d&apos;hébergement des données, l&apos;outil de notification éventuel et les garanties en cas de transfert hors UE</Placeholder>.
               Les notifications internes de nouvelle demande ne contiennent aucune donnée personnelle.
               Aucune donnée n&apos;est vendue ni utilisée à des fins publicitaires.
@@ -184,7 +184,7 @@ export function PrivacyView({ locale }: { locale: Locale }) {
             <h2>Recipients and processors</h2>
             <p>
               Your data is intended solely for the MesDémarches team, who alone have access to the management area. Technical
-              providers: website hosting (Vercel), database (Supabase){" "}
+              providers: website hosting (Vercel), database (Supabase), online payment (Stripe, which processes your card details directly) and appointment booking (Calendly, after a payment){" "}
               <Placeholder>specify the data hosting region, any notification tool used and the safeguards in the event of transfers outside the EU</Placeholder>.
               Internal notifications of new requests contain no personal data. No data is sold or used for advertising purposes.
             </p>

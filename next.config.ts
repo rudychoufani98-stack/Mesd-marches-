@@ -14,7 +14,8 @@ const contentSecurityPolicy = [
   "img-src 'self' blob: data:",
   "font-src 'self'",
   "connect-src 'self'",
-  "frame-src 'none'",
+  // Agenda Calendly intégré sur la page de confirmation de paiement.
+  "frame-src https://calendly.com https://*.calendly.com",
   "object-src 'none'",
   "base-uri 'self'",
   // Paiement : le formulaire « Payer » redirige vers la page de paiement hébergée par Stripe.

@@ -10,6 +10,7 @@ import { buildCart, parseOfferIds } from "@/lib/payments/cart";
 import { getStripe, paymentsEnabled } from "@/lib/payments/stripe";
 import { Button, ButtonLink, Container } from "@/components/ui/primitives";
 import { PageSkeleton } from "@/components/ui/PageSkeleton";
+import { CalendlyEmbed, calendlyUrl } from "@/components/booking/CalendlyEmbed";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -24,6 +25,9 @@ const copy = {
     invalid: "Ce lien de paiement n'est plus valable. Contactez votre conseiller pour en recevoir un nouveau.",
     thanksTitle: "Merci, votre paiement est confirmé",
     thanksText: "Votre conseiller vous contacte sous 48 h ouvrées pour démarrer. Votre reçu et votre facture vous sont envoyés par e-mail.",
+    calendarTitle: "Paiement confirmé : choisissez votre créneau",
+    calendarText: "Dernière étape : réservez dès maintenant votre rendez-vous avec votre conseiller. Votre reçu et votre facture vous sont envoyés par e-mail.",
+    calendarLabel: "Agenda de réservation de votre rendez-vous",
     amount: "Montant",
     email: "Reçu envoyé à",
     book: "Choisir mon créneau d'appel",
@@ -43,6 +47,9 @@ const copy = {
     invalid: "This payment link is no longer valid. Contact your advisor to receive a new one.",
     thanksTitle: "Thank you, your payment is confirmed",
     thanksText: "Your advisor will contact you within 2 working days to get started. Your receipt and invoice are sent by email.",
+    calendarTitle: "Payment confirmed: choose your time slot",
+    calendarText: "Last step: book your appointment with your advisor now. Your receipt and invoice are sent by email.",
+    calendarLabel: "Booking calendar for your appointment",
     amount: "Amount",
     email: "Receipt sent to",
     book: "Choose my call slot",
@@ -156,6 +163,41 @@ async function ThankYou({ searchParams, locale }: { searchParams: SearchParams; 
   }
 
   const portal = process.env.NEXT_PUBLIC_STRIPE_PORTAL_URL;
+
+  // Agenda Calendly configuré : le client réserve directement son créneau.
+  if (calendlyUrl()) {
+    return (
+      <div className="mx-auto max-w-4xl">
+        <div className="text-center">
+          <CheckCircle2 className="mx-auto h-12 w-12 text-accent-500" aria-hidden="true" />
+          <h1 className="mt-4 font-display text-3xl font-medium text-ink sm:text-4xl">{t.calendarTitle}</h1>
+          <p className="mx-auto mt-3 max-w-xl text-muted">{t.calendarText}</p>
+          {session.amount_total !== null && (
+            <p className="mt-2 text-sm text-muted">
+              {t.amount} : <span className="font-semibold text-ink">{formatEuros(session.amount_total / 100, locale)}</span>
+              {session.customer_details?.email ? ` · ${session.customer_details.email}` : ""}
+            </p>
+          )}
+        </div>
+        <div className="mt-8">
+          <CalendlyEmbed
+            title={t.calendarLabel}
+            name={session.customer_details?.name}
+            email={session.customer_details?.email}
+            reference={session.client_reference_id ?? session.id.slice(-12)}
+          />
+        </div>
+        {portal && (
+          <p className="mt-6 text-center">
+            <a href={portal} className="text-sm font-medium text-brand-700 underline">
+              {t.invoices}
+            </a>
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className={`${card} text-center`}>
       <CheckCircle2 className="mx-auto h-12 w-12 text-accent-500" aria-hidden="true" />
