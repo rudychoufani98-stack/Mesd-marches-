@@ -390,6 +390,5 @@ export const taskOffers: Record<string, string> = {
   "tr-fiche-paie": "d-emploi",
   "imp-espace": "d-impots",
   "imp-documents": "d-impots",
-  "fam-ecole": "d-ecole",
   "num-securite": "d-comptes-en-ligne",
 };

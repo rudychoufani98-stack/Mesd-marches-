@@ -39,10 +39,6 @@ const goals: Record<string, Record<Locale, Goal>> = {
     fr: { goal: "Déclarer vos revenus sans erreur", why: "Un oubli peut entraîner des pénalités, et l'avis d'impôt est demandé pour beaucoup d'aides." },
     en: { goal: "File your tax return correctly", why: "Mistakes can mean penalties, and your tax notice is needed for many benefits." },
   },
-  "d-ecole": {
-    fr: { goal: "Inscrire vos enfants à l'école", why: "Les inscriptions suivent un calendrier : s'y prendre tôt évite les mauvaises surprises." },
-    en: { goal: "Enrol your children at school", why: "Enrolment follows a calendar: starting early avoids bad surprises." },
-  },
   "d-comptes-en-ligne": {
     fr: { goal: "Avoir tous vos accès en ligne, en sécurité", why: "Presque tout se fait en ligne en France, et les faux sites sont nombreux." },
     en: { goal: "Get all your online accounts, safely", why: "Almost everything is online in France, and fake websites are everywhere." },

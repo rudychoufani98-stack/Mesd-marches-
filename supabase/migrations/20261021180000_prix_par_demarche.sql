@@ -13,4 +13,4 @@ alter table public.offers add constraint offers_kind_check check (kind in ('deco
 alter table public.offers add column if not exists category text;
 
 -- 3. Retirer les anciennes offres du site (elles restent en base, masquées)
-update public.offers set active = false where id in ('bilan', 'installation', 'suivi');
+update public.offers set active = false where id in ('bilan', 'installation', 'suivi', 'd-ecole');

@@ -21,6 +21,8 @@ const copy = {
     total: "Total",
     name: "Votre nom",
     email: "Votre adresse e-mail",
+    phone: "Votre téléphone",
+    optional: "facultatif",
     mode: "Mode de rendez-vous",
     slots: "Vos disponibilités (en semaine)",
     message: "Ce que vous souhaitez aborder",
@@ -39,6 +41,8 @@ const copy = {
     total: "Total",
     name: "Your name",
     email: "Your email address",
+    phone: "Your phone number",
+    optional: "optional",
     mode: "How would you like to meet?",
     slots: "Your availability (weekdays)",
     message: "What you would like to discuss",
@@ -180,6 +184,19 @@ export function AppointmentForm({
             defaultValue={previous(state, "email")}
             aria-invalid={e("email") ? true : undefined}
             aria-describedby={describedBy("email", e("email"))}
+            className={inputClasses}
+          />
+        </Field>
+        <Field id="phone" label={t.phone} error={e("phone")} optional={t.optional}>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            maxLength={24}
+            defaultValue={previous(state, "phone")}
+            aria-invalid={e("phone") ? true : undefined}
+            aria-describedby={describedBy("phone", e("phone"))}
             className={inputClasses}
           />
         </Field>

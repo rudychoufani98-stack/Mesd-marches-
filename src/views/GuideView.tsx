@@ -5,12 +5,12 @@ import { Clock } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { getCategory } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
-import { alternates, getDictionary, href, localeTags, type Locale } from "@/i18n";
+import { alternates, href, localeTags, type Locale } from "@/i18n";
 import { getDomainByCategory, getGuide, getOffers, getVisibleGuides } from "@/lib/data/content";
 import { formatPrice } from "@/config/pricing";
 import { Checklist } from "@/components/guides/Checklist";
 import { formatDate, SourceList, VerificationStatus } from "@/components/guides/shared";
-import { Badge, ButtonLink, Container, Notice } from "@/components/ui/primitives";
+import { Badge, ButtonLink, Container } from "@/components/ui/primitives";
 import { jsonLd } from "@/lib/seo";
 
 /** Démarche payante correspondant à chaque guide (les autres guides renvoient vers l'appel gratuit). */
@@ -86,7 +86,6 @@ export async function guideMetadata(slug: string, locale: Locale): Promise<Metad
 
 export async function GuideView({ slug, locale }: { slug: string; locale: Locale }) {
   const c = copy[locale];
-  const dict = getDictionary(locale);
   const guide = await getGuide(slug, locale);
   if (!guide) notFound();
   const category = localizeCategory(getCategory(guide.category)!, locale);
@@ -148,7 +147,7 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
             <span>
               {c.updated} {formatDate(guide.updatedAt, locale)}
             </span>
-            <VerificationStatus lastVerified={guide.lastVerified} locale={locale} />
+            {guide.lastVerified && <VerificationStatus lastVerified={guide.lastVerified} locale={locale} />}
           </div>
           {c.translationNote && (
             <p className="mt-3 text-xs text-muted">
@@ -163,7 +162,6 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
 
       <Container className="grid gap-10 py-10 lg:grid-cols-[1fr_360px]">
         <div className="min-w-0 space-y-10">
-          {!guide.lastVerified && <Notice title={dict.site.unverifiedNotice}>{c.unverifiedText}</Notice>}
 
           <p className="text-lg leading-relaxed text-ink">{guide.intro}</p>
 

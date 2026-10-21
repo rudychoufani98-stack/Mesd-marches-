@@ -48,7 +48,7 @@ export function PrivacyView({ locale }: { locale: Locale }) {
                 demande. Base légale : <Placeholder>à valider — mesures précontractuelles / intérêt légitime</Placeholder>.
               </li>
               <li>
-                <strong>Demande de rendez-vous</strong> : nom, adresse e-mail, offre choisie, mode et disponibilités, message
+                <strong>Demande de rendez-vous</strong> : nom, adresse e-mail, téléphone (facultatif), offre choisie, mode et disponibilités, message
                 facultatif. Finalité : organiser le rendez-vous. Base légale : <Placeholder>à valider — mesures précontractuelles</Placeholder>.
               </li>
               <li>
@@ -147,7 +147,7 @@ export function PrivacyView({ locale }: { locale: Locale }) {
                 basis: <Placeholder>to be confirmed — pre-contractual measures / legitimate interest</Placeholder>.
               </li>
               <li>
-                <strong>Appointment request</strong>: name, email address, chosen offer, format and availability, optional
+                <strong>Appointment request</strong>: name, email address, phone number (optional), chosen offer, format and availability, optional
                 message. Purpose: to arrange the appointment. Legal basis: <Placeholder>to be confirmed — pre-contractual measures</Placeholder>.
               </li>
               <li>

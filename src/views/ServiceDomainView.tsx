@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Ban } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getCategory } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
 import { alternates, href, type Locale } from "@/i18n";
@@ -101,19 +101,6 @@ export async function ServiceDomainView({ slug, locale }: { slug: string; locale
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-card border border-line bg-white p-5">
-            <h2 className="flex items-center gap-2 font-semibold text-ink">
-              <Ban className="h-4 w-4 text-muted" aria-hidden="true" /> {c.limits}
-            </h2>
-            <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted">
-              {domain.limits.map((l) => (
-                <li key={l} className="flex gap-2">
-                  <span aria-hidden="true">•</span>
-                  {l}
-                </li>
-              ))}
-            </ul>
-          </div>
           <div className="rounded-card bg-brand-900 p-5 text-white">
             <h2 className="font-semibold">{c.helpTitle}</h2>
             <p className="mt-2 text-sm text-brand-200">{c.helpText}</p>

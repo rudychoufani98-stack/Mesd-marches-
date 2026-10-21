@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { jsonLd } from "@/lib/seo";
 import { defaultLocale, localeDirection } from "@/i18n";
@@ -7,6 +7,13 @@ import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+});
+
+/** Police d'affichage (titres de l'accueil) pour un rendu plus haut de gamme. */
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin", "latin-ext"],
   display: "swap",
 });
@@ -64,7 +71,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang={defaultLocale} dir={localeDirection[defaultLocale]} className={`${jakarta.variable} h-full antialiased`}>
+    <html lang={defaultLocale} dir={localeDirection[defaultLocale]} className={`${jakarta.variable} ${fraunces.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organizationJsonLd)} />
         {children}

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Check, Minus } from "lucide-react";
-import { formatPrice, lowestDemarchePrice, PRICES_ARE_TEST_VALUES, type Offer } from "@/config/pricing";
+import { ArrowRight, Check } from "lucide-react";
+import { formatPrice, lowestDemarchePrice, type Offer } from "@/config/pricing";
 import { alternates, href, type Locale } from "@/i18n";
 import { getOffers } from "@/lib/data/content";
-import { ButtonLink, Container, Notice, PageHeader } from "@/components/ui/primitives";
+import { ButtonLink, Container, PageHeader } from "@/components/ui/primitives";
 import { DemarcheSelector } from "@/components/pricing/DemarcheSelector";
 import { jsonLd } from "@/lib/seo";
 
@@ -210,19 +210,6 @@ export async function PricingView({ locale }: { locale: Locale }) {
                       </li>
                     ))}
                   </ul>
-                  {offer.excludes.length > 0 && (
-                    <>
-                      <h4 className="mt-5 text-sm font-semibold text-ink">{c.excluded}</h4>
-                      <ul className="mt-2 space-y-2">
-                        {offer.excludes.map((item) => (
-                          <li key={item} className="flex gap-2 text-sm text-muted">
-                            <Minus className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
                   <dl className="mt-5 space-y-3 border-t border-line pt-5 text-sm">
                     <div>
                       <dt className="font-semibold text-ink">{c.responseTime}</dt>
@@ -244,32 +231,11 @@ export async function PricingView({ locale }: { locale: Locale }) {
           </section>
         )}
 
-        <section className="grid gap-8 lg:grid-cols-2" aria-labelledby="bon-a-savoir">
-          <div>
-            <h2 id="bon-a-savoir" className="text-xl font-bold text-ink">
-              {c.commonTitle}
-            </h2>
-            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
-              {c.common.map(([label, text]) => (
-                <li key={label}>
-                  <strong className="text-ink">{label}</strong> {text}
-                </li>
-              ))}
-              <li>
-                <strong className="text-ink">{c.withdrawal}</strong> {c.withdrawalText}{" "}
-                <Link href={href("/cgv", locale)} className="font-medium text-brand-700 underline">
-                  {c.terms}
-                </Link>
-                .
-              </li>
-            </ul>
-          </div>
-          {PRICES_ARE_TEST_VALUES && (
-            <Notice tone="info" title={c.launchTitle}>
-              {c.launchText}
-            </Notice>
-          )}
-        </section>
+        <p className="text-center text-sm text-muted">
+          <Link href={href("/cgv", locale)} className="font-medium text-brand-700 underline">
+            {c.terms}
+          </Link>
+        </p>
       </Container>
     </>
   );

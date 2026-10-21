@@ -143,14 +143,6 @@ export const defaultOffers: Offer[] = [
   },
   {
     ...DEMARCHE_COMMON,
-    id: "d-ecole",
-    category: "famille",
-    name: "Inscrire son enfant à l'école",
-    tagline: "Les étapes, les interlocuteurs et les documents à préparer.",
-    price: 19,
-  },
-  {
-    ...DEMARCHE_COMMON,
     id: "d-comptes-en-ligne",
     category: "numerique",
     name: "Créer et sécuriser ses comptes en ligne",

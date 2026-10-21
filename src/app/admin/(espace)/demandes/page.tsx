@@ -47,6 +47,7 @@ function Details({ r }: { r: RequestRow }) {
                 ["Total", `${d.total} € (sous-total ${d.subtotal} €, remise ${d.discountPercent} %)`],
               ] as [string, string][])
             : []),
+          ["Téléphone", String(d.phone ?? "") || "—"],
           ["Mode", label(appointmentModes, d.mode)],
           ["Disponibilités", Array.isArray(d.slots) ? d.slots.map((s) => label(appointmentSlots, s)).join(", ") : ""],
           ["Message", String(d.message ?? "") || "—"],

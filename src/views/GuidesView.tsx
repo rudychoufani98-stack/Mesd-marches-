@@ -3,10 +3,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { categories } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
-import { alternates, getDictionary, href, type Locale } from "@/i18n";
+import { alternates, href, type Locale } from "@/i18n";
 import { getVisibleGuides } from "@/lib/data/content";
 import { GuideCard } from "@/components/guides/shared";
-import { ButtonLink, Container, Notice, PageHeader } from "@/components/ui/primitives";
+import { ButtonLink, Container, PageHeader } from "@/components/ui/primitives";
 
 const copy = {
   fr: {
@@ -70,11 +70,7 @@ async function GuideLibrary({ locale, searchParams }: { locale: Locale; searchPa
 
   return (
     <Container className="py-10 sm:py-14">
-      <Notice tone="info">
-        {c.notice} « {getDictionary(locale).site.unverifiedNotice} »
-      </Notice>
-
-      <div className="mt-8 flex flex-wrap gap-2" aria-label={c.filterLabel}>
+      <div className="flex flex-wrap gap-2" aria-label={c.filterLabel}>
         <Link href={base} aria-current={!selected} className={chip}>
           {c.all}
         </Link>

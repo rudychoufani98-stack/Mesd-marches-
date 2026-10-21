@@ -22,6 +22,9 @@
   --color-accent-50: #ecfaf6;
   --color-accent-100: #d0f2e8;
   --color-accent-200: #a3e4d3;
+  --color-gold-200: #efdcb3;
+  --color-gold-300: #e2c387;
+  --color-gold-400: #cfa75e;
   --color-accent-300: #6dd0b9;
   --color-accent-400: #3fb79d;
   --color-accent-500: #239c83;
@@ -34,6 +37,7 @@
   --color-surface: #f6f8fb;
 
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
 
   --radius-card: 1.125rem;
 

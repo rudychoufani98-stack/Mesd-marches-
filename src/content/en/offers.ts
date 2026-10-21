@@ -76,11 +76,6 @@ export const offersEn: Record<string, OfferText> = {
     name: "Prepare your first French tax return",
     tagline: "Create your online account, gather your documents, understand the steps.",
   },
-  "d-ecole": {
-    ...STEP_COMMON,
-    name: "Enrol your child at school",
-    tagline: "The steps, who to contact and the documents to prepare.",
-  },
   "d-comptes-en-ligne": {
     ...STEP_COMMON,
     name: "Create and secure your online accounts",

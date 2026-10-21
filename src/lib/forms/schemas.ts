@@ -16,6 +16,7 @@ const messages = {
     offer: "Choisissez une offre.",
     mode: "Choisissez un mode de rendez-vous.",
     slots: "Choisissez au moins une disponibilité.",
+    phone: "Numéro de téléphone invalide.",
   },
   en: {
     max: (n: number) => `${n} characters maximum.`,
@@ -27,6 +28,7 @@ const messages = {
     offer: "Please choose an offer.",
     mode: "Please choose how you'd like to meet.",
     slots: "Please choose at least one time slot.",
+    phone: "Invalid phone number.",
   },
 } as const;
 
@@ -85,6 +87,8 @@ export function appointmentSchemaFor(locale: Locale) {
   return z.object({
     name: b.name,
     email: b.email,
+    /** Facultatif : utile pour un rendez-vous par téléphone. */
+    phone: z.union([z.literal(""), z.string().trim().regex(/^\+?[0-9 ().-]{6,24}$/, b.m.phone)]).optional(),
     // L'existence de l'offre est vérifiée dans l'action (les offres viennent de la base).
     offer: z.string({ error: b.m.offer }).trim().min(1, b.m.offer).max(40),
     mode: z.enum(appointmentModes.map((m) => m.value) as [string, ...string[]], { error: b.m.mode }),

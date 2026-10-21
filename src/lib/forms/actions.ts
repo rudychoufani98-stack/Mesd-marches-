@@ -173,6 +173,7 @@ export async function submitAppointment(_prev: FormState, formData: FormData): P
           data: {
             offer: "selection",
             offerName: `Sélection de ${totals.count} démarche(s)`,
+            phone: d.phone ?? "",
             selection: names,
             subtotal: totals.subtotal,
             discountPercent: totals.discountPercent,
@@ -189,7 +190,7 @@ export async function submitAppointment(_prev: FormState, formData: FormData): P
       return {
         name: d.name,
         email: d.email,
-        data: { offer: offer.id, offerName: offer.name, mode: d.mode, slots: d.slots, message: d.message ?? "", language: locale },
+        data: { offer: offer.id, offerName: offer.name, phone: d.phone ?? "", mode: d.mode, slots: d.slots, message: d.message ?? "", language: locale },
       };
     },
     text[locale].appointmentOk,
