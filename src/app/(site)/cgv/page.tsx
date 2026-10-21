@@ -22,7 +22,8 @@ export default async function TermsPage() {
         <h2>1. Objet</h2>
         <p>
           Les présentes conditions encadrent les prestations d&apos;accompagnement à l&apos;organisation de démarches
-          administratives et pratiques proposées par <Placeholder>raison sociale</Placeholder>. {siteConfig.disclaimer}
+          administratives et pratiques proposées par <Placeholder>raison sociale</Placeholder>. {siteConfig.disclaimer}{" "}
+          {siteConfig.independence}
         </p>
       </section>
       <section>

@@ -47,7 +47,7 @@ export const rules: Rule[] = [
   {
     id: "arrivee-recente",
     when: (a) => isRecentArrival(a) || a.goal === "installation",
-    taskIds: ["inst-documents", "inst-sejour-info", "inst-adresse", "bq-compte", "sa-affiliation"],
+    taskIds: ["inst-documents", "inst-sejour-info", "inst-adresse", "bq-compte", "sa-affiliation", "inst-permis"],
     reason: (a) =>
       a.goal === "installation"
         ? "Votre objectif est de vous installer en France."

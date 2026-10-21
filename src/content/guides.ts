@@ -493,6 +493,54 @@ export const defaultGuides: Guide[] = [
     updatedAt: "2026-10-21",
   },
   {
+    slug: "permis-de-conduire-etranger",
+    title: "Conduire en France avec un permis de conduire étranger",
+    description:
+      "Permis européen ou non, court séjour ou installation : les questions à se poser et où trouver la démarche officielle d'échange.",
+    category: "installation",
+    readingMinutes: 5,
+    intro:
+      "Les règles dépendent du pays qui a délivré votre permis, de votre statut (installation, études, court séjour) et de la date de votre arrivée. Ce guide vous aide à identifier votre cas, puis à suivre la fiche officielle qui s'applique. Il ne détermine pas votre situation : vérifiez toujours sur Service Public.",
+    steps: [
+      {
+        title: "Identifier votre situation",
+        body: "Notez le pays qui a délivré votre permis, sa date de validité et votre situation en France (installation durable, études, court séjour). Ces trois éléments déterminent la règle applicable.",
+      },
+      {
+        title: "Permis délivré dans l'Union européenne ou l'Espace économique européen",
+        body: "Les permis délivrés dans ces pays obéissent à des règles particulières. Consultez la rubrique Permis de conduire de Service Public pour savoir si un échange est nécessaire dans votre cas.",
+      },
+      {
+        title: "Permis délivré hors UE/EEE et installation en France",
+        body: "Lorsque vous vous installez en France, un permis obtenu hors UE/EEE peut devoir être échangé contre un permis français, dans un délai fixé par la réglementation et selon des conditions qui dépendent notamment du pays de délivrance. Ne tardez pas : consultez dès votre arrivée la fiche officielle sur l'échange de permis.",
+      },
+      {
+        title: "Court séjour ou études",
+        body: "Des règles spécifiques permettent, sous conditions, de conduire avec votre permis étranger pendant un court séjour ou pendant vos études. Vérifiez-les sur la fiche officielle dédiée.",
+      },
+      {
+        title: "Préparer la démarche en ligne",
+        body: "La demande d'échange se fait en ligne, sur le site officiel indiqué par Service Public. Préparez des scans lisibles de vos documents et méfiez-vous des sites qui facturent cette démarche : passez toujours par le lien donné sur Service Public.",
+      },
+    ],
+    checklist: [
+      { id: "pays-delivrance", label: "Pays de délivrance et date de validité du permis notés" },
+      { id: "situation", label: "Ma situation identifiée (installation, études, court séjour)" },
+      { id: "fiche-officielle", label: "Fiche officielle Service Public correspondant à mon cas consultée" },
+      { id: "delai", label: "Délai applicable à mon cas noté dans mon calendrier" },
+      { id: "documents-scannes", label: "Documents demandés scannés de façon lisible" },
+      { id: "site-officiel", label: "Démarche faite uniquement depuis le lien officiel" },
+    ],
+    glossary: [
+      { term: "Échange de permis", definition: "Démarche permettant de remplacer un permis étranger par un permis français, lorsque les conditions sont remplies." },
+      { term: "UE/EEE", definition: "Union européenne et Espace économique européen (UE + Islande, Liechtenstein, Norvège)." },
+    ],
+    sourceIds: ["sp-permis", "sp-permis-echange", "sp-permis-court-sejour"],
+    lastVerified: null,
+    status: "published",
+    updatedAt: "2026-10-21",
+  },
+  {
     slug: "demarches-etudiants-internationaux",
     title: "Démarches des étudiants internationaux : premiers repères",
     description:

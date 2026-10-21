@@ -14,6 +14,19 @@
 
 ## 2. Qualification juridique des prestations
 
+**Positionnement retenu (21/10/2026) : conseiller indépendant, PAS apporteur d'affaires.**
+- Le client est la seule source de revenus ; aucune commission, rétrocession ou rémunération de partenaires
+  (banques, courtiers, notaires, assureurs, agences). Texte de référence : `siteConfig.independence`.
+- Aucune transmission de coordonnées à un professionnel sans accord exprès du client.
+- Ce positionnement évite le statut IOBSP / intermédiaire d'assurance lié aux commissions, MAIS le
+  « conseil » reste encadré par d'autres règles, à faire valider par un avocat :
+  - **conseil en crédit** : une recommandation personnalisée sur un contrat de crédit est réservée à
+    certains professionnels, même sans commission → rester sur la pédagogie et l'organisation ;
+  - **consultation juridique** : réservée aux professions habilitées (avocats, notaires…) → ne pas
+    analyser la situation juridique d'un client ni rédiger d'actes ;
+  - **conseil fiscal / en investissement** : idem, rester général.
+- Formulation conseillée : « accompagnement à l'organisation des démarches administratives ».
+
 - [ ] Faire qualifier les prestations (information, organisation, orientation) et vérifier
       qu'elles ne relèvent pas d'une activité réglementée (conseil juridique, intermédiation
       en opérations de banque ou en crédit, conseil en investissement, etc.).

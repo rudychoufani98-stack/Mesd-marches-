@@ -12,18 +12,22 @@ export const metadata: Metadata = {
 
 const steps = [
   {
+    emoji: "💬",
     title: "Vous décrivez votre situation",
     text: "Cinq questions simples : votre objectif, depuis combien de temps vous êtes en France, les domaines concernés, votre délai et la façon dont vous souhaitez avancer. Aucun document, aucun numéro personnel.",
   },
   {
+    emoji: "🗺️",
     title: "Vous recevez un plan d'action organisé",
     text: "Des règles d'organisation définies à l'avance sélectionnent les tâches pertinentes et les classent dans un ordre logique : d'abord ce qui conditionne la suite, puis la mise en place, puis l'organisation dans la durée. Chaque tâche indique pourquoi elle vous est proposée.",
   },
   {
+    emoji: "✅",
     title: "Vous avancez étape par étape",
     text: "Cochez les tâches au fur et à mesure, consultez les guides pratiques et les sources officielles. Votre progression est conservée sur votre appareil.",
   },
   {
+    emoji: "🙋",
     title: "Si vous le souhaitez, un accompagnement humain",
     text: "Un rendez-vous permet de faire le point, d'ajuster votre plan et de répondre à vos questions d'organisation.",
   },
@@ -34,6 +38,7 @@ const weDo = [
   "Expliquer les notions et le vocabulaire administratif",
   "Vous orienter vers les sites officiels qui font référence",
   "Vous aider à préparer et classer vos documents",
+  "Vous aider à préparer vos rendez-vous (banque, notaire, propriétaire…) et les questions à poser",
 ];
 
 const weDont = [
@@ -41,6 +46,8 @@ const weDont = [
   "Représenter une administration ou parler en son nom",
   "Fournir un conseil juridique, fiscal ou financier personnalisé",
   "Garantir le résultat d'une démarche",
+  "Toucher une commission d'une banque, d'un courtier, d'un notaire ou d'un assureur",
+  "Vous recommander un crédit, une banque ou un produit financier",
   "Vous demander vos mots de passe ou codes d'accès",
 ];
 
@@ -55,7 +62,12 @@ export default function HowItWorksPage() {
               <span className="absolute -left-[2.85rem] inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-700 text-sm font-bold text-white ring-4 ring-white">
                 {i + 1}
               </span>
-              <h2 className="text-xl font-bold text-ink">{s.title}</h2>
+              <h2 className="text-xl font-bold text-ink">
+                <span aria-hidden="true" className="mr-2">
+                  {s.emoji}
+                </span>
+                {s.title}
+              </h2>
               <p className="mt-2 max-w-2xl leading-relaxed text-muted">{s.text}</p>
             </li>
           ))}
@@ -63,7 +75,9 @@ export default function HowItWorksPage() {
 
         <div className="mt-16 grid gap-6 md:grid-cols-2">
           <section className="rounded-card border border-line bg-white p-6">
-            <h2 className="text-lg font-bold text-ink">Ce que nous faisons</h2>
+            <h2 className="text-lg font-bold text-ink">
+              <span aria-hidden="true">👍</span> Ce que nous faisons
+            </h2>
             <ul className="mt-4 space-y-3">
               {weDo.map((i) => (
                 <li key={i} className="flex gap-2 text-sm text-ink">
@@ -73,7 +87,9 @@ export default function HowItWorksPage() {
             </ul>
           </section>
           <section className="rounded-card border border-line bg-white p-6">
-            <h2 className="text-lg font-bold text-ink">Ce que nous ne faisons pas</h2>
+            <h2 className="text-lg font-bold text-ink">
+              <span aria-hidden="true">✋</span> Ce que nous ne faisons pas
+            </h2>
             <ul className="mt-4 space-y-3">
               {weDont.map((i) => (
                 <li key={i} className="flex gap-2 text-sm text-ink">

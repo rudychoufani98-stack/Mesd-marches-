@@ -6,7 +6,6 @@ import { getCategory } from "@/content/categories";
 import { serviceFormatLabels } from "@/content/services";
 import { getActiveDomains, getDomainBySlug, getPublishedGuides } from "@/lib/data/content";
 import { GuideCard, SourceList } from "@/components/guides/shared";
-import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { Badge, ButtonLink, Container } from "@/components/ui/primitives";
 
 export async function generateStaticParams() {
@@ -43,8 +42,8 @@ export default async function ServiceDomainPage({ params }: PageProps<"/services
             / <span className="text-ink">{category.title}</span>
           </nav>
           <div className="mt-5 flex items-start gap-4">
-            <span className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-700 text-white sm:inline-flex">
-              <CategoryIcon name={category.icon} className="h-6 w-6" />
+            <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-3xl shadow-sm ring-1 ring-line" aria-hidden="true">
+              {category.emoji}
             </span>
             <div className="max-w-2xl">
               <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">{category.title}</h1>

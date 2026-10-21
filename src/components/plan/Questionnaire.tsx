@@ -11,7 +11,6 @@ import {
   timeInFranceOptions,
   type Answers,
 } from "@/lib/plan/questions";
-import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { Button } from "@/components/ui/primitives";
 
 type Draft = Partial<Answers> & { categories: CategoryId[] };
@@ -57,7 +56,10 @@ function OptionCard({
     >
       <input type={type} name={name} value={value} checked={selected} onChange={onSelect} className="sr-only" />
       {icon && (
-        <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${selected ? "bg-brand-700 text-white" : "bg-surface text-brand-700"}`}>
+        <span
+          aria-hidden="true"
+          className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-xl transition-transform ${selected ? "scale-110 bg-white shadow-sm" : "bg-surface"}`}
+        >
           {icon}
         </span>
       )}
@@ -160,7 +162,7 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
         <div className={`mt-6 grid gap-3 ${step.key === "categories" ? "sm:grid-cols-2" : ""}`}>
           {step.key === "goal" &&
             goalOptions.map((o) => (
-              <OptionCard key={o.value} name="goal" value={o.value} label={o.label} hint={o.hint} selected={draft.goal === o.value} onSelect={() => set("goal", o.value)} />
+              <OptionCard key={o.value} name="goal" value={o.value} label={o.label} hint={o.hint} icon={o.emoji} selected={draft.goal === o.value} onSelect={() => set("goal", o.value)} />
             ))}
           {step.key === "timeInFrance" &&
             timeInFranceOptions.map((o) => (
@@ -174,7 +176,7 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
                 name="categories"
                 value={c.id}
                 label={c.title}
-                icon={<CategoryIcon name={c.icon} className="h-4 w-4" />}
+                icon={c.emoji}
                 selected={draft.categories.includes(c.id)}
                 onSelect={() => toggleCategory(c.id)}
               />
@@ -185,7 +187,7 @@ export function Questionnaire({ initial, onComplete }: { initial?: Answers | nul
             ))}
           {step.key === "support" &&
             supportOptions.map((o) => (
-              <OptionCard key={o.value} name="support" value={o.value} label={o.label} hint={o.hint} selected={draft.support === o.value} onSelect={() => set("support", o.value)} />
+              <OptionCard key={o.value} name="support" value={o.value} label={o.label} hint={o.hint} icon={o.emoji} selected={draft.support === o.value} onSelect={() => set("support", o.value)} />
             ))}
         </div>
       </fieldset>

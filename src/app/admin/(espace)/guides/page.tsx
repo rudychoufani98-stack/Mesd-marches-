@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AlertTriangle, BadgeCheck, Plus } from "lucide-react";
 import { getCategory } from "@/content/categories";
+import { defaultGuides } from "@/content/guides";
 import { requireAdmin } from "@/lib/supabase/server";
 import { AdminTitle, formatDateTime, Panel } from "@/components/admin/ui";
 import { Badge, ButtonLink } from "@/components/ui/primitives";
@@ -17,6 +18,7 @@ export default async function AdminGuidesPage() {
     .select("slug, title, category, status, last_verified, updated_at")
     .order("updated_at", { ascending: false });
   const guides = (data ?? []) as Row[];
+  const missing = defaultGuides.filter((d) => !guides.some((g) => g.slug === d.slug));
 
   return (
     <>
@@ -28,6 +30,17 @@ export default async function AdminGuidesPage() {
           <Plus className="h-4 w-4" aria-hidden="true" /> Nouveau guide
         </ButtonLink>
       </AdminTitle>
+
+      {missing.length > 0 && guides.length > 0 && (
+        <Panel className="mb-6 border-brand-200 bg-brand-50/40">
+          <p className="text-sm text-ink">
+            <span aria-hidden="true">🆕</span> {missing.length} nouveau(x) guide(s) disponible(s) dans le contenu par défaut :{" "}
+            <strong>{missing.map((g) => g.title).join(", ")}</strong>. Importez-les pour qu&apos;ils apparaissent sur le site (vos
+            guides existants ne seront pas modifiés).
+          </p>
+          <ImportDefaultsForm />
+        </Panel>
+      )}
 
       {guides.length === 0 ? (
         <Panel>

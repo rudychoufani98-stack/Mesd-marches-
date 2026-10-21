@@ -102,6 +102,27 @@ export const officialSources = {
     url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F17556",
     linkCheckedOn: CHECKED,
   },
+  "sp-permis": {
+    id: "sp-permis",
+    name: "Service Public — Permis de conduire",
+    label: "Rubrique officielle sur le permis de conduire",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N530",
+    linkCheckedOn: CHECKED,
+  },
+  "sp-permis-echange": {
+    id: "sp-permis-echange",
+    name: "Service Public — Échange d'un permis obtenu hors UE/EEE",
+    label: "Conditions et démarches pour échanger un permis étranger lors d'une installation en France",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1460",
+    linkCheckedOn: CHECKED,
+  },
+  "sp-permis-court-sejour": {
+    id: "sp-permis-court-sejour",
+    name: "Service Public — Conduire avec un permis étranger (court séjour, études)",
+    label: "Règles pour conduire en France avec un permis étranger sans l'échanger",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1459",
+    linkCheckedOn: CHECKED,
+  },
   impots: {
     id: "impots",
     name: "impots.gouv.fr — Particulier",

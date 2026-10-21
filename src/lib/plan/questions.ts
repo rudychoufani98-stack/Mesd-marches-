@@ -6,11 +6,11 @@ import { categories, type CategoryId } from "@/content/categories";
  * Aucune donnée d'identité, aucun numéro, aucun document n'est demandé.
  */
 export const goalOptions = [
-  { value: "installation", label: "M'installer en France", hint: "Logement, compte, premières démarches" },
-  { value: "emploi", label: "Commencer un emploi", hint: "Documents d'embauche, fiche de paie" },
-  { value: "etudes", label: "Étudier en France", hint: "Premiers repères pour les étudiants" },
-  { value: "famille", label: "Organiser les démarches de ma famille", hint: "École, contrats, déménagement" },
-  { value: "organisation", label: "Mettre de l'ordre dans mes démarches", hint: "Documents, budget, sécurité" },
+  { value: "installation", label: "M'installer en France", hint: "Logement, compte, premières démarches", emoji: "🧳" },
+  { value: "emploi", label: "Commencer un emploi", hint: "Documents d'embauche, fiche de paie", emoji: "💼" },
+  { value: "etudes", label: "Étudier en France", hint: "Premiers repères pour les étudiants", emoji: "🎓" },
+  { value: "famille", label: "Organiser les démarches de ma famille", hint: "École, contrats, déménagement", emoji: "👨‍👩‍👧" },
+  { value: "organisation", label: "Mettre de l'ordre dans mes démarches", hint: "Documents, budget, sécurité", emoji: "🗂️" },
 ] as const;
 
 export const timeInFranceOptions = [
@@ -28,8 +28,8 @@ export const timeframeOptions = [
 ] as const;
 
 export const supportOptions = [
-  { value: "guides", label: "Consulter les guides gratuitement", hint: "Vous avancez seul·e avec votre plan" },
-  { value: "accompagnement", label: "Demander un accompagnement humain", hint: "Un rendez-vous pour faire le point" },
+  { value: "guides", label: "Consulter les guides gratuitement", hint: "Vous avancez seul·e avec votre plan", emoji: "📚" },
+  { value: "accompagnement", label: "Demander un accompagnement humain", hint: "Un rendez-vous pour faire le point", emoji: "🙋" },
 ] as const;
 
 type Values<T extends readonly { value: string }[]> = T[number]["value"];

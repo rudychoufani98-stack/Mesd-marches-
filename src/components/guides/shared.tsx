@@ -35,7 +35,14 @@ export function GuideCard({ guide }: { guide: Guide }) {
       className="group flex h-full flex-col rounded-card border border-line bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_8px_24px_rgba(22,32,58,0.07)]"
     >
       <div className="flex flex-wrap items-center gap-2">
-        {category && <Badge>{category.shortTitle}</Badge>}
+        {category && (
+          <Badge>
+            <span aria-hidden="true" className="mr-1">
+              {category.emoji}
+            </span>
+            {category.shortTitle}
+          </Badge>
+        )}
         {guide.status === "draft" && <Badge tone="warning">Brouillon</Badge>}
       </div>
       <h3 className="mt-3 font-semibold leading-snug text-ink group-hover:text-brand-700">{guide.title}</h3>

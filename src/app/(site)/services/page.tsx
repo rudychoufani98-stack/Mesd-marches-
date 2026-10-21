@@ -5,7 +5,6 @@ import { ArrowRight } from "lucide-react";
 import { getCategory } from "@/content/categories";
 import { serviceFormatLabels, type ServiceFormat } from "@/content/services";
 import { getActiveDomains } from "@/lib/data/content";
-import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { Badge, ButtonLink, Container, PageHeader } from "@/components/ui/primitives";
 
 export const metadata: Metadata = {
@@ -94,8 +93,8 @@ async function ServicesCatalog({ searchParams }: Pick<PageProps<"/services">, "s
                 <section key={d.slug} aria-labelledby={`domaine-${d.slug}`}>
                   <div className="flex flex-wrap items-end justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
-                        <CategoryIcon name={category.icon} />
+                      <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-accent-50 text-2xl" aria-hidden="true">
+                        {category.emoji}
                       </span>
                       <h2 id={`domaine-${d.slug}`} className="text-xl font-bold text-ink">
                         {category.title}

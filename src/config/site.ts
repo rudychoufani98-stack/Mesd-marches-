@@ -17,6 +17,14 @@ export const siteConfig = {
   disclaimer:
     "MesDémarches est un service privé indépendant et ne constitue pas un site officiel de l'administration française.",
   unverifiedNotice: "Information à vérifier auprès de l'organisme compétent.",
+  /**
+   * Positionnement : conseil indépendant en organisation administrative.
+   * MesDémarches n'est pas apporteur d'affaires : aucune commission, aucune mise en relation rémunérée.
+   * À reprendre tel quel partout où le sujet est abordé (cohérence du site).
+   */
+  independence:
+    "Conseil 100 % indépendant : nous ne percevons aucune commission de banques, courtiers, notaires, assureurs ou agences. Vous seul nous rémunérez, et vous choisissez librement vos interlocuteurs.",
+  independenceShort: "Aucune commission, aucun partenaire payant : un conseil 100 % indépendant.",
 } as const;
 
 export type NavItem = { href: string; label: string };
@@ -37,6 +45,7 @@ export const footerNav: { title: string; items: NavItem[] }[] = [
       { href: "/guides", label: "Guides pratiques" },
       { href: "/comment-ca-marche", label: "Comment ça marche" },
       { href: "/tarifs", label: "Tarifs" },
+      { href: "/professionnels", label: "Notaires, banques, courtiers" },
     ],
   },
   {

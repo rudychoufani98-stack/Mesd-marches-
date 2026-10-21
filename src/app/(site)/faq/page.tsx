@@ -42,6 +42,11 @@ function buildFaqs(offers: Offer[]): { q: string; a: React.ReactNode; text: stri
     ),
   },
   {
+    q: "Êtes-vous payés par des banques, des courtiers ou des notaires ?",
+    text: `Non. ${siteConfig.independence}`,
+    a: <>Non. {siteConfig.independence}</>,
+  },
+  {
     q: "Faites-vous les démarches à ma place ?",
     text: "Non. Nous vous aidons à comprendre, organiser et planifier vos démarches, mais vous les réalisez vous-même auprès des organismes compétents.",
     a: <>Non. Nous vous aidons à comprendre, organiser et planifier vos démarches, mais vous les réalisez vous-même auprès des organismes compétents.</>,

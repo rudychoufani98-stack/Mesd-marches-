@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tarifs" },
 };
 
+const offerEmojis: Record<string, string> = { bilan: "🧭", installation: "🏡", suivi: "🔄" };
+
 export default async function PricingPage() {
   const offers = await getOffers();
   return (
@@ -44,7 +46,10 @@ export default async function PricingPage() {
                   Pour les nouveaux arrivants
                 </span>
               )}
-              <h2 id={`offre-${offer.id}`} className="text-lg font-bold text-ink">
+              <span className="text-3xl" aria-hidden="true">
+                {offerEmojis[offer.id] ?? "✨"}
+              </span>
+              <h2 id={`offre-${offer.id}`} className="mt-3 text-lg font-bold text-ink">
                 {offer.name}
               </h2>
               <p className="mt-1 text-sm text-muted">{offer.tagline}</p>

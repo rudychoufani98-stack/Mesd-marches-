@@ -85,6 +85,15 @@ export const serviceDomains: ServiceDomain[] = [
         active: true,
       },
       {
+        id: "permis-de-conduire",
+        title: "Permis de conduire étranger",
+        description:
+          "Savoir si votre permis doit être échangé, dans quel délai, et préparer la démarche officielle sans passer par un site payant.",
+        format: "guide",
+        href: "/guides/permis-de-conduire-etranger",
+        active: true,
+      },
+      {
         id: "organismes-utiles",
         title: "Liens vers les organismes utiles",
         description:

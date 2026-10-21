@@ -83,6 +83,19 @@ export const taskLibrary: PlanTask[] = [
     deadline: null,
   },
   {
+    id: "inst-permis",
+    title: "Si vous avez un permis de conduire étranger : vérifier s'il doit être échangé",
+    description:
+      "Selon le pays qui l'a délivré et votre situation, un échange peut être nécessaire dans un délai fixé par la réglementation. Consultez la fiche officielle dès votre arrivée.",
+    category: "installation",
+    phase: 2,
+    order: 47,
+    documents: ["Permis de conduire étranger", "Pièce d'identité", "Justificatif de domicile"],
+    sourceIds: ["sp-permis-echange", "sp-permis-court-sejour"],
+    guideSlug: "permis-de-conduire-etranger",
+    deadline: null,
+  },
+  {
     id: "inst-france-services",
     title: "Repérer l'espace France services le plus proche",
     description:
