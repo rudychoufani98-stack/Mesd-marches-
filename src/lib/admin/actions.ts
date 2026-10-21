@@ -11,6 +11,8 @@ import { CONTENT_TAGS } from "@/lib/data/content";
 import { guideToRow, knownSourceIds, offerToRow } from "@/lib/data/mappers";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSessionClient, requireAdmin } from "@/lib/supabase/server";
+import { headers } from "next/headers";
+import { isRateLimited } from "@/lib/forms/rate-limit";
 import { parseChecklist, parseGlossary, parseLines, parseSteps } from "./guide-format";
 
 export type AdminResult = { status: "idle" | "success" | "error"; message?: string; errors?: Record<string, string> };
@@ -52,6 +54,12 @@ export async function signIn(_prev: AdminResult, formData: FormData): Promise<Ad
   if (!parsed.success) return fail("Vérifiez les champs.", firstErrors(parsed.error));
   if (!isSupabaseConfigured()) {
     return fail("Supabase n'est pas encore configuré : suivez l'étape « Espace admin » du README.");
+  }
+  // Limite les tentatives (par adresse IP et par compte) pour freiner les essais de mots de passe.
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "inconnu";
+  if (isRateLimited(`login-ip:${ip}`) || isRateLimited(`login-email:${parsed.data.email.toLowerCase()}`)) {
+    return fail("Trop de tentatives de connexion. Patientez 10 minutes avant de réessayer.");
   }
   const supabase = await createSessionClient();
   const { error } = await supabase.auth.signInWithPassword(parsed.data);

@@ -4,13 +4,14 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { cache } from "react";
-import { isSupabaseConfigured, supabaseEnv } from "./config";
+import { isSupabaseConfigured, sessionCookieOptions, supabaseEnv } from "./config";
 
 /** Client lié à la session de l'utilisateur connecté (cookies). Les règles RLS s'appliquent. */
 export async function createSessionClient() {
   const cookieStore = await cookies();
   const { url, anonKey } = supabaseEnv();
   return createServerClient(url, anonKey, {
+    cookieOptions: sessionCookieOptions,
     cookies: {
       getAll() {
         return cookieStore.getAll();

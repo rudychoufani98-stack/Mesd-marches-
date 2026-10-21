@@ -1,6 +1,7 @@
 /**
  * Stockage local dans le navigateur (aucune donnée envoyée au serveur).
- * Utilisé pour la progression des checklists et le dernier plan d'action.
+ * Utilisé pour la progression des checklists, le dernier plan d'action, le budget
+ * et le choix de masquer l'information sur les cookies.
  * Toutes les lectures/écritures sont protégées : le site fonctionne même si le stockage est bloqué.
  */
 const PREFIX = "mesdemarches:";
@@ -27,5 +28,16 @@ export function removeLocal(key: string): void {
     window.localStorage.removeItem(PREFIX + key);
   } catch {
     // ignore
+  }
+}
+
+/** Efface toutes les données MesDémarches enregistrées dans ce navigateur. Retourne le nombre d'éléments supprimés. */
+export function clearAllLocal(): number {
+  try {
+    const keys = Object.keys(window.localStorage).filter((k) => k.startsWith(PREFIX));
+    keys.forEach((k) => window.localStorage.removeItem(k));
+    return keys.length;
+  } catch {
+    return 0;
   }
 }

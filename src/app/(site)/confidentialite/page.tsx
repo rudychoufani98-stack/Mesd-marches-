@@ -76,7 +76,11 @@ export default function PrivacyPage() {
         <p>
           Le site n&apos;utilise pas de cookies publicitaires ni d&apos;outil de mesure d&apos;audience à ce jour, et ne dépose
           aucun cookie aux visiteurs. Seul l&apos;espace de gestion réservé à l&apos;équipe utilise un cookie de connexion,
-          strictement nécessaire. Le stockage
+          strictement nécessaire (détail sur la page{" "}
+          <Link href="/cookies" className="font-medium text-brand-700 underline">
+            Cookies et stockage local
+          </Link>
+          ). Le stockage
           local du navigateur sert uniquement à conserver votre plan et vos checklists, à votre demande. Si un outil de mesure
           d&apos;audience est ajouté, cette page sera mise à jour et votre consentement sera recueilli lorsque la
           réglementation l&apos;exige.
@@ -90,7 +94,11 @@ export default function PrivacyPage() {
           <Link href="/contact" className="font-medium text-brand-700 underline">
             formulaire de contact
           </Link>{" "}
-          (sujet « Mes données personnelles »), en écrivant depuis l&apos;adresse utilisée lors de votre demande. Nous vous
+          (sujet « Mes données personnelles ») ou la page{" "}
+          <Link href="/mes-donnees" className="font-medium text-brand-700 underline">
+            Mes données personnelles
+          </Link>
+          , en écrivant depuis l&apos;adresse utilisée lors de votre demande. Nous vous
           répondons dans un délai d&apos;un mois. Vous pouvez également introduire une réclamation auprès de la CNIL (cnil.fr).
         </p>
       </section>

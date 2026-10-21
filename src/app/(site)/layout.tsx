@@ -1,6 +1,7 @@
 import { getDictionary } from "@/i18n";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { CookieNotice } from "@/components/privacy/CookieNotice";
 
 const t = getDictionary();
 
@@ -19,6 +20,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
         {children}
       </main>
       <Footer />
+      <CookieNotice />
     </>
   );
 }

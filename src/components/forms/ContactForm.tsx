@@ -7,7 +7,7 @@ import { contactSubjects, initialFormState } from "@/lib/forms/schemas";
 import { Button, ButtonLink } from "@/components/ui/primitives";
 import { ConsentField, describedBy, Field, fieldError, FormStatus, FormSuccess, Honeypot, inputClasses, previous } from "./fields";
 
-export function ContactForm() {
+export function ContactForm({ defaultSubject }: { defaultSubject?: string } = {}) {
   const [state, action, pending] = useActionState(submitContact, initialFormState);
 
   if (state.status === "success") {
@@ -61,7 +61,7 @@ export function ContactForm() {
           id="subject"
           name="subject"
           required
-          defaultValue={previous(state, "subject") ?? ""}
+          defaultValue={previous(state, "subject") ?? defaultSubject ?? ""}
           aria-invalid={e("subject") ? true : undefined}
           aria-describedby={describedBy("subject", e("subject"))}
           className={inputClasses}

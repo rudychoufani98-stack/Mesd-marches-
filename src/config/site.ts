@@ -59,6 +59,8 @@ export const footerNav: { title: string; items: NavItem[] }[] = [
     items: [
       { href: "/mentions-legales", label: "Mentions légales" },
       { href: "/confidentialite", label: "Politique de confidentialité" },
+      { href: "/cookies", label: "Cookies et stockage local" },
+      { href: "/mes-donnees", label: "Mes données personnelles" },
       { href: "/cgv", label: "Conditions générales de vente" },
     ],
   },
