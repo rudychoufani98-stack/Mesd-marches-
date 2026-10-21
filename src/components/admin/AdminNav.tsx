@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Euro, Inbox, LayoutDashboard, ShieldCheck, ToggleRight } from "lucide-react";
+import { BookOpen, CreditCard, Euro, Inbox, LayoutDashboard, ShieldCheck, ToggleRight } from "lucide-react";
 
 const items = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/admin/demandes", label: "Demandes", icon: Inbox },
+  { href: "/admin/paiements", label: "Paiements", icon: CreditCard },
   { href: "/admin/tarifs", label: "Tarifs", icon: Euro },
   { href: "/admin/guides", label: "Guides", icon: BookOpen },
   { href: "/admin/services", label: "Services", icon: ToggleRight },

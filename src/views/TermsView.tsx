@@ -59,7 +59,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             <h2>3. Commande et paiement</h2>
             <p>
               La demande de rendez-vous en ligne n&apos;engage pas le client. La commande est confirmée après acceptation du
-              créneau et des présentes conditions. <Placeholder>modalités de paiement à définir</Placeholder>
+              créneau et des présentes conditions. Le paiement s&apos;effectue en ligne par carte bancaire, en toute sécurité, sur la page de paiement de notre prestataire Stripe ; MesDémarches n&apos;a jamais accès à vos données de carte. Le prix est payable en totalité à la commande (mensuellement pour l&apos;abonnement). Un reçu et une facture sont envoyés par e-mail.
             </p>
           </section>
           <section>
@@ -132,7 +132,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             <h2>3. Ordering and payment</h2>
             <p>
               An online appointment request does not commit the client. The order is confirmed once the time slot and these terms
-              have been accepted. <Placeholder>payment terms to be defined</Placeholder>
+              have been accepted. Payment is made online by bank card, securely, on the payment page of our provider Stripe; MesDémarches never has access to your card details. The price is payable in full when ordering (monthly for the subscription). A receipt and an invoice are sent by email.
             </p>
           </section>
           <section>

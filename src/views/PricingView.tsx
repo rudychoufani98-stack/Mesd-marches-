@@ -4,9 +4,11 @@ import { ArrowRight, Check } from "lucide-react";
 import { formatPrice, lowestDemarchePrice, type Offer } from "@/config/pricing";
 import { alternates, href, type Locale } from "@/i18n";
 import { getOffers } from "@/lib/data/content";
-import { ButtonLink, Container, PageHeader } from "@/components/ui/primitives";
+import { Button, ButtonLink, Container, PageHeader } from "@/components/ui/primitives";
 import { DemarcheSelector } from "@/components/pricing/DemarcheSelector";
 import { jsonLd } from "@/lib/seo";
+import { startCheckout } from "@/lib/payments/actions";
+import { paymentsEnabled } from "@/lib/payments/stripe";
 
 const copy = {
   fr: {
@@ -35,6 +37,7 @@ const copy = {
     cancellation: "Annulation",
     termination: "Résiliation",
     book: "Choisir cette formule",
+    pay: "Payer maintenant",
     commonTitle: "Bon à savoir",
     common: [
       ["On vous accompagne,", "mais c'est vous qui faites la démarche : vous gardez la main sur vos comptes et vos documents."],
@@ -72,6 +75,7 @@ const copy = {
     cancellation: "Cancellation",
     termination: "Ending the subscription",
     book: "Choose this option",
+    pay: "Pay now",
     commonTitle: "Good to know",
     common: [
       ["We support you,", "but you carry out the procedure yourself: you stay in control of your accounts and documents."],
@@ -101,6 +105,7 @@ export async function PricingView({ locale }: { locale: Locale }) {
   const steps = offers.filter((o) => o.kind === "demarche");
   const bundles = offers.filter((o) => o.kind === "pack" || o.kind === "abonnement");
   const lowest = lowestDemarchePrice(offers);
+  const canPay = paymentsEnabled();
 
   const catalogJsonLd = {
     "@context": "https://schema.org",
@@ -168,7 +173,7 @@ export async function PricingView({ locale }: { locale: Locale }) {
               ))}
             </div>
             <div className="mt-6">
-              <DemarcheSelector offers={steps} pack={bundles.find((o) => o.kind === "pack")} locale={locale} />
+              <DemarcheSelector offers={steps} pack={bundles.find((o) => o.kind === "pack")} locale={locale} canPay={canPay} />
             </div>
           </section>
         )}
@@ -220,8 +225,17 @@ export async function PricingView({ locale }: { locale: Locale }) {
                       <dd className="text-muted">{offer.cancellation}</dd>
                     </div>
                   </dl>
-                  <div className="mt-auto pt-6">
-                    <ButtonLink href={bookHref(offer, locale)} variant={offer.highlighted ? "primary" : "secondary"} className="w-full">
+                  <div className="mt-auto space-y-2 pt-6">
+                    {canPay && (
+                      <form action={startCheckout}>
+                        <input type="hidden" name="locale" value={locale} />
+                        <input type="hidden" name="offres" value={offer.id} />
+                        <Button type="submit" className="w-full">
+                          {c.pay}
+                        </Button>
+                      </form>
+                    )}
+                    <ButtonLink href={bookHref(offer, locale)} variant={canPay || !offer.highlighted ? "secondary" : "primary"} className="w-full">
                       {c.book}
                     </ButtonLink>
                   </div>

@@ -6,6 +6,10 @@ import { requireAdmin } from "@/lib/supabase/server";
 import { ActionButton } from "@/components/admin/forms";
 import { AdminTitle, formatDateTime, Panel } from "@/components/admin/ui";
 import { Badge } from "@/components/ui/primitives";
+import { PaymentLinkMaker } from "@/components/admin/PaymentLinkMaker";
+import { getOffers } from "@/lib/data/content";
+import { paidByReference, recentPaidSessions } from "@/lib/payments/admin";
+import { paymentsEnabled } from "@/lib/payments/stripe";
 
 export const metadata = { title: "Demandes" };
 
@@ -77,6 +81,14 @@ export default async function RequestsPage({ searchParams }: PageProps<"/admin/d
   if (filter) query = query.eq("status", filter);
   const { data, error } = await query;
   const requests = (data ?? []) as RequestRow[];
+  const canPay = paymentsEnabled();
+  const [offers, sessions] = canPay ? await Promise.all([getOffers(), recentPaidSessions()]) : [[], null];
+  const paid = paidByReference(sessions);
+  const payable = offers.filter((o) => o.price > 0).map(({ id, name, price, kind }) => ({ id, name, price, kind }));
+  const defaultsFor = (r: RequestRow): string[] => {
+    if (Array.isArray(r.data.selectionIds)) return r.data.selectionIds.filter((x): x is string => typeof x === "string");
+    return typeof r.data.offer === "string" ? [r.data.offer] : [];
+  };
 
   const chip =
     "inline-flex min-h-9 items-center rounded-full border border-line bg-white px-3 text-sm font-medium text-ink aria-[current=true]:border-brand-700 aria-[current=true]:bg-brand-700 aria-[current=true]:text-white";
@@ -112,6 +124,7 @@ export default async function RequestsPage({ searchParams }: PageProps<"/admin/d
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge tone={r.kind === "contact" ? "brand" : "accent"}>{r.kind === "contact" ? "Contact" : "Rendez-vous"}</Badge>
                     {r.status === "nouveau" && <Badge tone="warning">Nouveau</Badge>}
+                    {paid.has(r.reference) && <Badge tone="accent">Payé · {paid.get(r.reference)} €</Badge>}
                     <span className="text-xs text-muted">
                       {r.reference} · {formatDateTime(r.created_at)}
                     </span>
@@ -154,6 +167,9 @@ export default async function RequestsPage({ searchParams }: PageProps<"/admin/d
                 </div>
               </div>
               <Details r={r} />
+              {canPay && r.kind === "rendez-vous" && (
+                <PaymentLinkMaker reference={r.reference} locale={r.data.language === "en" ? "en" : "fr"} offers={payable} defaults={defaultsFor(r)} />
+              )}
             </Panel>
           </li>
         ))}

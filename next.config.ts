@@ -5,7 +5,7 @@ const isDev = process.env.NODE_ENV === "development";
 /**
  * Politique de sécurité du contenu (CSP) : le navigateur ne charge que des ressources du site lui-même.
  * Toutes les requêtes Supabase passent par le serveur, donc aucune connexion externe n'est autorisée côté navigateur.
- * Ajout futur de Stripe : autoriser https://js.stripe.com (script-src, frame-src) et https://api.stripe.com (connect-src).
+ * Stripe Checkout est une page hébergée par Stripe : seul form-action doit l'autoriser (aucun script Stripe sur le site).
  */
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -17,7 +17,8 @@ const contentSecurityPolicy = [
   "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self'",
+  // Paiement : le formulaire « Payer » redirige vers la page de paiement hébergée par Stripe.
+  "form-action 'self' https://checkout.stripe.com",
   "frame-ancestors 'none'",
   ...(isDev ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");

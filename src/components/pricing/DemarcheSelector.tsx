@@ -7,6 +7,7 @@ import { bundleDiscounts, computeSelection, formatEuros, formatPrice, type Offer
 import { getCategory } from "@/content/categories";
 import { getDemarcheGoal } from "@/content/demarcheGoals";
 import { href, type Locale } from "@/i18n";
+import { startCheckout } from "@/lib/payments/actions";
 
 const copy = {
   fr: {
@@ -19,7 +20,8 @@ const copy = {
     discount: (p: number) => `Remise ${p} %`,
     total: "Total",
     book: "Réserver ces démarches",
-    noPayment: "Aucun paiement en ligne : on vous recontacte pour confirmer.",
+    pay: "Payer maintenant",
+    noPayment: "Paiement sécurisé par Stripe, ou réservation sans paiement.",
     tiers: "Plus vous en prenez, moins c'est cher :",
     tier: (min: number, percent: number) => `−${percent} % dès ${min}`,
     packHint: (price: string) => `Astuce : le Pack Arrivée (${price}) inclut jusqu'à 5 démarches et un appel de 60 min.`,
@@ -36,7 +38,8 @@ const copy = {
     discount: (p: number) => `${p}% discount`,
     total: "Total",
     book: "Book these procedures",
-    noPayment: "No online payment: we'll get back to you to confirm.",
+    pay: "Pay now",
+    noPayment: "Secure payment by Stripe, or book without paying.",
     tiers: "The more you take, the less you pay:",
     tier: (min: number, percent: number) => `−${percent}% from ${min}`,
     packHint: (price: string) => `Tip: the Moving to France bundle (${price}) includes up to 5 procedures and a 60-minute call.`,
@@ -46,7 +49,7 @@ const copy = {
 };
 
 /** Sélecteur « à la carte » : on coche ses démarches, le total (avec remise dégressive) se met à jour. */
-export function DemarcheSelector({ offers, pack, locale }: { offers: Offer[]; pack?: Offer; locale: Locale }) {
+export function DemarcheSelector({ offers, pack, locale, canPay = false }: { offers: Offer[]; pack?: Offer; locale: Locale; canPay?: boolean }) {
   const t = copy[locale];
   const [selected, setSelected] = useState<string[]>([]);
   const totals = useMemo(() => computeSelection(offers, selected), [offers, selected]);
@@ -153,11 +156,23 @@ export function DemarcheSelector({ offers, pack, locale }: { offers: Offer[]; pa
               )}
             </>
           )}
+          {canPay && totals.count > 0 && (
+            <form action={startCheckout} className="mt-4">
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="offres" value={selected.join(",")} />
+              <button
+                type="submit"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
+              >
+                {t.pay} · {formatEuros(totals.total, locale)}
+              </button>
+            </form>
+          )}
           <Link
             href={totals.count ? bookUrl : "#"}
             aria-disabled={totals.count === 0}
-            className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-              totals.count ? "bg-brand-700 text-white hover:bg-brand-800" : "pointer-events-none bg-line text-muted"
+            className={`mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+              !totals.count ? "pointer-events-none bg-line text-muted" : canPay ? "border border-line bg-white text-ink hover:border-brand-300" : "bg-brand-700 text-white hover:bg-brand-800"
             }`}
           >
             {t.book} <ArrowRight className="h-4 w-4" aria-hidden="true" />

@@ -175,6 +175,7 @@ export async function submitAppointment(_prev: FormState, formData: FormData): P
             offerName: `Sélection de ${totals.count} démarche(s)`,
             phone: d.phone ?? "",
             selection: names,
+            selectionIds: offers.filter((o) => o.kind === "demarche" && d.selection?.includes(o.id)).map((o) => o.id),
             subtotal: totals.subtotal,
             discountPercent: totals.discountPercent,
             total: totals.total,
