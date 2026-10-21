@@ -55,8 +55,15 @@ export async function signIn(_prev: AdminResult, formData: FormData): Promise<Ad
   }
   const supabase = await createSessionClient();
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  // Message identique dans tous les cas : on ne révèle pas si le compte existe.
-  if (error) return fail("E-mail ou mot de passe incorrect.");
+  if (error) {
+    // « invalid_credentials » ne révèle pas si le compte existe ; les autres cas aident à corriger la configuration.
+    if (error.code === "email_not_confirmed") {
+      return fail("Ce compte n'est pas encore confirmé. Dans Supabase, confirmez l'utilisateur (Authentication > Users).");
+    }
+    if (error.code === "invalid_credentials") return fail("E-mail ou mot de passe incorrect.");
+    console.error(`[admin] connexion impossible : ${error.code ?? error.status}`);
+    return fail(`Connexion impossible (${error.code ?? "erreur inconnue"}). Réessayez dans un instant.`);
+  }
   const { data: isAdmin } = await supabase.rpc("is_admin");
   if (!isAdmin) {
     await supabase.auth.signOut();
