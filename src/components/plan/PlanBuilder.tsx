@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Offer } from "@/config/pricing";
 import { answersSchema, type Answers } from "@/lib/plan/questions";
 import { readLocal, removeLocal, writeLocal } from "@/lib/storage";
 import { ActionPlanView } from "./ActionPlanView";
@@ -12,7 +13,7 @@ type Mode = "loading" | "questions" | "plan";
  * Orchestration du parcours : questionnaire puis plan.
  * Les réponses et la progression restent dans le navigateur (aucun envoi au serveur).
  */
-export function PlanBuilder() {
+export function PlanBuilder({ offers, publishedGuideSlugs }: { offers: Offer[]; publishedGuideSlugs: string[] }) {
   const [mode, setMode] = useState<Mode>("loading");
   const [answers, setAnswers] = useState<Answers | null>(null);
   const [checked, setChecked] = useState<string[]>([]);
@@ -62,5 +63,5 @@ export function PlanBuilder() {
     return <Questionnaire initial={answers} onComplete={complete} />;
   }
 
-  return <ActionPlanView answers={answers} checked={checked} onToggle={toggle} onEdit={() => setMode("questions")} onReset={reset} />;
+  return <ActionPlanView offers={offers} publishedGuideSlugs={publishedGuideSlugs} answers={answers} checked={checked} onToggle={toggle} onEdit={() => setMode("questions")} onReset={reset} />;
 }

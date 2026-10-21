@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { offers, type OfferId } from "@/config/pricing";
 
 /**
  * Schémas de validation des formulaires (utilisés côté serveur).
@@ -48,7 +47,8 @@ export const appointmentModes = [
 export const appointmentSchema = z.object({
   name,
   email,
-  offer: z.enum(offers.map((o) => o.id) as [OfferId, ...OfferId[]], { error: "Choisissez une offre." }),
+  // L'existence de l'offre est vérifiée dans l'action (les offres viennent de la base).
+  offer: z.string({ error: "Choisissez une offre." }).trim().min(1, "Choisissez une offre.").max(40),
   mode: z.enum(appointmentModes.map((m) => m.value) as [string, ...string[]], {
     error: "Choisissez un mode de rendez-vous.",
   }),

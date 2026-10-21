@@ -32,8 +32,31 @@ cp .env.example .env.local
 
 ## Stack
 
-Next.js 16 (App Router, Cache Components), React 19, TypeScript, Tailwind CSS 4, Zod, lucide-react, Vitest.
-Pas de base de données, pas d'authentification, pas de paiement dans cette version.
+Next.js 16 (App Router, Cache Components), React 19, TypeScript, Tailwind CSS 4, Zod, lucide-react, Vitest,
+Supabase (base de données + connexion de l'administrateur). Pas de paiement dans cette version.
+Sans Supabase configuré, le site fonctionne avec le contenu par défaut du code (l'admin est alors indisponible).
+
+## Espace admin (mise en place, une seule fois)
+
+1. Créer un projet sur https://supabase.com — **choisir une région européenne** (ex. Paris ou Francfort).
+2. Supabase → **SQL Editor** → coller tout le fichier `supabase/migrations/20261021120000_admin_rgpd.sql` → **Run**.
+3. Supabase → **Authentication → Users → Add user** : votre e-mail + un mot de passe solide (cocher « Auto Confirm User »).
+   Puis **Authentication → Sign In / Providers** : désactiver « Allow new users to sign up ».
+4. SQL Editor : autoriser votre compte comme administrateur (en minuscules) :
+   ```sql
+   insert into public.admin_emails (email) values ('votre.adresse@exemple.com');
+   ```
+5. Supabase → **Project Settings → API** : copier « Project URL » et la clé « anon public » dans `.env.local`
+   (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`) **et** dans Vercel (Settings → Environment Variables),
+   puis redéployer. Ne jamais utiliser la clé `service_role`.
+6. Ouvrir `/admin`, se connecter, cliquer **Importer le contenu par défaut**.
+
+Ce que permet l'admin : demandes reçues (statut, suppression), offres et prix, guides (création, édition,
+publication, date de vérification), visibilité des domaines et services, données personnelles
+(export, effacement, purge, journal).
+
+Sécurité : chaque page et action admin vérifie la session **et** le rôle administrateur ; la base applique
+ses propres règles (RLS) : un visiteur peut seulement déposer une demande et lire le contenu publié.
 
 ## Organisation du code
 
@@ -54,19 +77,29 @@ src/
     plan/tasks.ts       Bibliothèque de tâches validées
     plan/rules.ts       Moteur de règles du plan d'action
     forms/              Schémas Zod, Server Actions, limitation de débit
+    data/content.ts     Lecture des contenus (base Supabase, sinon contenu par défaut), mise en cache
+    admin/              Actions de l'espace admin, format texte de l'éditeur de guides
+    supabase/           Clients Supabase (visiteur sans cookie, session admin)
+  app/(site)/           Site public
+  app/admin/            Espace admin (/admin, /admin/connexion)
+  proxy.ts              Protège /admin (session)
+  config/privacy.ts     Version de la politique de confidentialité, durée de conservation
   integrations/
     delivery.ts         Acheminement des formulaires (console / webhook)
   i18n/                 Libellés de l'interface (français ; prêt pour en / ar)
+supabase/migrations/    SQL à appliquer dans Supabase
 docs/CONFORMITE.md      Checklist juridique et RGPD avant commercialisation
+docs/registre-traitements.md  Registre RGPD (brouillon) + procédure d'exercice des droits
 ```
 
 ## Configuration
 
 Variables d'environnement : voir `.env.example`.
 
-- **Prix et offres** : `src/config/pricing.ts`.
-- **Services** : `src/content/services.ts` (`active: false` masque un domaine ou un service).
-- **Guides** : `src/content/guides.ts`. Un guide `draft` n'est visible qu'en développement.
+- **Prix et offres** : espace admin → Tarifs (valeurs par défaut : `src/config/pricing.ts`).
+- **Services** : contenu dans `src/content/services.ts` ; visibilité réglée dans l'admin → Services.
+- **Guides** : espace admin → Guides (contenu par défaut : `src/content/guides.ts`). Un guide en brouillon
+  n'est pas visible sur le site.
   Tant que `lastVerified` vaut `null`, la page affiche « Information à vérifier auprès de
   l'organisme compétent ».
 - **Sources officielles** : `src/content/sources.ts`. Un test refuse toute URL hors des domaines
@@ -74,9 +107,12 @@ Variables d'environnement : voir `.env.example`.
   contenu des guides, lui, n'a pas encore été relu face aux sources.
 - **Plan d'action** : ajouter une tâche dans `tasks.ts`, puis une règle dans `rules.ts`.
   Aucune IA : seules les tâches de la bibliothèque peuvent apparaître.
-- **Formulaires** : `FORMS_DELIVERY=webhook` + `FORMS_WEBHOOK_URL` pour recevoir les demandes
-  (Make, Zapier, n8n, Slack…). En production sans configuration, les formulaires affichent un
+- **Formulaires** : avec Supabase, les demandes sont enregistrées en base et visibles dans l'admin.
+  `FORMS_DELIVERY=webhook` + `FORMS_WEBHOOK_URL` ajoute une notification (sans donnée personnelle).
+  Sans Supabase, le webhook reçoit la demande complète ; sans rien, les formulaires affichent un
   message d'indisponibilité au lieu de perdre la demande en silence.
+- **RGPD** : durée de conservation et version de la politique dans `src/config/privacy.ts`
+  (la durée doit rester alignée avec la migration SQL).
 - **Indexation** : `robots.txt` bloque tout tant que `NEXT_PUBLIC_ALLOW_INDEXING` n'est pas à `true`.
 
 ## Choix faits par défaut (à valider)
@@ -89,8 +125,8 @@ Variables d'environnement : voir `.env.example`.
 ## Limites actuelles
 
 - Pas de comptes utilisateurs : la page Connexion explique que l'espace client arrive bientôt.
-- Pas de base de données : les demandes de contact / rendez-vous sont transmises par webhook,
-  pas stockées par l'application.
+- Un seul compte administrateur ; pas de comptes clients.
+- Les textes des services (hors visibilité) se modifient encore dans le code.
 - Pas de paiement ni de réservation avec calendrier.
 - La limitation de débit des formulaires est en mémoire (une seule instance).
 - Les pages légales sont des brouillons avec des champs `[à compléter]`.
@@ -102,7 +138,6 @@ Variables d'environnement : voir `.env.example`.
 1. Relire et dater chaque guide ; compléter les pages légales (voir `docs/CONFORMITE.md`).
 2. Vérifier la disponibilité de la marque et des noms de domaine.
 3. Brancher le webhook des formulaires et déployer (ex. Vercel) avec indexation désactivée.
-4. Phase 2 : base de données (ex. Supabase) pour comptes, sauvegarde des plans, tableau de bord,
-   espace administrateur (services, guides, prix), e-mails transactionnels.
+4. Phase 2 : comptes clients, sauvegarde des plans, tableau de bord client, e-mails transactionnels.
 5. Phase 3 : réservation avec calendrier, paiement et abonnements (après validation juridique),
    guides en anglais et en arabe (`src/i18n`).

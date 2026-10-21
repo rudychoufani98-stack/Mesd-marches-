@@ -10,6 +10,8 @@ import type { SourceId } from "./sources";
  * - `lastVerified` reste à `null` tant qu'une personne n'a pas relu le guide en le comparant
  *   aux sources officielles. Dans ce cas, l'avertissement « Information à vérifier… » est affiché.
  * - Seuls les guides `published` sont visibles en production.
+ * - Une fois Supabase configuré, les guides se gèrent dans l'espace admin (/admin/guides) ;
+ *   cette liste sert alors de contenu initial et de secours.
  */
 export type GuideStatus = "draft" | "published";
 
@@ -35,7 +37,7 @@ export type Guide = {
   updatedAt: string;
 };
 
-export const guides: Guide[] = [
+export const defaultGuides: Guide[] = [
   {
     slug: "premieres-demarches-installation",
     title: "Les premières démarches lors d'une installation en France",
@@ -512,18 +514,3 @@ export const guides: Guide[] = [
     updatedAt: "2026-10-21",
   },
 ];
-
-/** En développement, les brouillons sont visibles (avec un badge) pour pouvoir les relire. */
-export const SHOW_DRAFTS = process.env.NODE_ENV !== "production";
-
-export function getVisibleGuides(): Guide[] {
-  return guides.filter((g) => g.status === "published" || SHOW_DRAFTS);
-}
-
-export function getPublishedGuides(): Guide[] {
-  return guides.filter((g) => g.status === "published");
-}
-
-export function getGuide(slug: string): Guide | undefined {
-  return getVisibleGuides().find((g) => g.slug === slug);
-}

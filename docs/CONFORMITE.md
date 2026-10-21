@@ -36,12 +36,17 @@
 ## 4. Données personnelles (RGPD)
 
 - [ ] Désigner le responsable de traitement et un contact « données ».
-- [ ] Tenir un registre des traitements (contact, rendez-vous, futurs comptes clients).
+- [ ] Compléter et valider le registre des traitements : `docs/registre-traitements.md` (brouillon prêt).
 - [ ] Valider les bases légales et les durées de conservation (voir page Confidentialité).
-- [ ] Mettre en place une procédure de suppression (purge des demandes au-delà de la durée retenue).
+- [x] Suppression automatique des demandes après 12 mois (tâche `purge-demandes` + bouton dans l'admin).
+      À faire : vérifier dans Supabase que la tâche planifiée existe (Database > Cron).
 - [ ] Lister les sous-traitants (hébergeur, outil de réception des formulaires, messagerie) et
       vérifier la localisation des données et les clauses contractuelles.
-- [ ] Procédure de réponse aux demandes d'exercice des droits (accès, effacement…).
+- [x] Outil d'exercice des droits dans l'admin (recherche, export JSON, effacement, journal).
+      Procédure décrite dans `docs/registre-traitements.md`.
+- [x] Consentement horodaté avec la version de la politique (`PRIVACY_VERSION`).
+- [ ] Choisir une région européenne pour le projet Supabase et signer les DPA (Supabase, Vercel).
+- [ ] Rédiger la procédure en cas de violation de données.
 - [ ] Ne pas ajouter d'outil de mesure d'audience ou de cookie non essentiel sans vérifier
       les obligations de consentement (recommandations de la CNIL).
 - [ ] Ne jamais collecter de documents sensibles, de mots de passe ou de codes d'accès

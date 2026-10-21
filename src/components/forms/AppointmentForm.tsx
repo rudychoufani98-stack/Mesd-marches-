@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { CalendarCheck } from "lucide-react";
-import { formatPrice, offers, type OfferId } from "@/config/pricing";
+import { formatPrice, type Offer } from "@/config/pricing";
 import { submitAppointment } from "@/lib/forms/actions";
 import { appointmentModes, appointmentSlots, initialFormState } from "@/lib/forms/schemas";
 import { Button, ButtonLink } from "@/components/ui/primitives";
@@ -10,7 +10,7 @@ import { ConsentField, describedBy, Field, fieldError, FormStatus, FormSuccess, 
 
 const groupError = "mt-1.5 text-sm text-red-700";
 
-export function AppointmentForm({ defaultOffer }: { defaultOffer?: OfferId }) {
+export function AppointmentForm({ offers, defaultOffer }: { offers: Offer[]; defaultOffer?: string }) {
   const [state, action, pending] = useActionState(submitAppointment, initialFormState);
 
   if (state.status === "success") {

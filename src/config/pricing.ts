@@ -1,12 +1,14 @@
 /**
- * Configuration centrale des offres et des prix.
- * Modifier ici met à jour la page Tarifs, le formulaire de rendez-vous et la FAQ.
+ * Offres et prix PAR DÉFAUT.
+ * Une fois Supabase configuré, les offres se modifient dans l'espace admin (/admin/tarifs) ;
+ * ces valeurs servent alors de contenu initial (bouton « Importer le contenu par défaut »)
+ * et de secours si la base est vide ou indisponible.
  * Les prix sont des prix de test : ils doivent être validés avant toute commercialisation.
  */
 export type OfferId = "bilan" | "installation" | "suivi";
 
 export type Offer = {
-  id: OfferId;
+  id: string;
   name: string;
   tagline: string;
   /** Prix TTC en euros. */
@@ -22,7 +24,7 @@ export type Offer = {
 
 export const PRICES_ARE_TEST_VALUES = true;
 
-export const offers: Offer[] = [
+export const defaultOffers: Offer[] = [
   {
     id: "bilan",
     name: "Bilan administratif",
@@ -94,15 +96,12 @@ export const offers: Offer[] = [
   },
 ];
 
-export function getOffer(id: string): Offer | undefined {
-  return offers.find((o) => o.id === id);
-}
-
 export function formatPrice(offer: Offer): string {
   const amount = new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: Number.isInteger(offer.price) ? 0 : 2,
+    maximumFractionDigits: 2,
   }).format(offer.price);
   return offer.billing === "mensuel" ? `${amount} / mois` : amount;
 }

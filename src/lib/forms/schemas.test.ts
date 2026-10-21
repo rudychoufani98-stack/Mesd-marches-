@@ -43,8 +43,8 @@ describe("appointmentSchema", () => {
   it("accepte une demande valide", () => {
     expect(appointmentSchema.safeParse(appt).success).toBe(true);
   });
-  it("refuse une offre inconnue", () => {
-    expect(appointmentSchema.safeParse({ ...appt, offer: "premium" }).success).toBe(false);
+  it("exige une offre", () => {
+    expect(appointmentSchema.safeParse({ ...appt, offer: "" }).success).toBe(false);
   });
   it("exige au moins une disponibilité", () => {
     expect(appointmentSchema.safeParse({ ...appt, slots: [] }).success).toBe(false);

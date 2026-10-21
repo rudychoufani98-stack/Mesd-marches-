@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { BookOpen, CalendarClock, Check, FileText, Pencil, Printer, RotateCcw, Wrench } from "lucide-react";
 import { siteConfig } from "@/config/site";
-import { formatPrice, getOffer } from "@/config/pricing";
+import { formatPrice, type Offer } from "@/config/pricing";
 import { getCategory } from "@/content/categories";
 import { getSources } from "@/content/sources";
 import { buildPlan } from "@/lib/plan/rules";
@@ -24,7 +24,11 @@ export function ActionPlanView({
   onToggle,
   onEdit,
   onReset,
+  offers,
+  publishedGuideSlugs,
 }: {
+  offers: Offer[];
+  publishedGuideSlugs: string[];
   answers: Answers;
   checked: string[];
   onToggle: (taskId: string) => void;
@@ -33,7 +37,7 @@ export function ActionPlanView({
 }) {
   const plan = useMemo(() => buildPlan(answers), [answers]);
   const done = plan.tasks.filter((t) => checked.includes(t.id)).length;
-  const offer = plan.recommendedOffer ? getOffer(plan.recommendedOffer) : undefined;
+  const offer = plan.recommendedOffer ? offers.find((o) => o.id === plan.recommendedOffer) : undefined;
   const phases = ([1, 2, 3] as const).filter((p) => plan.tasks.some((t) => t.phase === p));
 
   return (
@@ -131,7 +135,7 @@ export function ActionPlanView({
                         ) : null}
 
                         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-0 text-sm">
-                          {task.guideSlug && (
+                          {task.guideSlug && publishedGuideSlugs.includes(task.guideSlug) && (
                             <Link href={`/guides/${task.guideSlug}`} className="inline-flex min-h-9 items-center gap-1 font-medium text-brand-700 hover:underline">
                               <BookOpen className="h-4 w-4" aria-hidden="true" /> Guide pratique
                             </Link>

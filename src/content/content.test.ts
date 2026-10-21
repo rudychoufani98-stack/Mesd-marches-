@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { categories } from "./categories";
-import { guides } from "./guides";
+import { defaultGuides as guides } from "./guides";
 import { officialSources } from "./sources";
 import { serviceDomains } from "./services";
 import { taskLibrary } from "@/lib/plan/tasks";
-import { offers } from "@/config/pricing";
+import { defaultOffers as offers } from "@/config/pricing";
 
 const ALLOWED_HOSTS = [
   /\.gouv\.fr$/,

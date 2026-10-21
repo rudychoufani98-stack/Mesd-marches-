@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { REQUEST_RETENTION_MONTHS } from "@/config/privacy";
 import type { FormState } from "@/lib/forms/schemas";
 
 export const inputClasses =
@@ -78,7 +79,7 @@ export function ConsentField({ error, defaultChecked }: { error?: string; defaul
         />
         <span>
           J&apos;accepte que les informations saisies soient utilisées pour traiter ma demande et me répondre. Elles ne sont
-          ni vendues ni utilisées à des fins publicitaires.{" "}
+          ni vendues ni utilisées à des fins publicitaires, et sont supprimées au bout de {REQUEST_RETENTION_MONTHS} mois.{" "}
           <Link href="/confidentialite" className="font-medium text-brand-700 underline">
             En savoir plus
           </Link>

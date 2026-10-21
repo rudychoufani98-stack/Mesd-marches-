@@ -1,9 +1,8 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
-import { getPublishedGuides } from "@/content/guides";
-import { getActiveDomains } from "@/content/services";
+import { getActiveDomains, getPublishedGuides } from "@/lib/data/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteConfig.url.replace(/\/$/, "");
   const staticPages = [
     "",
@@ -23,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...staticPages.map((path) => ({ url: `${base}${path}` })),
-    ...getActiveDomains().map((d) => ({ url: `${base}/services/${d.slug}` })),
-    ...getPublishedGuides().map((g) => ({ url: `${base}/guides/${g.slug}`, lastModified: g.updatedAt })),
+    ...(await getActiveDomains()).map((d) => ({ url: `${base}/services/${d.slug}` })),
+    ...(await getPublishedGuides()).map((g) => ({ url: `${base}/guides/${g.slug}`, lastModified: g.updatedAt })),
   ];
 }

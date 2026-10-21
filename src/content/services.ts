@@ -4,8 +4,8 @@ import type { SourceId } from "./sources";
 /**
  * Catalogue des services, regroupés par domaine.
  * Chaque domaine a sa page de détail (/services/[domaine]).
- * `active: false` masque un domaine ou un service sans supprimer son contenu
- * (en attendant l'espace administrateur prévu en phase 2).
+ * `active` est la valeur par défaut : une fois Supabase configuré, l'espace admin
+ * (/admin/services) peut masquer ou réafficher chaque domaine et chaque service.
  */
 export type ServiceFormat = "guide" | "outil" | "accompagnement";
 
@@ -466,15 +466,3 @@ export const serviceDomains: ServiceDomain[] = [
     active: true,
   },
 ];
-
-export function getActiveDomains(): ServiceDomain[] {
-  return serviceDomains.filter((d) => d.active);
-}
-
-export function getDomainBySlug(slug: string): ServiceDomain | undefined {
-  return serviceDomains.find((d) => d.slug === slug && d.active);
-}
-
-export function getDomainByCategory(category: CategoryId): ServiceDomain | undefined {
-  return serviceDomains.find((d) => d.category === category && d.active);
-}
