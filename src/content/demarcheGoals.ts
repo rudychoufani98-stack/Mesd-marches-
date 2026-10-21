@@ -7,6 +7,26 @@ import type { Locale } from "@/i18n";
 type Goal = { goal: string; why: string };
 
 const goals: Record<string, Record<Locale, Goal>> = {
+  "d-titre-sejour": {
+    fr: { goal: "Obtenir ou renouveler votre titre de séjour", why: "Rendez-vous introuvables, dossiers incomplets, délais : un retard peut fragiliser votre séjour." },
+    en: { goal: "Get or renew your residence permit", why: "Impossible appointments, incomplete files, deadlines: a delay can put your stay at risk." },
+  },
+  "d-naturalisation": {
+    fr: { goal: "Devenir français·e", why: "Un dossier lourd, des mois d'attente : chaque pièce manquante peut tout retarder." },
+    en: { goal: "Become a French citizen", why: "A heavy file, months of waiting: every missing document can delay everything." },
+  },
+  "d-traductions": {
+    fr: { goal: "Faire traduire vos documents officiels", why: "Actes de naissance, diplômes, permis : la plupart des dossiers exigent une traduction assermentée." },
+    en: { goal: "Get your official documents translated", why: "Birth certificates, diplomas, licences: most files require a sworn translation." },
+  },
+  "d-creation-entreprise": {
+    fr: { goal: "Lancer votre activité en France", why: "Statut, immatriculation, URSSAF : bien démarrer évite des erreurs coûteuses." },
+    en: { goal: "Launch your business in France", why: "Status, registration, URSSAF: starting right avoids costly mistakes." },
+  },
+  "d-diplome": {
+    fr: { goal: "Faire valoir votre diplôme", why: "Les employeurs et certaines professions exigent une reconnaissance officielle de votre diplôme étranger." },
+    en: { goal: "Make your diploma count", why: "Employers and some professions require official recognition of your foreign diploma." },
+  },
   "d-compte-bancaire": {
     fr: { goal: "Ouvrir votre compte bancaire", why: "Sans compte, pas de salaire, pas de loyer prélevé, pas de remboursements ni d'aides." },
     en: { goal: "Open your bank account", why: "Without one, you can't get paid, pay rent, or receive refunds and benefits." },
@@ -28,8 +48,8 @@ const goals: Record<string, Record<Locale, Goal>> = {
     en: { goal: "Get covered by French health insurance", why: "Without registration and a carte Vitale, your medical costs aren't reimbursed." },
   },
   "d-permis": {
-    fr: { goal: "Conduire légalement en France", why: "Certains permis étrangers doivent être échangés dans un délai précis : après, il peut être trop tard." },
-    en: { goal: "Drive legally in France", why: "Some foreign licences must be exchanged within a set time: miss it and it may be too late." },
+    fr: { goal: "Échanger votre permis étranger", why: "Certains permis étrangers doivent être échangés dans un délai précis : après, il peut être trop tard." },
+    en: { goal: "Exchange your foreign licence", why: "Some foreign licences must be exchanged within a set time: miss it and it may be too late." },
   },
   "d-emploi": {
     fr: { goal: "Démarrer votre emploi sereinement", why: "Les bons documents pour l'employeur, et une fiche de paie que vous comprenez enfin." },

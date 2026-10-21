@@ -61,6 +61,39 @@ export const offersEn: Record<string, OfferText> = {
     name: "Register with French health insurance",
     tagline: "Understand the steps, prepare the file, create your ameli account.",
   },
+  "d-titre-sejour": {
+    ...STEP_COMMON,
+    name: "Prepare your residence permit file",
+    tagline: "First application or renewal: a complete file, submitted on time.",
+  },
+  "d-naturalisation": {
+    ...STEP_COMMON,
+    name: "Prepare your naturalisation file",
+    tagline: "Documents, translations, online submission and interview preparation.",
+    duration: "60 min + 30 days of questions",
+    includes: [
+      "A 60-minute appointment (video or phone)",
+      "Your personalised document list",
+      "A full review of your file before submission",
+      "Preparation for the assimilation interview",
+      "30 days of questions by email",
+    ],
+  },
+  "d-traductions": {
+    ...STEP_COMMON,
+    name: "Sworn translations",
+    tagline: "The right sworn translator, checked documents (translation billed by the translator).",
+  },
+  "d-creation-entreprise": {
+    ...STEP_COMMON,
+    name: "Set up your micro-business (auto-entrepreneur)",
+    tagline: "Choose the right status, register, understand URSSAF.",
+  },
+  "d-diplome": {
+    ...STEP_COMMON,
+    name: "Get your diploma recognised",
+    tagline: "Comparability statement or professional recognition: the right file.",
+  },
   "d-permis": {
     ...STEP_COMMON,
     name: "Exchange your foreign driving licence",

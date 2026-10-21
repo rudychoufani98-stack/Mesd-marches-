@@ -5,6 +5,11 @@ import {
   Briefcase,
   Car,
   Check,
+  FileCheck2,
+  Flag,
+  GraduationCap,
+  Languages as LanguagesIcon,
+  Rocket,
   HeartPulse,
   Home,
   KeyRound,
@@ -29,6 +34,11 @@ import { jsonLd } from "@/lib/seo";
 
 /** Icône de chaque accompagnement (plus sobre que des emojis). */
 const ICONS: Record<string, LucideIcon> = {
+  "d-titre-sejour": FileCheck2,
+  "d-naturalisation": Flag,
+  "d-traductions": LanguagesIcon,
+  "d-creation-entreprise": Rocket,
+  "d-diplome": GraduationCap,
   "d-compte-bancaire": Landmark,
   "d-dossier-location": KeyRound,
   "d-aide-logement": Home,
@@ -57,6 +67,9 @@ const copy = {
     from: "dès",
     cta: "Être accompagné·e",
     allPrices: "Tarifs et Pack Arrivée",
+    otherTitle: "Votre démarche n'est pas listée ?",
+    otherText: "Parlez-en à un conseiller : nous vous accompagnons sur toutes les démarches.",
+    otherCta: "Appel offert",
     methodEyebrow: "La méthode",
     methodTitle: "Trois étapes. Aucune perte de temps.",
     method: [
@@ -109,6 +122,9 @@ const copy = {
     from: "from",
     cta: "Get support",
     allPrices: "Prices and Moving bundle",
+    otherTitle: "Your procedure isn't listed?",
+    otherText: "Talk to an advisor: we support you with every procedure.",
+    otherCta: "Free call",
     methodEyebrow: "The method",
     methodTitle: "Three steps. No time wasted.",
     method: [
@@ -245,6 +261,15 @@ export async function HomeView({ locale }: { locale: Locale }) {
                   </li>
                 );
               })}
+              <li className="bg-brand-950">
+                <a href="#demande" className="group flex h-full flex-col p-7 text-white">
+                  <span className="font-display text-xl font-medium leading-snug">{c.otherTitle}</span>
+                  <span className="mt-2 block text-sm leading-relaxed text-brand-100/80">{c.otherText}</span>
+                  <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-semibold text-gold-300">
+                    {c.otherCta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  </span>
+                </a>
+              </li>
             </ul>
           </Container>
         </section>

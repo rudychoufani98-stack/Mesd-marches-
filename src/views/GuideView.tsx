@@ -16,6 +16,8 @@ import { jsonLd } from "@/lib/seo";
 /** Démarche payante correspondant à chaque guide (les autres guides renvoient vers l'appel gratuit). */
 const GUIDE_OFFERS: Record<string, string> = {
   "permis-de-conduire-etranger": "d-permis",
+  "comprendre-titre-de-sejour": "d-titre-sejour",
+  "comprendre-nationalite-francaise": "d-naturalisation",
   "preparer-dossier-locatif": "d-dossier-location",
   "comprendre-ouverture-compte-bancaire": "d-compte-bancaire",
   "s-orienter-protection-sociale": "d-assurance-maladie",
