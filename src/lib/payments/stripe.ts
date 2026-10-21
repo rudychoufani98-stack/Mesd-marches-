@@ -9,8 +9,9 @@ import Stripe from "stripe";
  */
 export type PaymentsStatus = "off" | "test" | "live" | "live-blocked";
 
+/** Clé secrète : variable STRIPE_SECRET_KEY, ou « sk_test » (nom choisi dans Vercel). */
 function key(): string | null {
-  return process.env.STRIPE_SECRET_KEY?.trim() || null;
+  return process.env.STRIPE_SECRET_KEY?.trim() || process.env.sk_test?.trim() || null;
 }
 
 export function paymentsStatus(): PaymentsStatus {

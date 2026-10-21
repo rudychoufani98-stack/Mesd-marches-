@@ -25,7 +25,7 @@ export default async function PaymentsPage() {
 
       {status === "off" && (
         <Panel className="mb-6 border-amber-200 bg-amber-50 text-sm text-amber-900">
-          <strong>Paiements désactivés.</strong> Ajoutez la variable <code>STRIPE_SECRET_KEY</code> (clé de test <code>sk_test_…</code>) dans Vercel, puis redéployez.
+          <strong>Paiements désactivés.</strong> Ajoutez la variable <code>sk_test</code> (clé de test <code>sk_test_…</code>) dans Vercel, puis redéployez.
         </Panel>
       )}
       {status === "live-blocked" && (
