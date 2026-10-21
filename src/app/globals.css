@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Système visuel MesDémarches.
+ * Bleu profond (brand) pour la structure et les actions principales,
+ * vert d'eau doux (accent) pour les éléments de progression et les touches visuelles.
+ * Volontairement éloigné des codes graphiques institutionnels.
+ */
+@theme {
+  --color-brand-50: #eef3fb;
+  --color-brand-100: #d9e3f5;
+  --color-brand-200: #b4c8eb;
+  --color-brand-300: #85a4dc;
+  --color-brand-400: #557cc9;
+  --color-brand-500: #345cb3;
+  --color-brand-600: #244896;
+  --color-brand-700: #1c3a7a;
+  --color-brand-800: #172f63;
+  --color-brand-900: #12244b;
+  --color-brand-950: #0b1630;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-accent-50: #ecfaf6;
+  --color-accent-100: #d0f2e8;
+  --color-accent-200: #a3e4d3;
+  --color-accent-300: #6dd0b9;
+  --color-accent-400: #3fb79d;
+  --color-accent-500: #239c83;
+  --color-accent-600: #1a7d6a;
+  --color-accent-700: #186456;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-ink: #16203a;
+  --color-muted: #5b6478;
+  --color-line: #e3e7ef;
+  --color-surface: #f6f8fb;
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.125rem;
+
+  --animate-fade-up: fade-up 0.5s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-brand-400);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
 }
