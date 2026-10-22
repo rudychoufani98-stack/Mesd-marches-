@@ -17,14 +17,7 @@ const copy = {
     labels: { where: "Où", purpose: "À quoi ça sert", duration: "Durée", consent: "Consentement" },
     items: [
       {
-        name: "Plan d'action et progression",
-        where: "Stockage local de votre navigateur",
-        purpose: "Retrouver votre plan et les tâches cochées lors de votre prochaine visite.",
-        duration: "Jusqu'à ce que vous l'effaciez",
-        consent: "Non requis : nécessaire au service que vous utilisez",
-      },
-      {
-        name: "Checklists des guides et budget",
+        name: "Checklists des guides clients et budget",
         where: "Stockage local de votre navigateur",
         purpose: "Conserver vos cases cochées et vos montants.",
         duration: "Jusqu'à ce que vous l'effaciez",
@@ -36,6 +29,20 @@ const copy = {
         purpose: "Ne plus afficher le bandeau d'information une fois lu.",
         duration: "Jusqu'à ce que vous l'effaciez",
         consent: "Non requis",
+      },
+      {
+        name: "Paiement sécurisé (Stripe)",
+        where: "Cookies de Stripe, uniquement sur la page de paiement hébergée par Stripe",
+        purpose: "Faire fonctionner le paiement et prévenir la fraude. Aucun cookie Stripe n'est déposé sur les autres pages du site.",
+        duration: "Fixée par Stripe (voir stripe.com/cookie-settings)",
+        consent: "Non requis : strictement nécessaire au paiement que vous demandez",
+      },
+      {
+        name: "Agenda de réservation (Calendly)",
+        where: "Cookies de Calendly, uniquement dans l'agenda affiché après un paiement",
+        purpose: "Afficher l'agenda et enregistrer votre rendez-vous. Calendly vous demande votre accord pour ses cookies non essentiels.",
+        duration: "Fixée par Calendly",
+        consent: "Recueilli par Calendly pour les cookies non essentiels",
       },
       {
         name: "Session de l'espace administrateur",
@@ -62,14 +69,7 @@ const copy = {
     labels: { where: "Where", purpose: "What it is for", duration: "Duration", consent: "Consent" },
     items: [
       {
-        name: "Action plan and progress",
-        where: "Your browser's local storage",
-        purpose: "To find your plan and ticked tasks again on your next visit.",
-        duration: "Until you delete it",
-        consent: "Not required: necessary for the service you are using",
-      },
-      {
-        name: "Guide checklists and budget",
+        name: "Client guide checklists and budget",
         where: "Your browser's local storage",
         purpose: "To keep your ticked boxes and your amounts.",
         duration: "Until you delete it",
@@ -81,6 +81,20 @@ const copy = {
         purpose: "To stop showing the information banner once you have read it.",
         duration: "Until you delete it",
         consent: "Not required",
+      },
+      {
+        name: "Secure payment (Stripe)",
+        where: "Stripe cookies, only on the payment page hosted by Stripe",
+        purpose: "To make payment work and prevent fraud. No Stripe cookie is placed on the other pages of the website.",
+        duration: "Set by Stripe (see stripe.com/cookie-settings)",
+        consent: "Not required: strictly necessary for the payment you request",
+      },
+      {
+        name: "Booking calendar (Calendly)",
+        where: "Calendly cookies, only in the calendar shown after a payment",
+        purpose: "To display the calendar and save your appointment. Calendly asks for your consent for its non-essential cookies.",
+        duration: "Set by Calendly",
+        consent: "Collected by Calendly for non-essential cookies",
       },
       {
         name: "Administrator area session",

@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { alternates, getDictionary, type Locale } from "@/i18n";
+import type { ReactNode } from "react";
+import { hostingProvider, legalIdentity as id } from "@/config/legal";
 import { LegalDraft, Placeholder } from "@/components/ui/LegalDraft";
+
+function Value({ value, missing }: { value: string; missing: ReactNode }) {
+  return value ? <>{value}</> : <Placeholder>{missing}</Placeholder>;
+}
 import { FrenchVersionPrevails, legalUpdatedAt } from "./shared";
 
 const PATH = "/mentions-legales";
@@ -34,32 +40,32 @@ export function LegalNoticeView({ locale }: { locale: Locale }) {
             <h2>Éditeur du site</h2>
             <ul>
               <li>
-                Dénomination sociale : <Placeholder>raison sociale</Placeholder>
+                Dénomination sociale : <Value value={id.companyName} missing="raison sociale" />
               </li>
               <li>
-                Forme juridique et capital social : <Placeholder>forme, capital</Placeholder>
+                Forme juridique et capital social : <Value value={id.legalForm} missing="forme, capital" />
               </li>
               <li>
-                Siège social : <Placeholder>adresse</Placeholder>
+                Siège social : <Value value={id.address} missing="adresse" />
               </li>
               <li>
-                Immatriculation : <Placeholder>RCS / SIREN</Placeholder>
+                Immatriculation : <Value value={id.registration} missing="RCS / SIREN" />
               </li>
               <li>
-                Numéro de TVA intracommunautaire : <Placeholder>le cas échéant</Placeholder>
+                Numéro de TVA intracommunautaire : <Value value={id.vatNumber} missing="le cas échéant" />
               </li>
               <li>
-                Directeur ou directrice de la publication : <Placeholder>nom</Placeholder>
+                Directeur ou directrice de la publication : <Value value={id.publicationDirector} missing="nom" />
               </li>
               <li>
-                Contact : <Placeholder>adresse e-mail et téléphone</Placeholder>
+                Contact : <Value value={[id.email, id.phone].filter(Boolean).join(" · ")} missing="adresse e-mail et téléphone" />
               </li>
             </ul>
           </section>
           <section>
             <h2>Hébergement</h2>
             <p>
-              <Placeholder>nom, adresse et téléphone de l&apos;hébergeur</Placeholder>
+              {hostingProvider.name}, {hostingProvider.address} — {hostingProvider.website}
             </p>
           </section>
           <section>
@@ -92,32 +98,32 @@ export function LegalNoticeView({ locale }: { locale: Locale }) {
             <h2>Website publisher</h2>
             <ul>
               <li>
-                Company name: <Placeholder>company name</Placeholder>
+                Company name: <Value value={id.companyName} missing="company name" />
               </li>
               <li>
-                Legal form and share capital: <Placeholder>legal form, capital</Placeholder>
+                Legal form and share capital: <Value value={id.legalForm} missing="legal form, capital" />
               </li>
               <li>
-                Registered office: <Placeholder>address</Placeholder>
+                Registered office: <Value value={id.address} missing="address" />
               </li>
               <li>
-                Registration: <Placeholder>RCS / SIREN</Placeholder>
+                Registration: <Value value={id.registration} missing="RCS / SIREN" />
               </li>
               <li>
-                Intra-EU VAT number: <Placeholder>if applicable</Placeholder>
+                Intra-EU VAT number: <Value value={id.vatNumber} missing="if applicable" />
               </li>
               <li>
-                Publication director: <Placeholder>name</Placeholder>
+                Publication director: <Value value={id.publicationDirector} missing="name" />
               </li>
               <li>
-                Contact: <Placeholder>email address and telephone number</Placeholder>
+                Contact: <Value value={[id.email, id.phone].filter(Boolean).join(" · ")} missing="email address and telephone number" />
               </li>
             </ul>
           </section>
           <section>
             <h2>Hosting</h2>
             <p>
-              <Placeholder>name, address and telephone number of the host</Placeholder>
+              {hostingProvider.name}, {hostingProvider.address.replace("États-Unis", "United States")} — {hostingProvider.website}
             </p>
           </section>
           <section>

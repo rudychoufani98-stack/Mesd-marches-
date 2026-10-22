@@ -16,7 +16,7 @@ export default async function AdminPricingPage() {
     <>
       <AdminTitle
         title="Offres et tarifs"
-        description="Les modifications sont visibles immédiatement sur les pages Tarifs, Rendez-vous, FAQ, CGV et dans le plan d'action."
+        description="Les modifications sont visibles immédiatement sur les pages Tarifs, Rendez-vous, FAQ et CGV."
       />
       {rows.length === 0 ? (
         <Panel>

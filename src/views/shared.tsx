@@ -3,7 +3,7 @@ import { formatPrice, type Offer } from "@/config/pricing";
 import { href, type Locale } from "@/i18n";
 
 /** Date de dernière modification des pages légales, dans chaque langue. */
-export const legalUpdatedAt: Record<Locale, string> = { fr: "21 octobre 2026", en: "21 October 2026" };
+export const legalUpdatedAt: Record<Locale, string> = { fr: "22 octobre 2026", en: "22 October 2026" };
 
 /** Prix d'une offre dans la langue de la page. */
 export function formatOfferPrice(offer: Offer, locale: Locale): string {

@@ -18,7 +18,6 @@ export function CalendlyEmbed({ name, email, reference, title }: { name?: string
   const base = calendlyUrl();
   if (!base) return null;
   const url = new URL(base);
-  url.searchParams.set("hide_gdpr_banner", "1");
   url.searchParams.set("embed_type", "Inline");
   if (name) url.searchParams.set("name", name);
   if (email) url.searchParams.set("email", email);

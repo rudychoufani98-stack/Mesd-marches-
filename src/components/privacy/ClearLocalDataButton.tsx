@@ -8,20 +8,20 @@ import { Button } from "@/components/ui/primitives";
 
 const copy = {
   fr: {
-    confirm: "Effacer votre plan d'action, vos checklists et votre budget enregistrés sur cet appareil ?",
+    confirm: "Effacer vos checklists, votre budget et vos préférences enregistrés sur cet appareil ?",
     cleared: "Les données enregistrées sur cet appareil ont été effacées.",
     empty: "Aucune donnée n'était enregistrée sur cet appareil.",
     button: "Effacer les données de cet appareil",
   },
   en: {
-    confirm: "Delete your action plan, checklists and budget saved on this device?",
+    confirm: "Delete your checklists, budget and preferences saved on this device?",
     cleared: "The data saved on this device has been deleted.",
     empty: "No data was saved on this device.",
     button: "Delete the data on this device",
   },
 } as const;
 
-/** Efface le plan d'action, les checklists, le budget et les préférences stockés sur cet appareil. */
+/** Efface les checklists, le budget et les préférences stockés sur cet appareil. */
 export function ClearLocalDataButton({ locale = "fr" }: { locale?: Locale }) {
   const [message, setMessage] = useState<string | null>(null);
   const t = copy[locale];

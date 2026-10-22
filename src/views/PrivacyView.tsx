@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
+import { legalIdentity } from "@/config/legal";
 import { PRIVACY_VERSION, REQUEST_RETENTION_MONTHS } from "@/config/privacy";
 import { alternates, href, type Locale } from "@/i18n";
 import { LegalDraft, Placeholder } from "@/components/ui/LegalDraft";
@@ -11,12 +13,12 @@ const copy = {
   fr: {
     title: "Politique de confidentialité",
     metaDescription: "Comment MesDémarches collecte, utilise et protège vos données personnelles.",
-    description: "Nous collectons le minimum de données nécessaire et ne les vendons jamais.",
+    description: "Nous collectons le minimum de données nécessaire, les protégeons et ne les vendons jamais.",
   },
   en: {
     title: "Privacy policy",
     metaDescription: "How MesDémarches collects, uses and protects your personal data.",
-    description: "We collect only the minimum data necessary and never sell it.",
+    description: "We collect only the minimum data necessary, protect it and never sell it.",
   },
 } as const;
 
@@ -27,8 +29,14 @@ export function privacyMetadata(locale: Locale): Metadata {
 
 const linkClass = "font-medium text-brand-700 underline";
 
+/** Valeur de l'identité légale, ou mention à compléter si elle est vide. */
+function Value({ value, missing }: { value: string; missing: ReactNode }) {
+  return value ? <>{value}</> : <Placeholder>{missing}</Placeholder>;
+}
+
 export function PrivacyView({ locale }: { locale: Locale }) {
   const t = copy[locale];
+  const id = legalIdentity;
   return (
     <LegalDraft title={t.title} description={t.description} updatedAt={legalUpdatedAt[locale]} locale={locale}>
       {locale === "fr" ? (
@@ -36,96 +44,105 @@ export function PrivacyView({ locale }: { locale: Locale }) {
           <section>
             <h2>Responsable du traitement</h2>
             <p>
-              <Placeholder>raison sociale, adresse, contact</Placeholder>. Contact pour les questions relatives aux données :{" "}
-              <Placeholder>adresse e-mail dédiée</Placeholder>.
+              <Value value={id.companyName} missing="raison sociale" />, <Value value={id.address} missing="adresse" />. Pour toute
+              question sur vos données : <Value value={id.email} missing="adresse e-mail de contact" />.
             </p>
           </section>
           <section>
-            <h2>Données traitées</h2>
+            <h2>Données traitées, finalités et bases légales</h2>
             <ul>
               <li>
-                <strong>Formulaire de contact</strong> : nom, adresse e-mail, sujet et message. Finalité : répondre à votre
-                demande. Base légale : <Placeholder>à valider — mesures précontractuelles / intérêt légitime</Placeholder>.
+                <strong>Demande d&apos;appel ou de rendez-vous</strong> (formulaire de l&apos;accueil et page Rendez-vous) : nom,
+                e-mail, téléphone (facultatif), besoin choisi, mode de rendez-vous, disponibilités, message facultatif. Finalité :
+                vous recontacter et organiser le rendez-vous. Base légale : mesures précontractuelles prises à votre demande
+                (article 6.1.b du RGPD).
               </li>
               <li>
-                <strong>Demande de rendez-vous</strong> : nom, adresse e-mail, téléphone (facultatif), offre choisie, mode et disponibilités, message
-                facultatif. Finalité : organiser le rendez-vous. Base légale : <Placeholder>à valider — mesures précontractuelles</Placeholder>.
+                <strong>Formulaire de contact</strong> : nom, e-mail, sujet, message. Finalité : répondre à votre message. Base
+                légale : notre intérêt légitime à répondre aux personnes qui nous écrivent (article 6.1.f).
               </li>
               <li>
-                <strong>Plan d&apos;action et checklists</strong> : vos réponses et votre progression sont enregistrées uniquement
-                dans le stockage local de votre navigateur. Elles ne sont pas transmises à nos serveurs.
+                <strong>Paiement</strong> : nom, e-mail, adresse de facturation, prestation achetée, montant et date. Le paiement
+                est réalisé sur la page sécurisée de Stripe : nous n&apos;avons jamais accès à vos données de carte. Finalités :
+                encaisser le paiement et établir la facture. Bases légales : exécution du contrat (6.1.b) et obligations
+                comptables (6.1.c).
+              </li>
+              <li>
+                <strong>Rendez-vous réservé dans l&apos;agenda</strong> (après un paiement) : nom, e-mail, créneau choisi et
+                réponses éventuelles, via Calendly. Finalité : planifier votre rendez-vous. Base légale : exécution du contrat
+                (6.1.b).
+              </li>
+              <li>
+                <strong>Documents de votre dossier</strong> : pendant l&apos;accompagnement, vous pouvez nous transmettre des
+                documents (justificatifs, actes, titres…) afin que nous vérifions votre dossier. Ils servent uniquement à cette
+                vérification et ne sont jamais réutilisés. Base légale : exécution du contrat (6.1.b). Ne nous envoyez jamais vos
+                mots de passe ni vos codes d&apos;accès aux sites administratifs.
               </li>
             </ul>
             <p>
               Avec chaque demande, nous enregistrons la date et l&apos;heure de votre accord ainsi que la version de cette
-              politique en vigueur ({PRIVACY_VERSION}), afin de pouvoir en justifier.
-            </p>
-            <p>
-              Nous ne demandons ni pièce d&apos;identité, ni numéro de sécurité sociale, ni numéro fiscal, ni coordonnées bancaires,
-              ni identifiants de connexion aux sites administratifs. Merci de ne pas en indiquer dans vos messages.
+              politique en vigueur ({PRIVACY_VERSION}), afin de pouvoir en justifier. Les guides réservés aux clients
+              s&apos;ouvrent par un lien personnel qui ne contient aucune donnée vous concernant.
             </p>
           </section>
           <section>
             <h2>Durées de conservation</h2>
             <ul>
               <li>
-                Demandes de contact et de rendez-vous : {REQUEST_RETENTION_MONTHS} mois après leur réception, puis suppression
-                automatique. <Placeholder>durée à valider</Placeholder>
+                Demandes d&apos;appel, de rendez-vous et de contact : {REQUEST_RETENTION_MONTHS} mois après leur réception, puis
+                suppression automatique.
               </li>
               <li>
-                Données clients : <Placeholder>durée de la relation commerciale + durée de prescription applicable — à valider</Placeholder>.
+                Données des clients : pendant la durée de l&apos;accompagnement, puis archivage pendant 5 ans (délai de prescription
+                en matière civile) en cas de litige.
               </li>
-              <li>Données du navigateur : vous pouvez les effacer à tout moment avec le bouton « Recommencer » du plan d&apos;action ou en vidant les données du site.</li>
+              <li>Documents de votre dossier : supprimés au plus tard 3 mois après la fin de l&apos;accompagnement.</li>
+              <li>Factures : 10 ans, conformément aux obligations comptables.</li>
             </ul>
           </section>
           <section>
             <h2>Destinataires et sous-traitants</h2>
             <p>
-              Vos données sont destinées uniquement à l&apos;équipe MesDémarches, seule à avoir accès à l&apos;espace de gestion.
-              Prestataires techniques : hébergement du site (Vercel), base de données (Supabase), paiement en ligne (Stripe, qui traite directement vos données de carte) et prise de rendez-vous (Calendly, après un paiement){" "}
-              <Placeholder>préciser la région d&apos;hébergement des données, l&apos;outil de notification éventuel et les garanties en cas de transfert hors UE</Placeholder>.
-              Les notifications internes de nouvelle demande ne contiennent aucune donnée personnelle.
-              Aucune donnée n&apos;est vendue ni utilisée à des fins publicitaires.
+              Vos données sont destinées uniquement à l&apos;équipe MesDémarches. Nous faisons appel aux prestataires suivants,
+              qui agissent pour notre compte et selon nos instructions : Vercel (hébergement du site), Supabase (base de
+              données), Stripe (paiement en ligne) et Calendly (prise de rendez-vous). Certains de ces prestataires sont situés
+              ou ont accès aux données hors de l&apos;Union européenne, notamment aux États-Unis : ces transferts sont encadrés par
+              le Data Privacy Framework UE–États-Unis et/ou par les clauses contractuelles types de la Commission européenne.
             </p>
+            <p>Aucune donnée n&apos;est vendue, louée ni utilisée à des fins publicitaires.</p>
           </section>
           <section>
-            <h2>Cookies et mesure d&apos;audience</h2>
+            <h2>Cookies</h2>
             <p>
-              Le site n&apos;utilise pas de cookies publicitaires ni d&apos;outil de mesure d&apos;audience à ce jour, et ne dépose
-              aucun cookie aux visiteurs. Seul l&apos;espace de gestion réservé à l&apos;équipe utilise un cookie de connexion,
-              strictement nécessaire (détail sur la page{" "}
+              Le site n&apos;utilise ni cookie publicitaire ni outil de mesure d&apos;audience. Les pages de paiement (Stripe) et
+              l&apos;agenda de réservation (Calendly) peuvent déposer leurs propres cookies, nécessaires à leur fonctionnement et
+              à la sécurité des paiements. Détail sur la page{" "}
               <Link href={href("/cookies", locale)} className={linkClass}>
                 Cookies et stockage local
               </Link>
-              ). Le stockage
-              local du navigateur sert uniquement à conserver votre plan et vos checklists, à votre demande. Si un outil de mesure
-              d&apos;audience est ajouté, cette page sera mise à jour et votre consentement sera recueilli lorsque la
-              réglementation l&apos;exige.
+              .
             </p>
           </section>
           <section>
             <h2>Vos droits</h2>
             <p>
-              Vous disposez de droits d&apos;accès, de rectification, d&apos;effacement, de limitation, d&apos;opposition et de
-              portabilité. Pour les exercer, utilisez le{" "}
-              <Link href={href("/contact", locale)} className={linkClass}>
-                formulaire de contact
-              </Link>{" "}
-              (sujet « Mes données personnelles ») ou la page{" "}
+              Vous disposez d&apos;un droit d&apos;accès, de rectification, d&apos;effacement, de limitation, d&apos;opposition et de
+              portabilité de vos données, ainsi que du droit de définir des directives sur leur sort après votre décès. Pour les
+              exercer, utilisez la page{" "}
               <Link href={href("/mes-donnees", locale)} className={linkClass}>
                 Mes données personnelles
-              </Link>
-              , en écrivant depuis l&apos;adresse utilisée lors de votre demande. Nous vous
-              répondons dans un délai d&apos;un mois. Vous pouvez également introduire une réclamation auprès de la CNIL (cnil.fr).
+              </Link>{" "}
+              ou écrivez-nous depuis l&apos;adresse utilisée lors de votre demande. Nous répondons dans un délai d&apos;un mois. Si
+              vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL (cnil.fr).
             </p>
           </section>
           <section>
             <h2>Sécurité</h2>
             <p>
-              Les échanges avec le site sont chiffrés (HTTPS). Les formulaires sont validés côté serveur et protégés contre les
-              envois automatisés. Les demandes sont stockées dans une base dont l&apos;accès est limité à l&apos;équipe par des règles
-              d&apos;accès strictes : un visiteur peut déposer une demande mais jamais lire celles des autres. Aucune clé secrète
-              n&apos;est exposée dans le navigateur.
+              Les échanges avec le site sont chiffrés (HTTPS). Les formulaires sont vérifiés côté serveur et protégés contre les
+              envois automatisés. Les demandes sont stockées dans une base dont l&apos;accès est réservé à l&apos;équipe : un visiteur
+              peut déposer une demande mais jamais lire celles des autres. Les données de carte bancaire sont traitées uniquement
+              par Stripe (certifié PCI DSS). Aucune clé secrète n&apos;est exposée dans le navigateur.
             </p>
           </section>
         </>
@@ -135,97 +152,100 @@ export function PrivacyView({ locale }: { locale: Locale }) {
           <section>
             <h2>Data controller</h2>
             <p>
-              <Placeholder>company name, address, contact</Placeholder>. Contact for questions about your data:{" "}
-              <Placeholder>dedicated email address</Placeholder>.
+              <Value value={id.companyName} missing="company name" />, <Value value={id.address} missing="address" />. For any
+              question about your data: <Value value={id.email} missing="contact email address" />.
             </p>
           </section>
           <section>
-            <h2>Data processed</h2>
+            <h2>Data processed, purposes and legal bases</h2>
             <ul>
               <li>
-                <strong>Contact form</strong>: name, email address, subject and message. Purpose: to reply to your request. Legal
-                basis: <Placeholder>to be confirmed — pre-contractual measures / legitimate interest</Placeholder>.
+                <strong>Call or appointment request</strong> (home page form and Appointment page): name, email, phone
+                (optional), chosen need, meeting format, availability, optional message. Purpose: to get back to you and arrange
+                the appointment. Legal basis: pre-contractual measures taken at your request (Article 6(1)(b) GDPR).
               </li>
               <li>
-                <strong>Appointment request</strong>: name, email address, phone number (optional), chosen offer, format and availability, optional
-                message. Purpose: to arrange the appointment. Legal basis: <Placeholder>to be confirmed — pre-contractual measures</Placeholder>.
+                <strong>Contact form</strong>: name, email, subject, message. Purpose: to reply to your message. Legal basis: our
+                legitimate interest in replying to people who write to us (Article 6(1)(f)).
               </li>
               <li>
-                <strong>Action plan and checklists</strong>: your answers and your progress are saved only in your browser&apos;s
-                local storage. They are not sent to our servers.
+                <strong>Payment</strong>: name, email, billing address, service purchased, amount and date. Payment is made on
+                Stripe&apos;s secure page: we never have access to your card details. Purposes: to collect payment and issue the
+                invoice. Legal bases: performance of the contract (6(1)(b)) and accounting obligations (6(1)(c)).
+              </li>
+              <li>
+                <strong>Appointment booked in the calendar</strong> (after a payment): name, email, chosen slot and any answers,
+                via Calendly. Purpose: to schedule your appointment. Legal basis: performance of the contract (6(1)(b)).
+              </li>
+              <li>
+                <strong>Documents for your file</strong>: during the support, you may send us documents (proofs, certificates,
+                permits…) so that we can check your file. They are used only for this check and never reused. Legal basis:
+                performance of the contract (6(1)(b)). Never send us your passwords or login codes for government websites.
               </li>
             </ul>
             <p>
               With each request, we record the date and time of your consent and the version of this policy in force (
-              {PRIVACY_VERSION}), so that we can demonstrate it.
-            </p>
-            <p>
-              We never ask for an identity document, social security number, tax number, bank details or login details for
-              government websites. Please do not include any of these in your messages.
+              {PRIVACY_VERSION}), so that we can demonstrate it. Client guides open through a personal link that contains no data
+              about you.
             </p>
           </section>
           <section>
             <h2>Retention periods</h2>
             <ul>
               <li>
-                Contact and appointment requests: {REQUEST_RETENTION_MONTHS} months after they are received, then automatic
-                deletion. <Placeholder>period to be confirmed</Placeholder>
+                Call, appointment and contact requests: {REQUEST_RETENTION_MONTHS} months after they are received, then automatic
+                deletion.
               </li>
               <li>
-                Customer data: <Placeholder>duration of the business relationship + applicable limitation period — to be confirmed</Placeholder>.
+                Client data: for the duration of the support, then archived for 5 years (civil limitation period) in case of a
+                dispute.
               </li>
-              <li>
-                Browser data: you can delete it at any time with the &ldquo;Start again&rdquo; button in the action plan or by
-                clearing the site&apos;s data.
-              </li>
+              <li>Documents for your file: deleted no later than 3 months after the end of the support.</li>
+              <li>Invoices: 10 years, in line with accounting obligations.</li>
             </ul>
           </section>
           <section>
             <h2>Recipients and processors</h2>
             <p>
-              Your data is intended solely for the MesDémarches team, who alone have access to the management area. Technical
-              providers: website hosting (Vercel), database (Supabase), online payment (Stripe, which processes your card details directly) and appointment booking (Calendly, after a payment){" "}
-              <Placeholder>specify the data hosting region, any notification tool used and the safeguards in the event of transfers outside the EU</Placeholder>.
-              Internal notifications of new requests contain no personal data. No data is sold or used for advertising purposes.
+              Your data is intended solely for the MesDémarches team. We use the following providers, who act on our behalf and
+              on our instructions: Vercel (website hosting), Supabase (database), Stripe (online payment) and Calendly
+              (appointment booking). Some of these providers are located, or access data, outside the European Union, notably in
+              the United States: these transfers are covered by the EU–US Data Privacy Framework and/or the European
+              Commission&apos;s standard contractual clauses.
             </p>
+            <p>No data is sold, rented or used for advertising purposes.</p>
           </section>
           <section>
-            <h2>Cookies and audience measurement</h2>
+            <h2>Cookies</h2>
             <p>
-              The website does not currently use advertising cookies or any audience measurement tool, and places no cookies on
-              visitors&apos; devices. Only the management area reserved for the team uses a strictly necessary login cookie
-              (details on the{" "}
+              The website uses no advertising cookies and no audience measurement tool. The payment pages (Stripe) and the
+              booking calendar (Calendly) may place their own cookies, which are necessary for them to work and to secure
+              payments. Details on the{" "}
               <Link href={href("/cookies", locale)} className={linkClass}>
                 Cookies and local storage
               </Link>{" "}
-              page). The browser&apos;s local storage is used only to keep your plan and your checklists, at your request. If an
-              audience measurement tool is added, this page will be updated and your consent will be obtained where the
-              regulations require it.
+              page.
             </p>
           </section>
           <section>
             <h2>Your rights</h2>
             <p>
-              You have the rights of access, rectification, erasure, restriction, objection and portability. To exercise them,
-              use the{" "}
-              <Link href={href("/contact", locale)} className={linkClass}>
-                contact form
-              </Link>{" "}
-              (subject &ldquo;My personal data&rdquo;) or the{" "}
+              You have the right of access, rectification, erasure, restriction, objection and portability, as well as the right
+              to set guidelines on what happens to your data after your death. To exercise them, use the{" "}
               <Link href={href("/mes-donnees", locale)} className={linkClass}>
                 My personal data
               </Link>{" "}
-              page, writing from the address used for your request. We will reply within one month. You may also lodge a
-              complaint with the CNIL (cnil.fr).
+              page or write to us from the address used for your request. We reply within one month. If you believe your rights
+              are not respected, you may lodge a complaint with the CNIL (cnil.fr).
             </p>
           </section>
           <section>
             <h2>Security</h2>
             <p>
-              Communications with the website are encrypted (HTTPS). Forms are validated on the server and protected against
-              automated submissions. Requests are stored in a database whose access is restricted to the team by strict access
-              rules: a visitor can submit a request but can never read anyone else&apos;s. No secret key is exposed in the
-              browser.
+              Communications with the website are encrypted (HTTPS). Forms are checked on the server and protected against
+              automated submissions. Requests are stored in a database whose access is reserved for the team: a visitor can
+              submit a request but can never read anyone else&apos;s. Card details are processed only by Stripe (PCI DSS
+              certified). No secret key is exposed in the browser.
             </p>
           </section>
         </>

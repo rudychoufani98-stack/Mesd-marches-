@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getOffers } from "@/lib/data/content";
 import { alternates, getDictionary, type Locale } from "@/i18n";
+import { legalIdentity } from "@/config/legal";
 import { LegalDraft, Placeholder } from "@/components/ui/LegalDraft";
 import { FrenchVersionPrevails, formatOfferPrice, legalUpdatedAt } from "./shared";
 
@@ -36,7 +37,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             <h2>1. Objet</h2>
             <p>
               Les présentes conditions encadrent les prestations d&apos;accompagnement à l&apos;organisation de démarches
-              administratives et pratiques proposées par <Placeholder>raison sociale</Placeholder>. {disclaimer}
+              administratives et pratiques proposées par {legalIdentity.companyName || <Placeholder>raison sociale</Placeholder>}. {disclaimer}
             </p>
           </section>
           <section>
@@ -110,7 +111,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             <h2>1. Purpose</h2>
             <p>
               These terms govern the support services for organising administrative and practical procedures offered by{" "}
-              <Placeholder>company name</Placeholder>. {disclaimer}
+              {legalIdentity.companyName || <Placeholder>company name</Placeholder>}. {disclaimer}
             </p>
           </section>
           <section>
