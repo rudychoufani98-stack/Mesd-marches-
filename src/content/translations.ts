@@ -8,6 +8,7 @@ import { categoriesEn } from "./en/categories";
 import { servicesEn } from "./en/services";
 import { guidesEn } from "./en/guides";
 import { offersEn } from "./en/offers";
+import { getDemarcheGoal } from "./demarcheGoals";
 import { sourcesEn } from "./en/sources";
 
 /**
@@ -73,8 +74,21 @@ export function localizeGuide(g: Guide, locale: Locale): Guide | null {
 
 /** Le prix et la facturation viennent toujours de la base ; seuls les textes sont traduits. */
 export function localizeOffer(o: Offer, locale: Locale): Offer {
-  const t = locale === "en" ? offersEn[o.id] : undefined;
-  return t ? { ...o, ...t } : o;
+  const goal = getDemarcheGoal(o.id, locale);
+  if (locale === "fr") {
+    return { ...o, headline: o.headline || goal?.goal, why: o.why || goal?.why };
+  }
+  // Anglais : textes saisis dans l'admin, sinon traductions du code.
+  const t = offersEn[o.id];
+  const en = o.en ?? {};
+  return {
+    ...o,
+    ...(t ?? {}),
+    name: en.name || t?.name || o.name,
+    tagline: en.tagline || t?.tagline || o.tagline,
+    headline: en.headline || goal?.goal,
+    why: en.why || goal?.why,
+  };
 }
 
 export function localizeSource(s: OfficialSource, locale: Locale): OfficialSource {

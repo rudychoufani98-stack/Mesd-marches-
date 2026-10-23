@@ -129,6 +129,12 @@ const offerSchema = z.object({
   cancellation: z.string().trim().max(300),
   highlighted: z.literal("on").optional(),
   active: z.literal("on").optional(),
+  headline: z.string().trim().max(120),
+  why: z.string().trim().max(300),
+  nameEn: z.string().trim().max(80),
+  taglineEn: z.string().trim().max(160),
+  headlineEn: z.string().trim().max(120),
+  whyEn: z.string().trim().max(300),
 });
 
 export async function saveOffer(_prev: AdminResult, formData: FormData): Promise<AdminResult> {
@@ -155,13 +161,24 @@ export async function saveOffer(_prev: AdminResult, formData: FormData): Promise
         responseTime: d.responseTime,
         cancellation: d.cancellation,
         highlighted: d.highlighted === "on",
+        headline: d.headline,
+        why: d.why,
+        en: Object.fromEntries(
+          Object.entries({ name: d.nameEn, tagline: d.taglineEn, headline: d.headlineEn, why: d.whyEn }).filter(([, v]) => v),
+        ),
       },
       d.sort,
       d.active === "on",
     ),
     { onConflict: "id" },
   );
-  if (error) return fail("Enregistrement impossible. Réessayez.");
+  if (error) {
+    // Colonnes absentes : la migration « textes des offres » n'a pas encore été exécutée.
+    if (/headline|texts_en|column|schema cache/i.test(error.message ?? "")) {
+      return fail("Exécutez d'abord la migration SQL « textes des offres » dans Supabase, puis réessayez.");
+    }
+    return fail("Enregistrement impossible. Réessayez.");
+  }
   updateTag(CONTENT_TAGS.offers);
   refreshAdmin();
   return done(`Offre « ${d.name} » enregistrée. Le site est à jour.`);

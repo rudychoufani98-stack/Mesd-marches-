@@ -3,7 +3,6 @@
 import { useActionState } from "react";
 import { ArrowRight, Lock } from "lucide-react";
 import type { Offer } from "@/config/pricing";
-import { getDemarcheGoal } from "@/content/demarcheGoals";
 import { submitAppointment } from "@/lib/forms/actions";
 import { appointmentModes, appointmentSlots, initialFormState, optionLabel } from "@/lib/forms/schemas";
 import { Button } from "@/components/ui/primitives";
@@ -93,7 +92,7 @@ export function QuickLeadForm({ offers, locale }: { offers: Offer[]; locale: Loc
           {discovery && <option value={discovery.id}>{t.unsure}</option>}
           {steps.map((o) => (
             <option key={o.id} value={o.id}>
-              {getDemarcheGoal(o.id, locale)?.goal ?? o.name}
+              {o.headline || o.name}
             </option>
           ))}
         </select>

@@ -1,4 +1,4 @@
-import type { Offer, OfferKind } from "@/config/pricing";
+import type { Offer, OfferEnglishTexts, OfferKind } from "@/config/pricing";
 import { isCategoryId } from "@/content/categories";
 import type { ChecklistItem, GlossaryEntry, Guide, GuideStep } from "@/content/guides";
 import { officialSources, type SourceId } from "@/content/sources";
@@ -22,6 +22,10 @@ export type OfferRow = {
   highlighted: boolean;
   active: boolean;
   sort: number;
+  /** Colonnes ajoutées par la migration « textes des offres » (absentes avant). */
+  headline?: string | null;
+  why?: string | null;
+  texts_en?: OfferEnglishTexts | null;
 };
 
 export type GuideRow = {
@@ -55,6 +59,9 @@ export function offerFromRow(r: OfferRow): Offer {
     responseTime: r.response_time,
     cancellation: r.cancellation,
     highlighted: r.highlighted,
+    ...(r.headline ? { headline: r.headline } : {}),
+    ...(r.why ? { why: r.why } : {}),
+    ...(r.texts_en && typeof r.texts_en === "object" ? { en: r.texts_en } : {}),
   };
 }
 
@@ -75,6 +82,10 @@ export function offerToRow(o: Offer, sort: number, active = true): OfferRow {
     highlighted: Boolean(o.highlighted),
     active,
     sort,
+    // Écrits seulement s'ils sont définis : l'import par défaut fonctionne aussi avant la migration.
+    ...(o.headline !== undefined ? { headline: o.headline || null } : {}),
+    ...(o.why !== undefined ? { why: o.why || null } : {}),
+    ...(o.en !== undefined ? { texts_en: o.en } : {}),
   };
 }
 

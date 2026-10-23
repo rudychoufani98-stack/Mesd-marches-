@@ -62,3 +62,15 @@ describe("liens par langue", () => {
     expect(stripLocale("/entreprise")).toBe("/entreprise");
   });
 });
+
+describe("textes des offres modifiables dans l'admin", () => {
+  it("affichent le titre saisi en priorité, sinon l'objectif par défaut", async () => {
+    const { localizeOffer } = await import("./translations");
+    const base = defaultOffers.find((o) => o.id === "d-permis")!;
+    expect(localizeOffer(base, "fr").headline).toBe("Échanger votre permis étranger");
+    const edited = { ...base, headline: "Mon titre", why: "Ma raison", en: { name: "My name", headline: "My title" } };
+    expect(localizeOffer(edited, "fr")).toMatchObject({ headline: "Mon titre", why: "Ma raison" });
+    expect(localizeOffer(edited, "en")).toMatchObject({ name: "My name", headline: "My title", price: base.price });
+    expect(localizeOffer(base, "en").name).toBe("Exchange your foreign driving licence");
+  });
+});

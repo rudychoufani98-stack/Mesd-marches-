@@ -24,7 +24,6 @@ import {
   Wallet,
 } from "lucide-react";
 import { formatPrice, lowestDemarchePrice } from "@/config/pricing";
-import { getDemarcheGoal } from "@/content/demarcheGoals";
 import { alternates, href, localeTags, type Locale } from "@/i18n";
 import { getOffers } from "@/lib/data/content";
 import { InstitutionsMarquee } from "@/components/home/InstitutionsMarquee";
@@ -240,7 +239,6 @@ export async function HomeView({ locale }: { locale: Locale }) {
             <ul className="mt-14 grid gap-px overflow-hidden rounded-[1.5rem] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
               {steps.map((o) => {
                 const Icon = ICONS[o.id] ?? Check;
-                const goal = getDemarcheGoal(o.id, locale);
                 return (
                   <li key={o.id} className="bg-white">
                     <Link href={`${href("/rendez-vous", locale)}?offre=${o.id}`} className="group flex h-full flex-col p-7 transition-colors hover:bg-surface">
@@ -252,8 +250,8 @@ export async function HomeView({ locale }: { locale: Locale }) {
                           {c.from} <span className="font-semibold text-ink">{formatPrice(o, locale)}</span>
                         </span>
                       </span>
-                      <span className="mt-6 block font-display text-xl font-medium leading-snug text-ink">{goal?.goal ?? o.name}</span>
-                      {goal && <span className="mt-2 block text-sm leading-relaxed text-muted">{goal.why}</span>}
+                      <span className="mt-6 block font-display text-xl font-medium leading-snug text-ink">{o.headline || o.name}</span>
+                      {o.why && <span className="mt-2 block text-sm leading-relaxed text-muted">{o.why}</span>}
                       <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-semibold text-brand-700">
                         {c.cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                       </span>

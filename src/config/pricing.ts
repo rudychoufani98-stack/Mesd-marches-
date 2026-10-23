@@ -31,7 +31,15 @@ export type Offer = {
   responseTime: string;
   cancellation: string;
   highlighted?: boolean;
+  /** Titre affiché sur l'accueil et les tarifs (sinon : objectif par défaut, puis le nom). */
+  headline?: string;
+  /** « Pourquoi c'est important », en une phrase. */
+  why?: string;
+  /** Textes anglais saisis dans l'admin (prioritaires sur les traductions du code). */
+  en?: OfferEnglishTexts;
 };
+
+export type OfferEnglishTexts = { name?: string; tagline?: string; headline?: string; why?: string };
 
 export const PRICES_ARE_TEST_VALUES = true;
 

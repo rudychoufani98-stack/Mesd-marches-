@@ -16,7 +16,7 @@ export default async function AdminPricingPage() {
     <>
       <AdminTitle
         title="Offres et tarifs"
-        description="Les modifications sont visibles immédiatement sur les pages Tarifs, Rendez-vous, FAQ et CGV."
+        description="Cliquez sur un service pour modifier son nom, son prix et ses textes (français et anglais). Les changements sont visibles immédiatement sur tout le site."
       />
       {rows.length === 0 ? (
         <Panel>
@@ -26,7 +26,7 @@ export default async function AdminPricingPage() {
           <ImportDefaultsForm />
         </Panel>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-3">
           {rows.map((row) => (
             <OfferForm key={row.id} offer={offerFromRow(row)} sort={row.sort} active={row.active} />
           ))}
