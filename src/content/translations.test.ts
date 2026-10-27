@@ -28,7 +28,7 @@ describe("traductions anglaises", () => {
 
   it("couvrent le catalogue et les sources", () => {
     defaultCatalog.categories.forEach((c) => expect(c.en?.name && c.en.description && c.en.includes?.length, c.id).toBeTruthy());
-    defaultCatalog.services.forEach((s) => expect(s.en?.name && s.en.question, s.id).toBeTruthy());
+    defaultCatalog.services.forEach((s) => expect(s.description && s.en?.name && s.en.question && s.en.description, s.id).toBeTruthy());
     (Object.keys(officialSources) as SourceId[]).forEach((id) => expect(sourcesEn[id]?.label, id).toBeTruthy());
   });
 

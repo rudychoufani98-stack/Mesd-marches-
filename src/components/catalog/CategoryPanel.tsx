@@ -7,18 +7,24 @@ import { CategoryIcon } from "./CategoryIcon";
 const copy = {
   fr: {
     included: "Ce qui est compris",
-    services: "Choisissez votre besoin",
+    services: "Tout ce que couvre votre accompagnement",
+    allIncluded: (price: string) =>
+      `Un seul prix, ${price}, et l'accès à toute la liste : pendant votre accompagnement, vous pouvez poser toutes vos questions sur ces sujets.`,
+    start: "Commencer par ce sujet",
     book: "Réserver",
     free: "Pas sûr·e ? Appel découverte gratuit (15 min)",
-    fixed: "Prix fixe, quel que soit le service choisi dans cette catégorie.",
+    fixed: "Prix fixe : tous les services de la catégorie sont inclus.",
     business: "Découvrir nos solutions entreprises",
   },
   en: {
     included: "What's included",
-    services: "Choose your need",
+    services: "Everything your support covers",
+    allIncluded: (price: string) =>
+      `One price, ${price}, and access to the whole list: during your support, you can ask all your questions on these topics.`,
+    start: "Start with this topic",
     book: "Book",
     free: "Not sure? Free discovery call (15 min)",
-    fixed: "Fixed price, whichever service you choose in this category.",
+    fixed: "Fixed price: every service in the category is included.",
     business: "Discover our business solutions",
   },
 };
@@ -32,16 +38,23 @@ export function CategoryPanel({ category, services, locale }: { category: Catalo
     <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
       <div>
         <h3 className="text-sm font-semibold uppercase tracking-[0.15em] text-muted">{t.services}</h3>
+        {!isBusiness && (
+          <p className="mt-3 flex items-start gap-2 rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-sm text-ink">
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-700" aria-hidden="true" />
+            {t.allIncluded(formatCategoryPrice(category, locale))}
+          </p>
+        )}
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {services.map((s) => (
             <li key={s.id} className="flex flex-col rounded-card border border-line bg-white p-5 transition-shadow hover:shadow-[0_10px_30px_rgba(22,32,58,0.07)]">
               <p className="font-display text-lg font-medium leading-snug text-ink">{s.name}</p>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{s.question}</p>
+              <p className="mt-2 text-sm italic leading-relaxed text-muted">{s.question}</p>
+              {s.description && <p className="mt-2 flex-1 text-sm leading-relaxed text-ink">{s.description}</p>}
               <Link
                 href={isBusiness ? `${booking}?mode=appel&categorie=${category.id}` : `${booking}?categorie=${category.id}&service=${s.id}`}
                 className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline"
               >
-                {isBusiness ? t.business : t.book} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                {isBusiness ? t.business : t.start} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </li>
           ))}

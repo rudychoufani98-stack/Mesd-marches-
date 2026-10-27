@@ -31,11 +31,14 @@ create table if not exists public.services (
   category_id text not null references public.service_categories (id) on delete cascade,
   name text not null check (char_length(name) between 2 and 120),
   question text not null default '' check (char_length(question) <= 300),
+  description text not null default '' check (char_length(description) <= 600),
   texts_en jsonb check (texts_en is null or jsonb_typeof(texts_en) = 'object'),
   sort integer not null default 0,
   active boolean not null default true,
   updated_at timestamptz not null default now()
 );
+-- Pour une base créée avant l'ajout des descriptions :
+alter table public.services add column if not exists description text not null default '';
 create index if not exists services_category_idx on public.services (category_id);
 alter table public.services enable row level security;
 drop policy if exists "services visibles" on public.services;

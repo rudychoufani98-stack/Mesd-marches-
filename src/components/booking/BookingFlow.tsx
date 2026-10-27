@@ -23,7 +23,8 @@ const copy = {
     supportText: "Un rendez-vous individuel avec votre conseiller, à prix fixe, payé en ligne.",
     category: "Catégorie",
     categoryOptional: "Catégorie (facultatif)",
-    service: "Le service qui correspond à votre besoin",
+    service: "Par quoi souhaitez-vous commencer ?",
+    allIncluded: "Votre accompagnement couvre tous les services de la catégorie : vous pourrez aborder tous ces sujets.",
     businessNote: "Pour les entreprises, nous commençons par un appel pour établir une proposition adaptée.",
     next: "Continuer",
     back: "Retour",
@@ -64,7 +65,8 @@ const copy = {
     supportText: "A one-to-one appointment with your advisor, at a fixed price, paid online.",
     category: "Category",
     categoryOptional: "Category (optional)",
-    service: "The service that matches your need",
+    service: "What would you like to start with?",
+    allIncluded: "Your support covers every service in the category: you can discuss all of these topics.",
     businessNote: "For companies, we start with a call to put together a tailored proposal.",
     next: "Continue",
     back: "Back",
@@ -226,6 +228,7 @@ export function BookingFlow({
         {category && categoryServices.length > 0 && (
           <fieldset>
             <legend className={label}>{t.service}</legend>
+            {kind === "accompagnement" && !isBusiness && <p className="mt-1 text-sm text-accent-700">{t.allIncluded}</p>}
             <ul className="mt-2 space-y-2">
               {categoryServices.map((s) => (
                 <li key={s.id}>
@@ -238,6 +241,7 @@ export function BookingFlow({
                     <span>
                       <span className="block font-semibold text-ink">{s.name}</span>
                       <span className="mt-0.5 block text-sm text-muted">{s.question}</span>
+                      {serviceId === s.id && s.description && <span className="mt-1.5 block text-sm text-ink">{s.description}</span>}
                     </span>
                   </button>
                 </li>

@@ -23,6 +23,8 @@ export type ServiceRow = {
   category_id: string;
   name: string;
   question: string;
+  /** Absente tant que la migration « descriptions des services » n'est pas appliquée. */
+  description?: string | null;
   texts_en: CatalogService["en"] | null;
   sort: number;
   active: boolean;
@@ -66,6 +68,7 @@ export function serviceFromRow(r: ServiceRow): CatalogService {
     categoryId: r.category_id,
     name: r.name,
     question: r.question ?? "",
+    description: r.description ?? "",
     sort: r.sort,
     active: r.active,
     ...(r.texts_en ? { en: r.texts_en } : {}),
@@ -78,6 +81,7 @@ export function serviceToRow(s: CatalogService): ServiceRow {
     category_id: s.categoryId,
     name: s.name,
     question: s.question,
+    description: s.description,
     texts_en: s.en ?? null,
     sort: s.sort,
     active: s.active,

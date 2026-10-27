@@ -128,10 +128,12 @@ const serviceSchema = z.object({
   categoryId: z.string().regex(/^[a-z0-9-]{1,40}$/),
   name: z.string().trim().min(2, "Nom trop court.").max(120),
   question: z.string().trim().max(300),
+  description: z.string().trim().max(600),
   sort: z.coerce.number().int().min(0).max(999),
   active: z.literal("on").optional(),
   nameEn: z.string().trim().max(120),
   questionEn: z.string().trim().max(300),
+  descriptionEn: z.string().trim().max(600),
 });
 
 export async function saveService(_prev: AdminResult, formData: FormData): Promise<AdminResult> {
@@ -145,9 +147,14 @@ export async function saveService(_prev: AdminResult, formData: FormData): Promi
     categoryId: d.categoryId,
     name: d.name,
     question: d.question,
+    description: d.description,
     sort: d.sort,
     active: d.active === "on",
-    en: { ...(d.nameEn ? { name: d.nameEn } : {}), ...(d.questionEn ? { question: d.questionEn } : {}) },
+    en: {
+      ...(d.nameEn ? { name: d.nameEn } : {}),
+      ...(d.questionEn ? { question: d.questionEn } : {}),
+      ...(d.descriptionEn ? { description: d.descriptionEn } : {}),
+    },
   };
   const query =
     d.mode === "create"

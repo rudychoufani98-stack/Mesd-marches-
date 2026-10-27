@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n";
+import { serviceDescriptions } from "./catalog-descriptions";
 
 /**
  * Catalogue MesDémarches : catégories à prix fixe et services qu'elles regroupent.
@@ -21,9 +22,11 @@ export type CatalogService = {
   name: string;
   /** Question d'identification du besoin (« Vous souhaitez… ? »). */
   question: string;
+  /** Ce que le conseiller fait concrètement avec le client. */
+  description: string;
   sort: number;
   active: boolean;
-  en?: { name?: string; question?: string };
+  en?: { name?: string; question?: string; description?: string };
 };
 
 export type CatalogCategory = {
@@ -53,12 +56,14 @@ export const DISCOVERY = {
 } as const;
 
 const INCLUDES_FR = [
+  "L'accès à tous les services de la catégorie : posez toutes vos questions",
   "Un rendez-vous individuel de 45 minutes, en visio ou par téléphone",
   "Une analyse de votre situation et de vos documents",
   "Un plan d'action clair et la liste des pièces à préparer",
   "7 jours de questions par e-mail après le rendez-vous",
 ];
 const INCLUDES_EN = [
+  "Access to every service in the category: ask all your questions",
   "A 45-minute one-to-one appointment, by video or phone",
   "A review of your situation and your documents",
   "A clear action plan and the list of documents to prepare",
@@ -68,15 +73,20 @@ const INCLUDES_EN = [
 type Seed = [id: string, fr: [string, string], en: [string, string]];
 
 function services(categoryId: string, seeds: Seed[]): CatalogService[] {
-  return seeds.map(([id, [name, question], [nameEn, questionEn]], i) => ({
-    id: `${categoryId}-${id}`,
-    categoryId,
-    name,
-    question,
-    sort: i,
-    active: true,
-    en: { name: nameEn, question: questionEn },
-  }));
+  return seeds.map(([id, [name, question], [nameEn, questionEn]], i) => {
+    const fullId = `${categoryId}-${id}`;
+    const [description = "", descriptionEn = ""] = serviceDescriptions[fullId] ?? [];
+    return {
+      id: fullId,
+      categoryId,
+      name,
+      question,
+      description,
+      sort: i,
+      active: true,
+      en: { name: nameEn, question: questionEn, description: descriptionEn },
+    };
+  });
 }
 
 export const defaultCategories: CatalogCategory[] = [
@@ -282,7 +292,7 @@ export function localizeCategory(c: CatalogCategory, locale: Locale): CatalogCat
 
 export function localizeService(s: CatalogService, locale: Locale): CatalogService {
   if (locale === "fr" || !s.en) return s;
-  return { ...s, name: s.en.name || s.name, question: s.en.question || s.question };
+  return { ...s, name: s.en.name || s.name, question: s.en.question || s.question, description: s.en.description || s.description };
 }
 
 export function formatEuros(amount: number, locale: Locale = "fr"): string {
