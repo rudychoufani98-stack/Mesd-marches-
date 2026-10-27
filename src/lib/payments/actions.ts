@@ -8,6 +8,7 @@ import { sign, verify } from "@/lib/signing";
 import { requireAdmin } from "@/lib/supabase/server";
 import { buildCart, parseOfferIds } from "./cart";
 import { getStripe } from "./stripe";
+import { isRateLimited } from "@/lib/forms/rate-limit";
 
 /**
  * Paiements Stripe (Checkout hébergé par Stripe : aucune donnée de carte ne passe par le site).
@@ -36,6 +37,11 @@ export async function startCheckout(formData: FormData): Promise<void> {
   // Lien envoyé par l'admin : la référence n'est acceptée que si la signature est valide.
   const rawRef = formData.get("ref");
   const ref = typeof rawRef === "string" && REF_PATTERN.test(rawRef) && verify("payer", linkValue(rawRef, ids), formData.get("sig")) ? rawRef : undefined;
+
+  // Limite les ouvertures de paiement par adresse IP (anti-abus).
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "inconnu";
+  if (isRateLimited(`checkout:${ip}`)) redirect(`${thanks}?statut=indisponible`);
 
   const stripe = getStripe();
   const cart = buildCart(await getOffers(locale), ids, locale);

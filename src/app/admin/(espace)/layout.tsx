@@ -13,10 +13,18 @@ export const metadata: Metadata = {
 };
 
 async function AdminGate({ children }: { children: React.ReactNode }) {
-  const { email } = await requireAdmin();
+  const { email, mfaEnabled } = await requireAdmin();
   return (
     <>
       <p className="mb-6 text-xs text-muted">Connecté·e : {email}</p>
+      {!mfaEnabled && (
+        <p className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <strong>Protégez les données de vos clients :</strong> activez la double authentification.{" "}
+          <Link href="/admin/securite" className="font-semibold underline">
+            Activer maintenant
+          </Link>
+        </p>
+      )}
       {children}
     </>
   );

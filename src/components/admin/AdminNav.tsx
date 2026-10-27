@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, CreditCard, Euro, Inbox, LayoutDashboard, ShieldCheck, ToggleRight } from "lucide-react";
+import { BookOpen, CreditCard, Euro, Inbox, LayoutDashboard, Lock, ShieldCheck, ToggleRight } from "lucide-react";
 
 const items = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
@@ -12,6 +12,7 @@ const items = [
   { href: "/admin/guides", label: "Guides", icon: BookOpen },
   { href: "/admin/services", label: "Services", icon: ToggleRight },
   { href: "/admin/donnees", label: "Données personnelles", icon: ShieldCheck },
+  { href: "/admin/securite", label: "Sécurité", icon: Lock },
 ];
 
 export function AdminNav() {

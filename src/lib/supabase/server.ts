@@ -41,7 +41,10 @@ export const requireAdmin = cache(async () => {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/admin/connexion");
+  // Double authentification : si elle est activée, le code est exigé avant tout accès.
+  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2") redirect("/admin/verification");
   const { data: isAdmin } = await supabase.rpc("is_admin");
   if (!isAdmin) redirect("/admin/connexion?erreur=acces");
-  return { supabase, user, email: user.email ?? "admin" };
+  return { supabase, user, email: user.email ?? "admin", mfaEnabled: aal?.nextLevel === "aal2" };
 });
