@@ -7,6 +7,7 @@ import { formatCategoryPrice } from "@/config/catalog";
 import { createBooking, type BookingState } from "@/lib/booking/actions";
 import type { DaySlots } from "@/lib/booking/slots";
 import { CategoryIcon } from "@/components/catalog/CategoryIcon";
+import { ServiceDescription } from "@/components/catalog/ServiceDescription";
 import { Honeypot, inputClasses } from "@/components/forms/fields";
 import { href, type Locale } from "@/i18n";
 import Link from "next/link";
@@ -241,7 +242,7 @@ export function BookingFlow({
                     <span>
                       <span className="block font-semibold text-ink">{s.name}</span>
                       <span className="mt-0.5 block text-sm text-muted">{s.question}</span>
-                      {serviceId === s.id && s.description && <span className="mt-1.5 block text-sm text-ink">{s.description}</span>}
+                      {serviceId === s.id && s.description && <ServiceDescription text={s.description} locale={locale} compact />}
                     </span>
                   </button>
                 </li>

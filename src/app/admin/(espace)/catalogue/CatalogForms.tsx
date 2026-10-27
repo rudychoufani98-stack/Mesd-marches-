@@ -136,7 +136,7 @@ export function ServiceForm({ service, categoryId, nextSort }: { service?: Catal
             <FieldError result={r} name="name" />
           </div>
           <Area id={id("question")} name="question" label="Question d'identification du besoin" value={service?.question} />
-          <Area id={id("description")} name="description" label="Description : ce que vous faites avec le client" value={service?.description} rows={3} />
+          <Area id={id("description")} name="description" label="Description" hint="1re ligne : la promesse ; lignes suivantes : ce que le client obtient" value={service?.description} rows={5} />
           <div className="flex flex-wrap gap-x-6">
             <label className="inline-flex min-h-10 items-center gap-2 text-sm text-ink">
               <input type="checkbox" name="active" defaultChecked={service?.active ?? true} className="h-4 w-4 accent-brand-700" /> Visible
@@ -151,7 +151,7 @@ export function ServiceForm({ service, categoryId, nextSort }: { service?: Catal
             <div className="space-y-3 px-4 pb-4">
               <Input id={id("nameEn")} name="nameEn" label="Name" value={service?.en?.name} max={120} />
               <Area id={id("questionEn")} name="questionEn" label="Question" value={service?.en?.question} />
-              <Area id={id("descriptionEn")} name="descriptionEn" label="Description" value={service?.en?.description} rows={3} />
+              <Area id={id("descriptionEn")} name="descriptionEn" label="Description" hint="1st line: the promise; next lines: what the client gets" value={service?.en?.description} rows={5} />
             </div>
           </details>
           <ResultMessage result={r} />

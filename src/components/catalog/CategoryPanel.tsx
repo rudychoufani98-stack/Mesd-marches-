@@ -3,6 +3,7 @@ import { ArrowRight, Check, Phone } from "lucide-react";
 import { formatCategoryPrice, type CatalogCategory, type CatalogService } from "@/config/catalog";
 import { href, type Locale } from "@/i18n";
 import { CategoryIcon } from "./CategoryIcon";
+import { ServiceDescription } from "./ServiceDescription";
 
 const copy = {
   fr: {
@@ -48,8 +49,8 @@ export function CategoryPanel({ category, services, locale }: { category: Catalo
           {services.map((s) => (
             <li key={s.id} className="flex flex-col rounded-card border border-line bg-white p-5 transition-shadow hover:shadow-[0_10px_30px_rgba(22,32,58,0.07)]">
               <p className="font-display text-lg font-medium leading-snug text-ink">{s.name}</p>
-              <p className="mt-2 text-sm italic leading-relaxed text-muted">{s.question}</p>
-              {s.description && <p className="mt-2 flex-1 text-sm leading-relaxed text-ink">{s.description}</p>}
+              <p className="mt-1.5 text-sm italic leading-relaxed text-muted">{s.question}</p>
+              <div className="flex-1">{s.description && <ServiceDescription text={s.description} locale={locale} />}</div>
               <Link
                 href={isBusiness ? `${booking}?mode=appel&categorie=${category.id}` : `${booking}?categorie=${category.id}&service=${s.id}`}
                 className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline"
