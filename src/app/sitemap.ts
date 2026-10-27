@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { href, type Locale } from "@/i18n";
-import { getActiveDomains } from "@/lib/data/content";
+import { getCatalog } from "@/lib/data/catalog";
 
 const STATIC_PAGES = [
   "/",
@@ -33,10 +33,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       alternates: { languages: Object.fromEntries(locales.map((l) => [l === "en" ? "en-GB" : "fr-FR", url(path, l)])) },
     }));
 
-  const domains = await getActiveDomains();
+  const { categories } = await getCatalog();
 
   return [
     ...STATIC_PAGES.flatMap((p) => entry(p, ["fr", "en"])),
-    ...domains.flatMap((d) => entry(`/services/${d.slug}`, ["fr", "en"])),
+    ...categories.flatMap((c) => entry(`/services/${c.id}`, ["fr", "en"])),
   ];
 }

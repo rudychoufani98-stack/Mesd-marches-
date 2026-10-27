@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { getActiveDomains } from "@/lib/data/content";
-import { ServiceDomainView, serviceDomainMetadata } from "@/views/ServiceDomainView";
+import { getCatalog } from "@/lib/data/catalog";
+import { CategoryView, categoryMetadata } from "@/views/ServicesView";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  return (await getActiveDomains("fr")).map((d) => ({ slug: d.slug }));
+  return (await getCatalog("fr")).categories.map((c) => ({ slug: c.id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return serviceDomainMetadata((await params).slug, "fr");
+  return categoryMetadata((await params).slug, "fr");
 }
 
 export default async function Page({ params }: Props) {
-  return <ServiceDomainView slug={(await params).slug} locale="fr" />;
+  return <CategoryView slug={(await params).slug} locale="fr" />;
 }

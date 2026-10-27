@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { getOffers } from "@/lib/data/content";
+import { getCatalog } from "@/lib/data/catalog";
+import { formatCategoryPrice } from "@/config/catalog";
 import { alternates, getDictionary, type Locale } from "@/i18n";
 import { legalIdentity } from "@/config/legal";
 import { LegalDraft, Placeholder } from "@/components/ui/LegalDraft";
-import { FrenchVersionPrevails, formatOfferPrice, legalUpdatedAt } from "./shared";
+import { FrenchVersionPrevails, legalUpdatedAt } from "./shared";
 
 const PATH = "/cgv";
 
@@ -27,7 +28,7 @@ export function termsMetadata(locale: Locale): Metadata {
 
 export async function TermsView({ locale }: { locale: Locale }) {
   const t = copy[locale];
-  const offers = await getOffers(locale);
+  const { categories: offers } = await getCatalog(locale);
   const disclaimer = getDictionary(locale).footer.disclaimer;
   return (
     <LegalDraft title={t.title} description={t.description} updatedAt={legalUpdatedAt[locale]} locale={locale}>
@@ -45,7 +46,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             <ul>
               {offers.map((o) => (
                 <li key={o.id}>
-                  <strong>{o.name}</strong> — {formatOfferPrice(o, locale)} TTC : {o.includes.join(", ").toLowerCase()}.
+                  <strong>{o.name}</strong> — {formatCategoryPrice(o, locale)} TTC : {o.includes.join(", ").toLowerCase()}.
                 </li>
               ))}
             </ul>
@@ -75,19 +76,16 @@ export async function TermsView({ locale }: { locale: Locale }) {
           </section>
           <section>
             <h2>5. Annulation et report</h2>
-            <ul>
-              {offers.map((o) => (
-                <li key={o.id}>
-                  {o.name} : {o.cancellation}
-                </li>
-              ))}
-            </ul>
+            <p>
+              Le rendez-vous est annulable ou reportable gratuitement jusqu&apos;à 24 heures avant l&apos;heure prévue, sur simple
+              demande par e-mail. L&apos;appel découverte est gratuit et sans engagement.
+            </p>
           </section>
           <section>
-            <h2>6. Abonnement « {offers.find((o) => o.kind === "abonnement")?.name ?? "Abonnement"} »</h2>
+            <h2>6. Offre entreprises</h2>
             <p>
-              Sans engagement de durée, résiliable à tout moment, effet à la fin de la période mensuelle en cours.{" "}
-              <Placeholder>modalités de résiliation en ligne et de reconduction à valider au regard de la réglementation applicable</Placeholder>
+              Les prestations « MesDémarches Business » font l&apos;objet d&apos;un devis préalable, établi après un échange avec
+              l&apos;entreprise. Le prix indiqué sur le site est un prix de départ.
             </p>
           </section>
           <section>
@@ -119,7 +117,7 @@ export async function TermsView({ locale }: { locale: Locale }) {
             <ul>
               {offers.map((o) => (
                 <li key={o.id}>
-                  <strong>{o.name}</strong> — {formatOfferPrice(o, locale)} including VAT: {o.includes.join(", ").toLowerCase()}.
+                  <strong>{o.name}</strong> — {formatCategoryPrice(o, locale)} including VAT: {o.includes.join(", ").toLowerCase()}.
                 </li>
               ))}
             </ul>
@@ -148,19 +146,16 @@ export async function TermsView({ locale }: { locale: Locale }) {
           </section>
           <section>
             <h2>5. Cancellation and rescheduling</h2>
-            <ul>
-              {offers.map((o) => (
-                <li key={o.id}>
-                  {o.name}: {o.cancellation}
-                </li>
-              ))}
-            </ul>
+            <p>
+              The appointment can be cancelled or rescheduled free of charge up to 24 hours before the scheduled time, simply by
+              email. The discovery call is free and without commitment.
+            </p>
           </section>
           <section>
-            <h2>6. &ldquo;{offers.find((o) => o.kind === "abonnement")?.name ?? "Subscription"}&rdquo; subscription</h2>
+            <h2>6. Business offer</h2>
             <p>
-              No minimum term, can be cancelled at any time, taking effect at the end of the current monthly period.{" "}
-              <Placeholder>online cancellation and renewal terms to be validated against the applicable regulations</Placeholder>
+              &ldquo;MesDémarches Business&rdquo; services are subject to a prior quote, drawn up after a discussion with the
+              company. The price shown on the website is a starting price.
             </p>
           </section>
           <section>

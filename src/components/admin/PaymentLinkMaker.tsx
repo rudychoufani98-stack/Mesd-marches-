@@ -5,10 +5,20 @@ import { CreditCard } from "lucide-react";
 import { createPaymentLink, type PaymentLinkState } from "@/lib/payments/actions";
 import { CopyLinkButton } from "./CopyLinkButton";
 
-type PayableOffer = { id: string; name: string; price: number; kind: string };
+type PayableCategory = { id: string; name: string; price: number };
 
-/** Génère un lien de paiement signé pour une demande (démarches cochées, ou Pack / abonnement seul). */
-export function PaymentLinkMaker({ reference, locale, offers, defaults }: { reference: string; locale: "fr" | "en"; offers: PayableOffer[]; defaults: string[] }) {
+/** Génère un lien de paiement signé pour une demande (une catégorie à prix fixe). */
+export function PaymentLinkMaker({
+  reference,
+  locale,
+  categories,
+  defaultCategory,
+}: {
+  reference: string;
+  locale: "fr" | "en";
+  categories: PayableCategory[];
+  defaultCategory: string;
+}) {
   const [state, action, pending] = useActionState<PaymentLinkState, FormData>(createPaymentLink, {});
   return (
     <details className="mt-4 rounded-xl border border-line bg-surface/60 p-3 text-sm">
@@ -19,12 +29,12 @@ export function PaymentLinkMaker({ reference, locale, offers, defaults }: { refe
         <input type="hidden" name="ref" value={reference} />
         <input type="hidden" name="locale" value={locale} />
         <fieldset className="grid gap-1.5 sm:grid-cols-2">
-          <legend className="mb-1 text-xs text-muted">Cochez ce que le client doit payer (démarches, ou Pack / abonnement seul)</legend>
-          {offers.map((o) => (
-            <label key={o.id} className="flex items-center gap-2">
-              <input type="checkbox" name="offres" value={o.id} defaultChecked={defaults.includes(o.id)} className="h-4 w-4 accent-brand-700" />
+          <legend className="mb-1 text-xs text-muted">Catégorie à payer</legend>
+          {categories.map((c) => (
+            <label key={c.id} className="flex items-center gap-2">
+              <input type="radio" name="categorie" value={c.id} defaultChecked={c.id === defaultCategory} className="h-4 w-4 accent-brand-700" />
               <span className="text-ink">
-                {o.name} <span className="text-muted">· {o.price} €</span>
+                {c.name} <span className="text-muted">· {c.price} €</span>
               </span>
             </label>
           ))}

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { lowestDemarchePrice, type Offer } from "@/config/pricing";
-import { getOffers } from "@/lib/data/content";
+import { formatEuros, type CatalogCategory } from "@/config/catalog";
+import { getCatalog } from "@/lib/data/catalog";
 import { alternates, href, type Locale } from "@/i18n";
 import { Container, PageHeader } from "@/components/ui/primitives";
-import { formatOfferPrice } from "./shared";
 import { jsonLd } from "@/lib/seo";
 
 const PATH = "/faq";
@@ -31,13 +30,13 @@ const linkClass = "font-medium text-brand-700 underline";
 
 type Faq = { q: string; a: ReactNode; text: string };
 
-function buildFaqs(offers: Offer[], locale: Locale): Faq[] {
-  const lowest = lowestDemarchePrice(offers);
-  const from = lowest !== null ? formatOfferPrice({ ...offers[0], price: lowest, billing: "unique" }, locale) : "";
+function buildFaqs(categories: CatalogCategory[], locale: Locale): Faq[] {
+  const prices = categories.filter((c) => c.kind === "particulier").map((c) => c.price);
+  const from = prices.length ? `${formatEuros(Math.min(...prices), locale)}–${formatEuros(Math.max(...prices), locale)}` : "";
   const offerList =
     locale === "en"
-      ? `a free 15-minute discovery call, then one fixed price per procedure${from ? ` (from ${from})` : ""}, plus a Moving to France bundle and a monthly subscription`
-      : `un appel découverte offert de 15 minutes, puis un prix fixe par démarche${from ? ` (à partir de ${from})` : ""}, ainsi qu'un Pack Arrivée et un abonnement mensuel`;
+      ? `a free 15-minute discovery call, then one fixed price per category${from ? ` (${from})` : ""}, and a dedicated offer for companies`
+      : `un appel découverte offert de 15 minutes, puis un prix fixe par catégorie${from ? ` (${from})` : ""}, ainsi qu'une offre dédiée aux entreprises`;
   const pricingLink = (label: string) => (
     <Link href={href("/tarifs", locale)} className={linkClass}>
       {label}
@@ -76,7 +75,7 @@ export function faqMetadata(locale: Locale): Metadata {
 
 export async function FaqView({ locale }: { locale: Locale }) {
   const t = copy[locale];
-  const faqs = buildFaqs(await getOffers(locale), locale);
+  const faqs = buildFaqs((await getCatalog(locale)).categories, locale);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

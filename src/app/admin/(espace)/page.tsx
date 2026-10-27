@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Euro, Inbox, ShieldCheck } from "lucide-react";
-import { REQUEST_RETENTION_MONTHS, retentionCutoff } from "@/config/privacy";
+import { ArrowRight, BookOpen, CalendarDays, Inbox, LayoutList } from "lucide-react";
 import { requireAdmin } from "@/lib/supabase/server";
 import { AdminTitle, Panel } from "@/components/admin/ui";
 import { ImportDefaultsForm } from "./ImportDefaultsForm";
@@ -12,26 +11,21 @@ async function count(query: PromiseLike<{ count: number | null }>) {
 export default async function AdminDashboard() {
   const { supabase } = await requireAdmin();
   const head = { count: "exact" as const, head: true };
-  const [newRequests, totalRequests, expired, offers, guides, published] = await Promise.all([
+  const nowIso = new Date().toISOString();
+  const [newRequests, totalRequests, upcoming, categories, guides, published] = await Promise.all([
     count(supabase.from("requests").select("id", head).eq("status", "nouveau")),
     count(supabase.from("requests").select("id", head)),
-    count(supabase.from("requests").select("id", head).lt("created_at", retentionCutoff().toISOString())),
-    count(supabase.from("offers").select("id", head)),
+    count(supabase.from("bookings").select("id", head).gte("starts_at", nowIso).eq("status", "confirme")),
+    count(supabase.from("service_categories").select("id", head)),
     count(supabase.from("guides").select("slug", head)),
     count(supabase.from("guides").select("slug", head).eq("status", "published")),
   ]);
 
   const cards = [
     { href: "/admin/demandes?statut=nouveau", label: "Nouvelles demandes", value: newRequests, hint: `${totalRequests} au total`, icon: Inbox },
-    { href: "/admin/tarifs", label: "Offres en base", value: offers, hint: offers ? "Modifiables" : "Contenu par défaut affiché", icon: Euro },
+    { href: "/admin/reservations", label: "Rendez-vous à venir", value: upcoming, hint: "Confirmés", icon: CalendarDays },
+    { href: "/admin/catalogue", label: "Catégories en base", value: categories, hint: categories ? "Modifiables" : "Catalogue par défaut affiché", icon: LayoutList },
     { href: "/admin/guides", label: "Guides publiés", value: published, hint: `${guides} en base`, icon: BookOpen },
-    {
-      href: "/admin/donnees",
-      label: `Demandes > ${REQUEST_RETENTION_MONTHS} mois`,
-      value: expired,
-      hint: expired ? "À purger" : "Rien à purger",
-      icon: ShieldCheck,
-    },
   ];
 
   return (
@@ -48,12 +42,22 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      {(offers === 0 || guides === 0) && (
+      {categories === 0 && (
+        <Panel className="mt-6">
+          <h2 className="font-semibold text-ink">Catalogue des services</h2>
+          <p className="mt-1 text-sm text-muted">Le site affiche le catalogue par défaut. Importez-le pour modifier les services et les prix.</p>
+          <Link href="/admin/catalogue" className="mt-3 inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
+            Ouvrir le catalogue <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </Panel>
+      )}
+
+      {guides === 0 && (
         <Panel className="mt-6">
           <h2 className="font-semibold text-ink">Première utilisation</h2>
           <p className="mt-1 text-sm text-muted">
-            Votre base ne contient pas encore {offers === 0 && guides === 0 ? "les offres ni les guides" : offers === 0 ? "les offres" : "les guides"}. Le
-            site affiche pour l&apos;instant le contenu par défaut. Importez-le pour pouvoir le modifier ici.
+            Votre base ne contient pas encore les guides. Le site affiche pour l&apos;instant le contenu par défaut. Importez-le pour pouvoir le
+            modifier ici.
           </p>
           <ImportDefaultsForm />
         </Panel>
@@ -64,8 +68,8 @@ export default async function AdminDashboard() {
         <ul className="mt-3 grid gap-2 sm:grid-cols-2">
           {[
             { href: "/admin/guides/nouveau", label: "Écrire un nouveau guide" },
-            { href: "/admin/tarifs", label: "Modifier les prix" },
-            { href: "/admin/services", label: "Masquer ou afficher un service" },
+            { href: "/admin/catalogue", label: "Modifier les services et les prix" },
+            { href: "/admin/disponibilites", label: "Gérer mes disponibilités" },
             { href: "/admin/donnees", label: "Traiter une demande RGPD" },
           ].map((l) => (
             <li key={l.href}>

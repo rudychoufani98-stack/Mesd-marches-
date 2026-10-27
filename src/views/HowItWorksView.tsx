@@ -100,7 +100,7 @@ export function HowItWorksView({ locale }: { locale: Locale }) {
               </li>
             ))}
           </ul>
-          <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`} size="lg" variant="secondary" className="mt-8">
+          <ButtonLink href={`${href("/rendez-vous", locale)}?mode=appel`} size="lg" variant="secondary" className="mt-8">
             {t.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </ButtonLink>
         </section>

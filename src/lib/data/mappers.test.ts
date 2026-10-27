@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { defaultOffers } from "@/config/pricing";
+import { defaultCatalog } from "@/config/catalog";
 import { retentionCutoff } from "@/config/privacy";
 import { defaultGuides } from "@/content/guides";
-import { guideFromRow, guideToRow, knownSourceIds, offerFromRow, offerToRow, type GuideRow } from "./mappers";
+import { guideFromRow, guideToRow, knownSourceIds, type GuideRow } from "./mappers";
+import { categoryFromRow, categoryToRow, serviceFromRow, serviceToRow } from "./catalog-rows";
 
-describe("offres", () => {
-  it("font l'aller-retour base ↔ application sans perte", () => {
-    defaultOffers.forEach((o, i) => {
-      expect(offerFromRow(offerToRow(o, i))).toEqual({ ...o, highlighted: Boolean(o.highlighted) });
-    });
+describe("catalogue", () => {
+  it("fait l'aller-retour base ↔ application sans perte", () => {
+    defaultCatalog.categories.forEach((c) => expect(categoryFromRow(categoryToRow(c))).toEqual(c));
+    defaultCatalog.services.forEach((s) => expect(serviceFromRow(serviceToRow(s))).toEqual(s));
   });
-  it("convertissent un prix texte (numeric Postgres) en nombre", () => {
-    const row = offerToRow(defaultOffers[0], 0);
-    expect(offerFromRow({ ...row, price: "29.90" }).price).toBe(29.9);
+  it("convertit un prix texte (numeric Postgres) en nombre et ignore une icône inconnue", () => {
+    const row = { ...categoryToRow(defaultCatalog.categories[0]), price: "59.00", icon: "inconnue" };
+    expect(categoryFromRow(row)).toMatchObject({ price: 59, icon: "quotidien" });
   });
 });
 

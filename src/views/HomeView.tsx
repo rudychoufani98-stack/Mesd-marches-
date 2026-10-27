@@ -1,53 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Briefcase,
-  Car,
-  Check,
-  FileCheck2,
-  Flag,
-  GraduationCap,
-  Languages as LanguagesIcon,
-  Rocket,
-  HeartPulse,
-  Home,
-  KeyRound,
-  Landmark,
-  Languages,
-  Lock,
-  type LucideIcon,
-  Receipt,
-  ShieldCheck,
-  Truck,
-  UserRound,
-  Wallet,
-} from "lucide-react";
-import { formatPrice, lowestDemarchePrice } from "@/config/pricing";
+import { ArrowRight, Check, Languages, Lock, UserRound, Wallet } from "lucide-react";
+import { formatCategoryPrice, formatEuros } from "@/config/catalog";
 import { alternates, href, localeTags, type Locale } from "@/i18n";
-import { getOffers } from "@/lib/data/content";
+import { getCatalog } from "@/lib/data/catalog";
+import { CategoryIcon } from "@/components/catalog/CategoryIcon";
 import { InstitutionsMarquee } from "@/components/home/InstitutionsMarquee";
 import { QuickLeadForm } from "@/components/forms/QuickLeadForm";
 import { Container } from "@/components/ui/primitives";
 import { jsonLd } from "@/lib/seo";
-
-/** Icône de chaque accompagnement (plus sobre que des emojis). */
-const ICONS: Record<string, LucideIcon> = {
-  "d-titre-sejour": FileCheck2,
-  "d-naturalisation": Flag,
-  "d-traductions": LanguagesIcon,
-  "d-creation-entreprise": Rocket,
-  "d-diplome": GraduationCap,
-  "d-compte-bancaire": Landmark,
-  "d-dossier-location": KeyRound,
-  "d-aide-logement": Home,
-  "d-emmenagement": Truck,
-  "d-assurance-maladie": HeartPulse,
-  "d-permis": Car,
-  "d-emploi": Briefcase,
-  "d-impots": Receipt,
-  "d-comptes-en-ligne": ShieldCheck,
-};
 
 const copy = {
   fr: {
@@ -62,10 +23,9 @@ const copy = {
     proofs: ["Conseiller dédié", "Français & English", "Réponse sous 48 h"],
     servicesEyebrow: "Nos accompagnements",
     servicesTitle: "Ce que nous réglons avec vous",
-    servicesText: "Un objectif clair, un prix fixe. Vous choisissez, nous vous accompagnons jusqu'au bout.",
-    from: "dès",
-    cta: "Être accompagné·e",
-    allPrices: "Tarifs et Pack Arrivée",
+    servicesText: "Un prix fixe par catégorie, annoncé avant de réserver. Vous choisissez, nous vous accompagnons jusqu'au bout.",
+    cta: "Découvrir les services",
+    allPrices: "Tous nos services",
     otherTitle: "Votre démarche n'est pas listée ?",
     otherText: "Parlez-en à un conseiller : nous vous accompagnons sur toutes les démarches.",
     otherCta: "Appel offert",
@@ -117,10 +77,9 @@ const copy = {
     proofs: ["Dedicated advisor", "English & French", "Reply within 48h"],
     servicesEyebrow: "What we do",
     servicesTitle: "What we sort out with you",
-    servicesText: "A clear goal, a fixed price. You choose, we support you all the way.",
-    from: "from",
-    cta: "Get support",
-    allPrices: "Prices and Moving bundle",
+    servicesText: "One fixed price per category, announced before you book. You choose, we support you all the way.",
+    cta: "Discover the services",
+    allPrices: "All our services",
     otherTitle: "Your procedure isn't listed?",
     otherText: "Talk to an advisor: we support you with every procedure.",
     otherCta: "Free call",
@@ -175,10 +134,9 @@ export function homeMetadata(locale: Locale): Metadata {
 
 export async function HomeView({ locale }: { locale: Locale }) {
   const c = copy[locale];
-  const offers = await getOffers(locale);
-  const steps = offers.filter((o) => o.kind === "demarche");
-  const lowest = lowestDemarchePrice(offers);
-  const from = lowest !== null && steps[0] ? formatPrice({ ...steps[0], price: lowest }, locale) : "15 €";
+  const { categories } = await getCatalog(locale);
+  const prices = categories.filter((cat) => cat.kind === "particulier").map((cat) => cat.price);
+  const from = formatEuros(prices.length ? Math.min(...prices) : 29, locale);
   const faq = c.faq(from);
 
   const faqJsonLd = {
@@ -214,14 +172,14 @@ export async function HomeView({ locale }: { locale: Locale }) {
               ))}
             </ul>
           </div>
-          <QuickLeadForm offers={offers} locale={locale} />
+          <QuickLeadForm categories={categories} locale={locale} />
         </Container>
       </section>
 
       <InstitutionsMarquee locale={locale} />
 
       {/* Accompagnements */}
-      {steps.length > 0 && (
+      {categories.length > 0 && (
         <section className="py-20 sm:py-28" aria-labelledby="accompagnements">
           <Container>
             <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -232,33 +190,31 @@ export async function HomeView({ locale }: { locale: Locale }) {
                 </h2>
                 <p className="mt-4 text-lg text-muted">{c.servicesText}</p>
               </div>
-              <Link href={href("/tarifs", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
+              <Link href={href("/services", locale)} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
                 {c.allPrices} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
             <ul className="mt-14 grid gap-px overflow-hidden rounded-[1.5rem] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-              {steps.map((o) => {
-                const Icon = ICONS[o.id] ?? Check;
-                return (
-                  <li key={o.id} className="bg-white">
-                    <Link href={`${href("/rendez-vous", locale)}?offre=${o.id}`} className="group flex h-full flex-col p-7 transition-colors hover:bg-surface">
-                      <span className="flex items-center justify-between">
-                        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-100 text-brand-700 transition-colors group-hover:border-brand-700 group-hover:bg-brand-700 group-hover:text-white">
-                          <Icon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                        <span className="text-sm text-muted">
-                          {c.from} <span className="font-semibold text-ink">{formatPrice(o, locale)}</span>
-                        </span>
+              {categories.map((cat) => (
+                <li key={cat.id} className="bg-white">
+                  <Link
+                    href={cat.kind === "business" ? `${href("/services", locale)}#entreprises` : href(`/services/${cat.id}`, locale)}
+                    className="group flex h-full flex-col p-7 transition-colors hover:bg-surface"
+                  >
+                    <span className="flex items-center justify-between">
+                      <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-100 text-brand-700 transition-colors group-hover:border-brand-700 group-hover:bg-brand-700 group-hover:text-white">
+                        <CategoryIcon icon={cat.icon} />
                       </span>
-                      <span className="mt-6 block font-display text-xl font-medium leading-snug text-ink">{o.headline || o.name}</span>
-                      {o.why && <span className="mt-2 block text-sm leading-relaxed text-muted">{o.why}</span>}
-                      <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-semibold text-brand-700">
-                        {c.cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
+                      <span className="text-sm font-semibold text-ink">{formatCategoryPrice(cat, locale)}</span>
+                    </span>
+                    <span className="mt-6 block font-display text-xl font-medium leading-snug text-ink">{cat.name}</span>
+                    <span className="mt-2 block text-sm leading-relaxed text-muted">{cat.description}</span>
+                    <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-semibold text-brand-700">
+                      {c.cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
               <li className="bg-brand-950">
                 <a href="#demande" className="group flex h-full flex-col p-7 text-white">
                   <span className="font-display text-xl font-medium leading-snug">{c.otherTitle}</span>

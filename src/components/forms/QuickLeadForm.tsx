@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { ArrowRight, Lock } from "lucide-react";
-import type { Offer } from "@/config/pricing";
+import { DISCOVERY, type CatalogCategory } from "@/config/catalog";
 import { submitAppointment } from "@/lib/forms/actions";
 import { appointmentModes, appointmentSlots, initialFormState, optionLabel } from "@/lib/forms/schemas";
 import { Button } from "@/components/ui/primitives";
@@ -47,11 +47,9 @@ const copy = {
 
 const labelClasses = "block text-xs font-semibold uppercase tracking-wider text-muted";
 
-export function QuickLeadForm({ offers, locale }: { offers: Offer[]; locale: Locale }) {
+export function QuickLeadForm({ categories, locale }: { categories: CatalogCategory[]; locale: Locale }) {
   const t = copy[locale];
   const [state, action, pending] = useActionState(submitAppointment, initialFormState);
-  const discovery = offers.find((o) => o.kind === "decouverte");
-  const steps = offers.filter((o) => o.kind === "demarche");
 
   if (state.status === "success") return <FormSuccess message={state.message} locale={locale} />;
 
@@ -88,11 +86,11 @@ export function QuickLeadForm({ offers, locale }: { offers: Offer[]; locale: Loc
         <label htmlFor="lead-offer" className={labelClasses}>
           {t.need}
         </label>
-        <select {...input("offer")} defaultValue={previous(state, "offer") ?? discovery?.id ?? ""}>
-          {discovery && <option value={discovery.id}>{t.unsure}</option>}
-          {steps.map((o) => (
-            <option key={o.id} value={o.id}>
-              {o.headline || o.name}
+        <select {...input("offer")} defaultValue={previous(state, "offer") ?? DISCOVERY.id}>
+          <option value={DISCOVERY.id}>{t.unsure}</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
             </option>
           ))}
         </select>

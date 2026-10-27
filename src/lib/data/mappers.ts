@@ -1,32 +1,8 @@
-import type { Offer, OfferEnglishTexts, OfferKind } from "@/config/pricing";
 import { isCategoryId } from "@/content/categories";
 import type { ChecklistItem, GlossaryEntry, Guide, GuideStep } from "@/content/guides";
 import { officialSources, type SourceId } from "@/content/sources";
 
 /** Conversions entre les lignes de la base (snake_case) et les types de l'application. */
-
-export type OfferRow = {
-  id: string;
-  /** Absent tant que la migration « prix par démarche » n'est pas appliquée. */
-  kind?: OfferKind | null;
-  category?: string | null;
-  name: string;
-  tagline: string;
-  price: number | string;
-  billing: "unique" | "mensuel";
-  duration: string;
-  includes: string[];
-  excludes: string[];
-  response_time: string;
-  cancellation: string;
-  highlighted: boolean;
-  active: boolean;
-  sort: number;
-  /** Colonnes ajoutées par la migration « textes des offres » (absentes avant). */
-  headline?: string | null;
-  why?: string | null;
-  texts_en?: OfferEnglishTexts | null;
-};
 
 export type GuideRow = {
   slug: string;
@@ -44,50 +20,7 @@ export type GuideRow = {
   updated_at: string;
 };
 
-export function offerFromRow(r: OfferRow): Offer {
-  return {
-    id: r.id,
-    kind: r.kind ?? "pack",
-    ...(r.category && isCategoryId(r.category) ? { category: r.category } : {}),
-    name: r.name,
-    tagline: r.tagline,
-    price: Number(r.price),
-    billing: r.billing,
-    duration: r.duration,
-    includes: r.includes ?? [],
-    excludes: r.excludes ?? [],
-    responseTime: r.response_time,
-    cancellation: r.cancellation,
-    highlighted: r.highlighted,
-    ...(r.headline ? { headline: r.headline } : {}),
-    ...(r.why ? { why: r.why } : {}),
-    ...(r.texts_en && typeof r.texts_en === "object" ? { en: r.texts_en } : {}),
-  };
-}
 
-export function offerToRow(o: Offer, sort: number, active = true): OfferRow {
-  return {
-    id: o.id,
-    kind: o.kind,
-    category: o.category ?? null,
-    name: o.name,
-    tagline: o.tagline,
-    price: o.price,
-    billing: o.billing,
-    duration: o.duration,
-    includes: o.includes,
-    excludes: o.excludes,
-    response_time: o.responseTime,
-    cancellation: o.cancellation,
-    highlighted: Boolean(o.highlighted),
-    active,
-    sort,
-    // Écrits seulement s'ils sont définis : l'import par défaut fonctionne aussi avant la migration.
-    ...(o.headline !== undefined ? { headline: o.headline || null } : {}),
-    ...(o.why !== undefined ? { why: o.why || null } : {}),
-    ...(o.en !== undefined ? { texts_en: o.en } : {}),
-  };
-}
 
 const asArray = <T>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 

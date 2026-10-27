@@ -3,17 +3,16 @@
 import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { defaultOffers } from "@/config/pricing";
 import { retentionCutoff } from "@/config/privacy";
 import { categories, type CategoryId } from "@/content/categories";
 import { defaultGuides } from "@/content/guides";
 import { CONTENT_TAGS } from "@/lib/data/content";
-import { guideToRow, knownSourceIds, offerToRow } from "@/lib/data/mappers";
+import { guideToRow, knownSourceIds } from "@/lib/data/mappers";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSessionClient, requireAdmin } from "@/lib/supabase/server";
 import { headers } from "next/headers";
 import { isRateLimited } from "@/lib/forms/rate-limit";
-import { parseChecklist, parseGlossary, parseLines, parseSteps } from "./guide-format";
+import { parseChecklist, parseGlossary, parseSteps } from "./guide-format";
 
 export type AdminResult = { status: "idle" | "success" | "error"; message?: string; errors?: Record<string, string> };
 
@@ -92,96 +91,12 @@ export async function signOut() {
 
 export async function importDefaults(): Promise<AdminResult> {
   const { supabase } = await requireAdmin();
-  const offers = defaultOffers.map((o, i) => offerToRow(o, i));
   const guides = defaultGuides.map(guideToRow);
-  const [o, g] = await Promise.all([
-    supabase.from("offers").upsert(offers, { onConflict: "id", ignoreDuplicates: true }),
-    supabase.from("guides").upsert(guides, { onConflict: "slug", ignoreDuplicates: true }),
-  ]);
-  if (o.error || g.error) return fail("L'import a échoué. Vérifiez que la migration SQL a bien été appliquée.");
-  updateTag(CONTENT_TAGS.offers);
+  const g = await supabase.from("guides").upsert(guides, { onConflict: "slug", ignoreDuplicates: true });
+  if (g.error) return fail("L'import a échoué. Vérifiez que la migration SQL a bien été appliquée.");
   updateTag(CONTENT_TAGS.guides);
   refreshAdmin();
   return done("Contenu par défaut importé. Les éléments déjà présents n'ont pas été modifiés.");
-}
-
-// ---------------------------------------------------------------------------
-// Offres et prix
-// ---------------------------------------------------------------------------
-
-const offerSchema = z.object({
-  id: z.string().regex(/^[a-z0-9-]{2,40}$/),
-  kind: z.enum(["decouverte", "demarche", "pack", "abonnement"]),
-  category: z.union([z.literal(""), z.enum(categories.map((c) => c.id) as [CategoryId, ...CategoryId[]])]),
-  sort: z.coerce.number().int().min(0).max(100),
-  name: z.string().trim().min(2, "Nom trop court.").max(80),
-  tagline: z.string().trim().max(160),
-  price: z
-    .string()
-    .trim()
-    .transform((v) => Number(v.replace(/\s/g, "").replace(",", ".")))
-    .pipe(z.number({ error: "Prix invalide." }).min(0, "Le prix ne peut pas être négatif.").max(9999, "Prix trop élevé.")),
-  billing: z.enum(["unique", "mensuel"]),
-  duration: z.string().trim().max(120),
-  includes: z.string().max(3000),
-  excludes: z.string().max(3000),
-  responseTime: z.string().trim().max(300),
-  cancellation: z.string().trim().max(300),
-  highlighted: z.literal("on").optional(),
-  active: z.literal("on").optional(),
-  headline: z.string().trim().max(120),
-  why: z.string().trim().max(300),
-  nameEn: z.string().trim().max(80),
-  taglineEn: z.string().trim().max(160),
-  headlineEn: z.string().trim().max(120),
-  whyEn: z.string().trim().max(300),
-});
-
-export async function saveOffer(_prev: AdminResult, formData: FormData): Promise<AdminResult> {
-  const { supabase } = await requireAdmin();
-  const parsed = offerSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return fail("Certains champs sont à corriger.", firstErrors(parsed.error));
-  const d = parsed.data;
-  const includes = parseLines(d.includes);
-  if (includes.length === 0) return fail("Indiquez au moins un élément inclus.", { includes: "Au moins une ligne." });
-
-  const { error } = await supabase.from("offers").upsert(
-    offerToRow(
-      {
-        id: d.id,
-        kind: d.kind,
-        ...(d.category ? { category: d.category } : {}),
-        name: d.name,
-        tagline: d.tagline,
-        price: Math.round(d.price * 100) / 100,
-        billing: d.billing,
-        duration: d.duration,
-        includes,
-        excludes: parseLines(d.excludes),
-        responseTime: d.responseTime,
-        cancellation: d.cancellation,
-        highlighted: d.highlighted === "on",
-        headline: d.headline,
-        why: d.why,
-        en: Object.fromEntries(
-          Object.entries({ name: d.nameEn, tagline: d.taglineEn, headline: d.headlineEn, why: d.whyEn }).filter(([, v]) => v),
-        ),
-      },
-      d.sort,
-      d.active === "on",
-    ),
-    { onConflict: "id" },
-  );
-  if (error) {
-    // Colonnes absentes : la migration « textes des offres » n'a pas encore été exécutée.
-    if (/headline|texts_en|column|schema cache/i.test(error.message ?? "")) {
-      return fail("Exécutez d'abord la migration SQL « textes des offres » dans Supabase, puis réessayez.");
-    }
-    return fail("Enregistrement impossible. Réessayez.");
-  }
-  updateTag(CONTENT_TAGS.offers);
-  refreshAdmin();
-  return done(`Offre « ${d.name} » enregistrée. Le site est à jour.`);
 }
 
 // ---------------------------------------------------------------------------
@@ -268,27 +183,6 @@ export async function deleteGuide(formData: FormData) {
   updateTag(CONTENT_TAGS.guides);
   refreshAdmin();
   redirect("/admin/guides");
-}
-
-// ---------------------------------------------------------------------------
-// Visibilité des services
-// ---------------------------------------------------------------------------
-
-const visibilitySchema = z.object({
-  id: z.string().regex(/^(domain|item):[a-z0-9-]+$/),
-  active: z.enum(["true", "false"]),
-});
-
-export async function setVisibility(formData: FormData) {
-  const { supabase } = await requireAdmin();
-  const parsed = visibilitySchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return;
-  const { id, active } = parsed.data;
-  await supabase
-    .from("service_visibility")
-    .upsert({ id, kind: id.startsWith("domain:") ? "domain" : "item", active: active === "true", updated_at: new Date().toISOString() });
-  updateTag(CONTENT_TAGS.services);
-  refreshAdmin();
 }
 
 // ---------------------------------------------------------------------------

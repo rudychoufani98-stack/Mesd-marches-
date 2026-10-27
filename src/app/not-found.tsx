@@ -13,7 +13,7 @@ export default function NotFound() {
           <p className="mx-auto mt-3 max-w-md text-muted">La page demandée n&apos;existe pas ou a été déplacée.</p>
           <div className="mt-8 flex flex-col justify-center gap-2 sm:flex-row">
             <ButtonLink href="/">Retour à l&apos;accueil</ButtonLink>
-            <ButtonLink href="/rendez-vous?offre=decouverte" variant="secondary">
+            <ButtonLink href="/rendez-vous?mode=appel" variant="secondary">
               Réserver un appel offert
             </ButtonLink>
           </div>

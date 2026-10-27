@@ -93,8 +93,6 @@ export function appointmentSchemaFor(locale: Locale) {
     offer: z.string({ error: b.m.offer }).trim().min(1, b.m.offer).max(40),
     mode: z.enum(appointmentModes.map((m) => m.value) as [string, ...string[]], { error: b.m.mode }),
     slots: z.array(z.enum(appointmentSlots.map((s) => s.value) as [string, ...string[]])).min(1, b.m.slots),
-    /** Démarches cochées dans le sélecteur de la page Tarifs (offre « selection »). */
-    selection: z.array(z.string().regex(/^[a-z0-9-]{2,40}$/)).max(20).optional(),
     message: b.trimmed(1000).optional(),
     consent: b.consent,
     website: b.website,

@@ -7,7 +7,8 @@ import { ActionButton } from "@/components/admin/forms";
 import { AdminTitle, formatDateTime, Panel } from "@/components/admin/ui";
 import { Badge } from "@/components/ui/primitives";
 import { PaymentLinkMaker } from "@/components/admin/PaymentLinkMaker";
-import { getOffers } from "@/lib/data/content";
+import { getCatalog } from "@/lib/data/catalog";
+import { isPayable } from "@/config/catalog";
 import { paidByReference, recentPaidSessions } from "@/lib/payments/admin";
 import { paymentsEnabled } from "@/lib/payments/stripe";
 
@@ -82,13 +83,10 @@ export default async function RequestsPage({ searchParams }: PageProps<"/admin/d
   const { data, error } = await query;
   const requests = (data ?? []) as RequestRow[];
   const canPay = paymentsEnabled();
-  const [offers, sessions] = canPay ? await Promise.all([getOffers(), recentPaidSessions()]) : [[], null];
+  const [catalog, sessions] = canPay ? await Promise.all([getCatalog(), recentPaidSessions()]) : [null, null];
   const paid = paidByReference(sessions);
-  const payable = offers.filter((o) => o.price > 0).map(({ id, name, price, kind }) => ({ id, name, price, kind }));
-  const defaultsFor = (r: RequestRow): string[] => {
-    if (Array.isArray(r.data.selectionIds)) return r.data.selectionIds.filter((x): x is string => typeof x === "string");
-    return typeof r.data.offer === "string" ? [r.data.offer] : [];
-  };
+  const payable = (catalog?.categories ?? []).filter(isPayable).map(({ id, name, price }) => ({ id, name, price }));
+  const defaultFor = (r: RequestRow): string => (typeof r.data.offer === "string" ? r.data.offer : "");
 
   const chip =
     "inline-flex min-h-9 items-center rounded-full border border-line bg-white px-3 text-sm font-medium text-ink aria-[current=true]:border-brand-700 aria-[current=true]:bg-brand-700 aria-[current=true]:text-white";
@@ -168,7 +166,7 @@ export default async function RequestsPage({ searchParams }: PageProps<"/admin/d
               </div>
               <Details r={r} />
               {canPay && r.kind === "rendez-vous" && (
-                <PaymentLinkMaker reference={r.reference} locale={r.data.language === "en" ? "en" : "fr"} offers={payable} defaults={defaultsFor(r)} />
+                <PaymentLinkMaker reference={r.reference} locale={r.data.language === "en" ? "en" : "fr"} categories={payable} defaultCategory={defaultFor(r)} />
               )}
             </Panel>
           </li>

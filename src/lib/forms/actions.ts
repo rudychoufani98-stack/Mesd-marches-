@@ -5,8 +5,8 @@ import { z } from "zod";
 import { deliverWithoutDatabase, newReference, notifyStoredRequest, type DeliveryKind } from "@/integrations/delivery";
 import { PRIVACY_VERSION } from "@/config/privacy";
 import { siteConfig } from "@/config/site";
-import { getOffer, getOffers } from "@/lib/data/content";
-import { computeSelection } from "@/config/pricing";
+import { getCatalog } from "@/lib/data/catalog";
+import { DISCOVERY } from "@/config/catalog";
 import { createPublicClient } from "@/lib/supabase/public";
 import type { Locale } from "@/i18n";
 import { appointmentSchemaFor, contactSchemaFor, type FormState } from "./schemas";
@@ -53,7 +53,7 @@ function formValues(formData: FormData): Record<string, string | string[]> {
   for (const key of new Set(formData.keys())) {
     if (key.startsWith("$ACTION") || key === "website" || key === "locale") continue;
     const all = formData.getAll(key).filter((v): v is string => typeof v === "string");
-    values[key] = all.length > 1 || key === "slots" || key === "selection" ? all : (all[0] ?? "");
+    values[key] = all.length > 1 || key === "slots" ? all : (all[0] ?? "");
   }
   return values;
 }
@@ -108,7 +108,6 @@ async function handle<S extends z.ZodType>(
   const raw: Record<string, unknown> = { ...values, website: formData.get("website") ?? undefined };
   if (kind === "rendez-vous") {
     raw.slots = formData.getAll("slots");
-    raw.selection = formData.getAll("selection");
   }
 
   const parsed = schema.safeParse(raw);
@@ -161,37 +160,21 @@ export async function submitAppointment(_prev: FormState, formData: FormData): P
     locale,
     formData,
     async (d) => {
-      if (d.offer === "selection") {
-        // Le total est recalculé ici : on ne fait jamais confiance au prix envoyé par le navigateur.
-        const offers = await getOffers();
-        const totals = computeSelection(offers, d.selection ?? []);
-        if (totals.count === 0) return { error: text[locale].offer, field: "offer" };
-        const names = offers.filter((o) => o.kind === "demarche" && d.selection?.includes(o.id)).map((o) => o.name);
-        return {
-          name: d.name,
-          email: d.email,
-          data: {
-            offer: "selection",
-            offerName: `Sélection de ${totals.count} démarche(s)`,
-            phone: d.phone ?? "",
-            selection: names,
-            selectionIds: offers.filter((o) => o.kind === "demarche" && d.selection?.includes(o.id)).map((o) => o.id),
-            subtotal: totals.subtotal,
-            discountPercent: totals.discountPercent,
-            total: totals.total,
-            mode: d.mode,
-            slots: d.slots,
-            message: d.message ?? "",
-            language: locale,
-          },
-        };
-      }
-      const offer = await getOffer(d.offer);
-      if (!offer) return { error: text[locale].offer, field: "offer" };
+      // Besoin choisi : appel découverte ou une catégorie du catalogue.
+      const category = d.offer === DISCOVERY.id ? undefined : (await getCatalog()).categories.find((c) => c.id === d.offer);
+      if (d.offer !== DISCOVERY.id && !category) return { error: text[locale].offer, field: "offer" };
       return {
         name: d.name,
         email: d.email,
-        data: { offer: offer.id, offerName: offer.name, phone: d.phone ?? "", mode: d.mode, slots: d.slots, message: d.message ?? "", language: locale },
+        data: {
+          offer: category?.id ?? DISCOVERY.id,
+          offerName: category?.name ?? DISCOVERY.name.fr,
+          phone: d.phone ?? "",
+          mode: d.mode,
+          slots: d.slots,
+          message: d.message ?? "",
+          language: locale,
+        },
       };
     },
     text[locale].appointmentOk,

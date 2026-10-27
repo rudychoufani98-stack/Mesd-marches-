@@ -6,8 +6,9 @@ import { Clock } from "lucide-react";
 import { getCategory } from "@/content/categories";
 import { localizeCategory } from "@/content/translations";
 import { href, type Locale } from "@/i18n";
-import { getDomainByCategory, getGuide, getOffers } from "@/lib/data/content";
-import { formatPrice } from "@/config/pricing";
+import { getGuide } from "@/lib/data/content";
+import { getCategoryById } from "@/lib/data/catalog";
+import { formatCategoryPrice } from "@/config/catalog";
 import { Checklist } from "@/components/guides/Checklist";
 import { formatDate, SourceList, VerificationStatus } from "@/components/guides/shared";
 import { Badge, ButtonLink, Container } from "@/components/ui/primitives";
@@ -15,17 +16,18 @@ import { canReadGuide, guideKey } from "@/lib/guideAccess";
 import { PageSkeleton } from "@/components/ui/PageSkeleton";
 
 /** Démarche payante correspondant à chaque guide (les autres guides renvoient vers l'appel gratuit). */
-const GUIDE_OFFERS: Record<string, string> = {
-  "permis-de-conduire-etranger": "d-permis",
-  "comprendre-titre-de-sejour": "d-titre-sejour",
-  "comprendre-nationalite-francaise": "d-naturalisation",
-  "preparer-dossier-locatif": "d-dossier-location",
-  "comprendre-ouverture-compte-bancaire": "d-compte-bancaire",
-  "s-orienter-protection-sociale": "d-assurance-maladie",
-  "preparer-sa-declaration-de-revenus": "d-impots",
-  "comprendre-sa-fiche-de-paie": "d-emploi",
-  "checklist-demenagement": "d-emmenagement",
-  "organiser-ses-documents-numeriques": "d-comptes-en-ligne",
+const GUIDE_CATEGORIES: Record<string, string> = {
+  "permis-de-conduire-etranger": "quotidien",
+  "comprendre-titre-de-sejour": "immigration",
+  "comprendre-nationalite-francaise": "immigration",
+  "preparer-dossier-locatif": "logement",
+  "comprendre-ouverture-compte-bancaire": "banque",
+  "s-orienter-protection-sociale": "sante",
+  "preparer-sa-declaration-de-revenus": "fiscalite",
+  "comprendre-sa-fiche-de-paie": "emploi",
+  "checklist-demenagement": "quotidien",
+  "organiser-ses-documents-numeriques": "quotidien",
+  "premieres-demarches-installation": "immigration",
 };
 
 const copy = {
@@ -105,9 +107,7 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
   const guide = await getGuide(slug, locale);
   if (!guide) notFound();
   const category = localizeCategory(getCategory(guide.category)!, locale);
-  const domain = await getDomainByCategory(guide.category, locale);
-  const offers = await getOffers(locale);
-  const stepOffer = offers.find((o) => o.kind === "demarche" && o.id === GUIDE_OFFERS[guide.slug]);
+  const helpCategory = await getCategoryById(GUIDE_CATEGORIES[guide.slug] ?? "", locale);
   return (
     <article>
       <div className="border-b border-line bg-surface">
@@ -200,16 +200,16 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
             <h2 className="font-semibold text-ink">{c.helpTitle}</h2>
             <p className="mt-2 text-sm text-muted">{c.helpText}</p>
             <div className="mt-4 flex flex-col gap-2">
-              {stepOffer ? (
-                <ButtonLink href={`${href("/rendez-vous", locale)}?offre=${stepOffer.id}`}>
-                  {c.helpWith} · {formatPrice(stepOffer, locale)}
+              {helpCategory ? (
+                <ButtonLink href={`${href("/rendez-vous", locale)}?mode=accompagnement&categorie=${helpCategory.id}`}>
+                  {c.helpWith} · {formatCategoryPrice(helpCategory, locale)}
                 </ButtonLink>
               ) : (
-                <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`}>{c.book}</ButtonLink>
+                <ButtonLink href={`${href("/rendez-vous", locale)}?mode=appel`}>{c.book}</ButtonLink>
               )}
-              {domain && (
-                <ButtonLink href={href(`/services/${domain.slug}`, locale)} variant="secondary">
-                  {c.seeDomain} {category.shortTitle}
+              {helpCategory && (
+                <ButtonLink href={href(`/services/${helpCategory.id}`, locale)} variant="secondary">
+                  {c.seeDomain} {helpCategory.name}
                 </ButtonLink>
               )}
             </div>

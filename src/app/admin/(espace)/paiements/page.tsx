@@ -1,5 +1,5 @@
 import { ExternalLink } from "lucide-react";
-import { getOffers } from "@/lib/data/content";
+import { getCatalog } from "@/lib/data/catalog";
 import { recentPaidSessions } from "@/lib/payments/admin";
 import { paymentsStatus } from "@/lib/payments/stripe";
 import { requireAdmin } from "@/lib/supabase/server";
@@ -11,8 +11,9 @@ export const metadata = { title: "Paiements" };
 export default async function PaymentsPage() {
   await requireAdmin();
   const status = paymentsStatus();
-  const [sessions, offers] = await Promise.all([recentPaidSessions(50), getOffers()]);
-  const nameOf = (id: string) => offers.find((o) => o.id === id)?.name ?? id;
+  const [sessions, catalog] = await Promise.all([recentPaidSessions(50), getCatalog()]);
+  const nameOf = (id?: string) => catalog.categories.find((c) => c.id === id)?.name ?? id ?? "—";
+  const serviceOf = (id?: string) => catalog.services.find((s) => s.id === id)?.name;
   const dashboard = status === "live" ? "https://dashboard.stripe.com/payments" : "https://dashboard.stripe.com/test/payments";
 
   return (
@@ -46,10 +47,10 @@ export default async function PaymentsPage() {
             {sessions.map((s) => (
               <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 text-sm">
                 <div className="min-w-0">
-                  <p className="font-medium text-ink">{(s.metadata?.offres ?? "").split(",").filter(Boolean).map(nameOf).join(", ") || "—"}</p>
+                  <p className="font-medium text-ink">{[nameOf(s.metadata?.categorie), serviceOf(s.metadata?.service)].filter(Boolean).join(" — ")}</p>
                   <p className="mt-0.5 text-xs text-muted">
                     {formatDateTime(new Date(s.created * 1000).toISOString())} · {s.customer_details?.email ?? "e-mail inconnu"}
-                    {s.client_reference_id ? ` · demande ${s.client_reference_id}` : ""}
+                    {s.client_reference_id ? ` · réf. ${s.client_reference_id}` : ""}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

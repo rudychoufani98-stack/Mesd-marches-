@@ -40,7 +40,7 @@ export function LoginView({ locale }: { locale: Locale }) {
         <h1 className="mt-5 text-2xl font-bold text-ink">{t.heading}</h1>
         <p className="mt-3 leading-relaxed text-muted">{t.text}</p>
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <ButtonLink href={`${href("/rendez-vous", locale)}?offre=decouverte`}>{t.plan}</ButtonLink>
+          <ButtonLink href={`${href("/rendez-vous", locale)}?mode=appel`}>{t.plan}</ButtonLink>
           <ButtonLink href={href("/contact", locale)} variant="secondary">
             {t.contact}
           </ButtonLink>

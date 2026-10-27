@@ -2,104 +2,65 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getOffers } from "@/lib/data/content";
+import { isPayable } from "@/config/catalog";
 import { href, type Locale } from "@/i18n";
+import { getCategoryById } from "@/lib/data/catalog";
+import { isRateLimited } from "@/lib/forms/rate-limit";
 import { sign, verify } from "@/lib/signing";
 import { requireAdmin } from "@/lib/supabase/server";
-import { buildCart, parseOfferIds } from "./cart";
-import { getStripe } from "./stripe";
-import { isRateLimited } from "@/lib/forms/rate-limit";
+import { createCheckoutSession } from "./checkout";
 
 /**
- * Paiements Stripe (Checkout hébergé par Stripe : aucune donnée de carte ne passe par le site).
- *
- * - startCheckout : bouton « Payer » du site, ou page /payer ouverte depuis un lien envoyé par l'admin.
- * - createPaymentLink : l'admin génère un lien de paiement signé pour une demande.
+ * Paiement d'une catégorie SANS créneau : lien envoyé par l'admin après un appel découverte.
+ * (La réservation avec créneau passe par lib/booking/actions.ts.)
+ * Le prix vient toujours du catalogue côté serveur.
  */
 
 const REF_PATTERN = /^[A-Z0-9-]{4,40}$/;
+const CATEGORY_PATTERN = /^[a-z0-9-]{2,40}$/;
 
-async function siteOrigin(): Promise<string> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
-}
-
-/** Valeur signée d'un lien de paiement admin : référence + démarches. */
-const linkValue = (ref: string, ids: string[]) => `${ref}|${ids.join(",")}`;
+/** Valeur signée d'un lien de paiement admin : référence + catégorie. */
+const linkValue = (ref: string, categoryId: string) => `${ref}|${categoryId}`;
 
 export async function startCheckout(formData: FormData): Promise<void> {
   const locale: Locale = formData.get("locale") === "en" ? "en" : "fr";
   const thanks = href("/paiement/merci", locale);
-  const ids = parseOfferIds(formData.get("offres"));
+  const categoryId = String(formData.get("categorie") ?? "");
+  if (!CATEGORY_PATTERN.test(categoryId)) redirect(thanks);
 
-  // Lien envoyé par l'admin : la référence n'est acceptée que si la signature est valide.
+  // La référence de la demande n'est acceptée que si la signature du lien est valide.
   const rawRef = formData.get("ref");
-  const ref = typeof rawRef === "string" && REF_PATTERN.test(rawRef) && verify("payer", linkValue(rawRef, ids), formData.get("sig")) ? rawRef : undefined;
+  const ref = typeof rawRef === "string" && REF_PATTERN.test(rawRef) && verify("payer", linkValue(rawRef, categoryId), formData.get("sig")) ? rawRef : undefined;
 
-  // Limite les ouvertures de paiement par adresse IP (anti-abus).
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "inconnu";
-  if (isRateLimited(`checkout:${ip}`)) redirect(`${thanks}?statut=indisponible`);
+  if (isRateLimited(`checkout:${ip}`)) redirect(thanks);
 
-  const stripe = getStripe();
-  const cart = buildCart(await getOffers(locale), ids, locale);
-  if (!stripe || !cart) redirect(`${thanks}?statut=indisponible`);
+  const category = await getCategoryById(categoryId, locale);
+  if (!category || !isPayable(category)) redirect(thanks);
 
-  const origin = await siteOrigin();
-  const terms = `${origin}${href("/cgv", locale)}`;
-  let url: string | null = null;
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: cart.mode,
-      locale,
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: "eur",
-            unit_amount: Math.round(cart.total * 100),
-            product_data: { name: cart.label, description: cart.description.slice(0, 500) },
-            ...(cart.mode === "subscription" ? { recurring: { interval: "month" as const } } : {}),
-          },
-        },
-      ],
-      ...(cart.mode === "payment" ? { customer_creation: "always" as const, invoice_creation: { enabled: true } } : {}),
-      billing_address_collection: "auto",
-      client_reference_id: ref,
-      metadata: { offres: cart.ids.join(","), ref: ref ?? "", site: "mesdemarches" },
-      custom_text: {
-        submit: {
-          message:
-            locale === "en"
-              ? `By paying, you accept our terms of sale (${terms}) and ask for your support to start before the end of the withdrawal period.`
-              : `En payant, vous acceptez nos CGV (${terms}) et demandez que l'accompagnement commence avant la fin du délai de rétractation.`,
-        },
-      },
-      success_url: `${origin}${thanks}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}${href("/tarifs", locale)}`,
-    });
-    url = session.url;
-  } catch (error) {
-    console.error("[paiement] création de la session Stripe impossible", error);
-  }
-  redirect(url ?? `${thanks}?statut=indisponible`);
+  const session = await createCheckoutSession({
+    locale,
+    line: { label: category.name, description: category.description, amount: category.price },
+    metadata: { categorie: category.id, ref: ref ?? "" },
+    clientReference: ref,
+    cancelPath: href("/tarifs", locale),
+  });
+  redirect(session?.url ?? thanks);
 }
 
 export type PaymentLinkState = { path?: string; total?: number; error?: string };
 
-/** Admin : lien de paiement signé (valable sans limite de durée, montant recalculé à chaque ouverture). */
+/** Admin : lien de paiement signé pour une catégorie (montant recalculé à chaque ouverture). */
 export async function createPaymentLink(_prev: PaymentLinkState, formData: FormData): Promise<PaymentLinkState> {
   await requireAdmin();
   const locale: Locale = formData.get("locale") === "en" ? "en" : "fr";
   const ref = String(formData.get("ref") ?? "");
   if (!REF_PATTERN.test(ref)) return { error: "Référence de demande invalide." };
-  const ids = parseOfferIds(formData.getAll("offres").join(","));
-  const cart = buildCart(await getOffers(locale), ids, locale);
-  if (!cart) return { error: "Choisissez au moins une démarche, le Pack ou l'abonnement (pas un mélange)." };
-  const sig = sign("payer", linkValue(ref, cart.ids));
+  const category = await getCategoryById(String(formData.get("categorie") ?? ""), locale);
+  if (!category || !isPayable(category)) return { error: "Choisissez une catégorie payable en ligne (hors Business)." };
+  const sig = sign("payer", linkValue(ref, category.id));
   if (!sig) return { error: "Ajoutez la variable GUIDES_LINK_SECRET dans Vercel pour signer les liens." };
-  const params = new URLSearchParams({ offres: cart.ids.join(","), ref, sig });
-  return { path: `${href("/payer", locale)}?${params.toString()}`, total: cart.total };
+  const params = new URLSearchParams({ categorie: category.id, ref, sig });
+  return { path: `${href("/payer", locale)}?${params.toString()}`, total: category.price };
 }

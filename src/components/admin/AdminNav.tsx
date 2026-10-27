@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, CreditCard, Euro, Inbox, LayoutDashboard, Lock, ShieldCheck, ToggleRight } from "lucide-react";
+import { BookOpen, CalendarClock, CalendarDays, CreditCard, Inbox, LayoutDashboard, LayoutList, Lock, ShieldCheck } from "lucide-react";
 
 const items = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
+  { href: "/admin/reservations", label: "Réservations", icon: CalendarDays },
   { href: "/admin/demandes", label: "Demandes", icon: Inbox },
   { href: "/admin/paiements", label: "Paiements", icon: CreditCard },
-  { href: "/admin/tarifs", label: "Tarifs", icon: Euro },
+  { href: "/admin/catalogue", label: "Catalogue et prix", icon: LayoutList },
+  { href: "/admin/disponibilites", label: "Disponibilités", icon: CalendarClock },
   { href: "/admin/guides", label: "Guides", icon: BookOpen },
-  { href: "/admin/services", label: "Services", icon: ToggleRight },
   { href: "/admin/donnees", label: "Données personnelles", icon: ShieldCheck },
   { href: "/admin/securite", label: "Sécurité", icon: Lock },
 ];

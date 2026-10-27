@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { categories } from "./categories";
 import { defaultGuides as guides } from "./guides";
 import { officialSources } from "./sources";
-import { serviceDomains } from "./services";
-import { defaultOffers as offers } from "@/config/pricing";
+import { categories } from "./categories";
+import { defaultCatalog, formatCategoryPrice, isPayable } from "@/config/catalog";
 
 const ALLOWED_HOSTS = [
   /\.gouv\.fr$/,
@@ -59,53 +58,30 @@ describe("guides", () => {
   });
 });
 
-describe("services", () => {
-  const published = new Set(guides.filter((g) => g.status === "published").map((g) => g.slug));
+describe("catalogue", () => {
+  const { categories: cats, services } = defaultCatalog;
 
-  it("couvrent chaque domaine une fois", () => {
-    expect(serviceDomains.map((d) => d.category).sort()).toEqual(categories.map((c) => c.id).sort());
+  it("a des identifiants uniques", () => {
+    expect(new Set(cats.map((c) => c.id)).size).toBe(cats.length);
+    expect(new Set(services.map((s) => s.id)).size).toBe(services.length);
   });
 
-  it("pointent vers des guides publiés ou des pages existantes", () => {
-    const pages = new Set(["/tarifs", "/outils/budget", "/rendez-vous"]);
-    serviceDomains.forEach((d) =>
-      d.items.forEach((item) => {
-        if (!item.href) return;
-        if (item.href.startsWith("/guides/")) {
-          expect(published.has(item.href.replace("/guides/", "")), item.href).toBe(true);
-        } else {
-          expect(pages.has(item.href), item.href).toBe(true);
-        }
-      }),
-    );
+  it("rattache chaque service à une catégorie existante, et chaque catégorie a des services", () => {
+    services.forEach((s) => expect(cats.some((c) => c.id === s.categoryId), s.id).toBe(true));
+    cats.forEach((c) => expect(services.some((s) => s.categoryId === c.id), c.id).toBe(true));
   });
-});
 
-describe("tarifs", () => {
-  it("ont des identifiants uniques et un seul appel gratuit", () => {
-    expect(new Set(offers.map((o) => o.id)).size).toBe(offers.length);
-    offers.forEach((o) => expect(o.price === 0).toBe(o.kind === "decouverte"));
-    expect(offers.filter((o) => o.kind === "decouverte")).toHaveLength(1);
+  it("affiche un prix fixe pour les particuliers et « à partir de » pour les entreprises", () => {
+    const logement = cats.find((c) => c.id === "logement")!;
+    expect(formatCategoryPrice(logement, "fr").replace(/\s/g, " ")).toBe("59 €");
+    const business = cats.find((c) => c.kind === "business")!;
+    expect(formatCategoryPrice(business, "fr")).toMatch(/^À partir de 199/);
+    expect(isPayable(business)).toBe(false);
+    cats.filter((c) => c.kind === "particulier").forEach((c) => expect(isPayable(c), c.id).toBe(true));
   });
-  it("rattachent chaque démarche à un domaine", () => {
-    offers.filter((o) => o.kind === "demarche").forEach((o) => expect(o.category, o.id).toBeTruthy());
-  });
-});
 
-describe("sélecteur de démarches", () => {
-  it("applique la remise selon le nombre de démarches", async () => {
-    const { computeSelection } = await import("@/config/pricing");
-    const steps = offers.filter((o) => o.kind === "demarche");
-    expect(computeSelection(offers, [steps[0].id]).discountPercent).toBe(0);
-    expect(computeSelection(offers, steps.slice(0, 2).map((o) => o.id)).discountPercent).toBe(10);
-    expect(computeSelection(offers, steps.slice(0, 3).map((o) => o.id)).discountPercent).toBe(15);
-    const five = computeSelection(offers, steps.slice(0, 5).map((o) => o.id));
-    expect(five.discountPercent).toBe(25);
-    expect(five.total).toBe(Math.floor(five.subtotal * 0.75));
-    expect(five.subtotal - five.discount).toBe(five.total);
-  });
-  it("ignore les offres qui ne sont pas des démarches", async () => {
-    const { computeSelection } = await import("@/config/pricing");
-    expect(computeSelection(offers, ["decouverte", "pack-arrivee", "abonnement"]).count).toBe(0);
+  it("n'emploie pas d'intitulés de prestations réglementées", () => {
+    const risky = /choisir quelle mutuelle|capacité d'emprunt|^recherche de logement$|étude de rentabilité/i;
+    services.forEach((s) => expect(risky.test(s.name) || risky.test(s.question), s.id).toBe(false));
   });
 });
