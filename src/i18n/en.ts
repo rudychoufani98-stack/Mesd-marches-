@@ -4,7 +4,7 @@ import type { Dictionary } from "./fr";
 export const en: Dictionary = {
   common: {
     skipToContent: "Skip to content",
-    primaryCta: "📞 Free call",
+    primaryCta: "Free call",
     login: "Log in",
     openMenu: "Open menu",
     closeMenu: "Close menu",
@@ -27,32 +27,35 @@ export const en: Dictionary = {
     { href: "/tarifs", label: "Pricing" },
   ],
   footer: {
-    tagline: "Your paperwork in France, made simple.",
+    tagline: "A dedicated advisor for all your paperwork in France, in English or French.",
+    cta: "Book my free call",
     rights: "All rights reserved.",
     disclaimer:
       "MesDémarches is an independent private service and is not an official website of the French administration.",
     groups: [
       {
-        title: "Discover",
+        title: "Our support",
+        items: [
+          { href: "/services/logement", label: "Housing & property" },
+          { href: "/services/fiscalite", label: "Tax & income tax" },
+          { href: "/services/sante", label: "Health & insurance" },
+          { href: "/services/banque", label: "Banking & finance" },
+          { href: "/services/emploi", label: "Jobs & working life" },
+          { href: "/services/immigration", label: "Immigration & residence permit" },
+          { href: "/services/quotidien", label: "Everyday life & settling in" },
+          { href: "/services/business", label: "For companies" },
+        ],
+      },
+      {
+        title: "MesDémarches",
         items: [
           { href: "/services", label: "Our services" },
           { href: "/comment-ca-marche", label: "How it works" },
           { href: "/tarifs", label: "Pricing" },
-          { href: "/professionnels", label: "Notaries, banks, brokers" },
-        ],
-      },
-      {
-        title: "Tools",
-        items: [
-          { href: "/outils/budget", label: "Monthly budget" },
           { href: "/rendez-vous", label: "Book an appointment" },
-        ],
-      },
-      {
-        title: "Help",
-        items: [
-          { href: "/contact", label: "Contact" },
+          { href: "/professionnels", label: "Partner professionals" },
           { href: "/faq", label: "FAQ" },
+          { href: "/contact", label: "Contact" },
         ],
       },
       {
@@ -60,7 +63,7 @@ export const en: Dictionary = {
         items: [
           { href: "/mentions-legales", label: "Legal notice" },
           { href: "/confidentialite", label: "Privacy policy" },
-          { href: "/cookies", label: "Cookies and local storage" },
+          { href: "/cookies", label: "Cookies" },
           { href: "/mes-donnees", label: "My personal data" },
           { href: "/cgv", label: "Terms of sale" },
         ],

@@ -37,7 +37,7 @@ export function ServicesExplorer({ categories, services, locale }: { categories:
     <>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((c) => (
-          <li key={c.id}>
+          <li key={c.id} className="reveal">
             <button
               type="button"
               onClick={() => select(c.id)}

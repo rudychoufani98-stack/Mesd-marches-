@@ -26,6 +26,12 @@ const copy = {
     servicesText: "Un prix fixe par catégorie, annoncé avant de réserver. Vous choisissez, nous vous accompagnons jusqu'au bout.",
     cta: "Découvrir les services",
     allPrices: "Tous nos services",
+    stats: (domains: number, services: number) => [
+      { value: String(domains), label: "domaines d'accompagnement" },
+      { value: String(services), label: "services couverts" },
+      { value: "15 min", label: "d'appel découverte offert" },
+      { value: "FR · EN", label: "un conseiller bilingue" },
+    ],
     otherTitle: "Votre démarche n'est pas listée ?",
     otherText: "Parlez-en à un conseiller : nous vous accompagnons sur toutes les démarches.",
     otherCta: "Appel offert",
@@ -80,6 +86,12 @@ const copy = {
     servicesText: "One fixed price per category, announced before you book. You choose, we support you all the way.",
     cta: "Discover the services",
     allPrices: "All our services",
+    stats: (domains: number, services: number) => [
+      { value: String(domains), label: "areas of support" },
+      { value: String(services), label: "services covered" },
+      { value: "15 min", label: "free discovery call" },
+      { value: "EN · FR", label: "a bilingual advisor" },
+    ],
     otherTitle: "Your procedure isn't listed?",
     otherText: "Talk to an advisor: we support you with every procedure.",
     otherCta: "Free call",
@@ -134,7 +146,8 @@ export function homeMetadata(locale: Locale): Metadata {
 
 export async function HomeView({ locale }: { locale: Locale }) {
   const c = copy[locale];
-  const { categories } = await getCatalog(locale);
+  const { categories, services } = await getCatalog(locale);
+  const personal = categories.filter((cat) => cat.kind === "particulier");
   const prices = categories.filter((cat) => cat.kind === "particulier").map((cat) => cat.price);
   const from = formatEuros(prices.length ? Math.min(...prices) : 29, locale);
   const faq = c.faq(from);
@@ -154,6 +167,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
       <section id="demande" className="relative scroll-mt-16 overflow-hidden bg-brand-950 text-white">
         <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-brand-600/30 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -bottom-48 -left-24 h-[28rem] w-[28rem] rounded-full bg-accent-500/15 blur-3xl" />
+        <div aria-hidden="true" className="hero-grid pointer-events-none absolute inset-0" />
         <Container className="relative grid items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.15fr_1fr] lg:py-24">
           <div className="animate-fade-up">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">{c.eyebrow}</p>
@@ -178,6 +192,22 @@ export async function HomeView({ locale }: { locale: Locale }) {
 
       <InstitutionsMarquee locale={locale} />
 
+      <section aria-label={locale === "en" ? "Key figures" : "Chiffres clés"} className="border-b border-line bg-white">
+        <Container>
+          <dl className="grid grid-cols-2 divide-line py-10 sm:py-12 lg:grid-cols-4 lg:divide-x">
+            {c.stats(personal.length, services.filter((sv) => personal.some((cat) => cat.id === sv.categoryId)).length).map((st) => (
+              <div key={st.label} className="reveal px-4 py-3 text-center">
+                <dt className="sr-only">{st.label}</dt>
+                <dd>
+                  <span className="block font-display text-4xl font-medium tracking-tight text-brand-800 sm:text-5xl">{st.value}</span>
+                  <span className="mt-1 block text-sm text-muted">{st.label}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Container>
+      </section>
+
       {/* Accompagnements */}
       {categories.length > 0 && (
         <section className="py-20 sm:py-28" aria-labelledby="accompagnements">
@@ -196,7 +226,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
             </div>
             <ul className="mt-14 grid gap-px overflow-hidden rounded-[1.5rem] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
               {categories.map((cat) => (
-                <li key={cat.id} className="bg-white">
+                <li key={cat.id} className="reveal bg-white">
                   <Link
                     href={cat.kind === "business" ? `${href("/services", locale)}#entreprises` : href(`/services/${cat.id}`, locale)}
                     className="group flex h-full flex-col p-7 transition-colors hover:bg-surface"
@@ -238,7 +268,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
           </h2>
           <ol className="mt-14 grid gap-10 md:grid-cols-3">
             {c.method.map((step, i) => (
-              <li key={step.title} className="border-t border-white/15 pt-6">
+              <li key={step.title} className="reveal border-t border-white/15 pt-6">
                 <span className="font-display text-5xl font-light text-gold-300">0{i + 1}</span>
                 <h3 className="mt-4 text-xl font-semibold">{step.title}</h3>
                 <p className="mt-2 leading-relaxed text-brand-100/80">{step.text}</p>
@@ -254,13 +284,16 @@ export async function HomeView({ locale }: { locale: Locale }) {
           <h2 id="engagements" className="text-center font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
             {c.commitmentsTitle}
           </h2>
-          <ul className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {c.commitments.map(({ icon: Icon, title, text }) => (
-              <li key={title} className="text-center">
-                <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-surface text-brand-700">
-                  <Icon className="h-6 w-6" aria-hidden="true" />
+              <li
+                key={title}
+                className="reveal group rounded-[1.25rem] border border-line bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-[0_24px_50px_-30px_rgba(22,32,58,0.35)]"
+              >
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-950 text-gold-300 transition-transform duration-300 group-hover:scale-105">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <h3 className="mt-5 font-semibold text-ink">{title}</h3>
+                <h3 className="mt-6 font-display text-xl font-medium text-ink">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
               </li>
             ))}
@@ -274,7 +307,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
           <h2 id="faq-accueil" className="text-center font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl">
             {c.faqTitle}
           </h2>
-          <div className="mx-auto mt-12 max-w-3xl divide-y divide-line rounded-[1.5rem] border border-line bg-white">
+          <div className="reveal mx-auto mt-12 max-w-3xl divide-y divide-line rounded-[1.5rem] border border-line bg-white shadow-[0_20px_50px_-30px_rgba(22,32,58,0.25)]">
             {faq.map((f) => (
               <details key={f.q} className="group p-6">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink">

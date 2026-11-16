@@ -33,9 +33,8 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.slogan}`,
     description: siteConfig.description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "MesDémarches — Perdu dans les démarches en France ? On vous guide." }],
   },
-  twitter: { card: "summary_large_image", images: ["/og.png"] },
+  twitter: { card: "summary_large_image" },
   // Code de vérification Google Search Console (à renseigner dans Vercel le jour de l'ouverture à Google).
   verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : undefined,
 };

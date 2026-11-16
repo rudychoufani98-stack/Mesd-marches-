@@ -50,6 +50,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      // Pages anglaises : langue déclarée dès la réponse du serveur (moteurs de recherche).
+      { source: "/en", headers: [{ key: "Content-Language", value: "en" }] },
+      { source: "/en/:path*", headers: [{ key: "Content-Language", value: "en" }] },
       {
         // Espace admin : jamais mis en cache ni indexé.
         source: "/admin/:path*",

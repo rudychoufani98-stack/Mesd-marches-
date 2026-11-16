@@ -32,13 +32,13 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
   );
 }
 
-export function Logo({ href = "/", className = "" }: { href?: string; className?: string }) {
+export function Logo({ href = "/", className = "", tone = "light" }: { href?: string; className?: string; tone?: "light" | "dark" }) {
   const label = href.startsWith("/en") ? "MesDémarches, back to home" : "MesDémarches, retour à l'accueil";
   return (
     <Link href={href} className={`inline-flex items-center gap-2.5 ${className}`} aria-label={label}>
       <LogoMark />
-      <span className="text-[1.2rem] font-semibold tracking-tight text-ink">
-        Mes<span className="font-extrabold text-brand-700">Démarches</span>
+      <span className={`text-[1.2rem] font-semibold tracking-tight ${tone === "dark" ? "text-white" : "text-ink"}`}>
+        Mes<span className={`font-extrabold ${tone === "dark" ? "text-gold-300" : "text-brand-700"}`}>Démarches</span>
       </span>
     </Link>
   );

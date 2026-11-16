@@ -2,7 +2,7 @@
 export const fr = {
   common: {
     skipToContent: "Aller au contenu",
-    primaryCta: "📞 Appel gratuit",
+    primaryCta: "Appel gratuit",
     login: "Connexion",
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
@@ -25,32 +25,35 @@ export const fr = {
     { href: "/tarifs", label: "Tarifs" },
   ],
   footer: {
-    tagline: "Vos démarches, en toute simplicité.",
+    tagline: "Un conseiller dédié pour toutes vos démarches en France, en français ou en anglais.",
+    cta: "Réserver mon appel gratuit",
     rights: "Tous droits réservés.",
     disclaimer:
       "MesDémarches est un service privé indépendant et ne constitue pas un site officiel de l'administration française.",
     groups: [
       {
-        title: "Découvrir",
+        title: "Nos accompagnements",
+        items: [
+          { href: "/services/logement", label: "Immobilier & logement" },
+          { href: "/services/fiscalite", label: "Fiscalité & impôts" },
+          { href: "/services/sante", label: "Santé & assurances" },
+          { href: "/services/banque", label: "Banque & finances" },
+          { href: "/services/emploi", label: "Emploi & vie professionnelle" },
+          { href: "/services/immigration", label: "Immigration & titre de séjour" },
+          { href: "/services/quotidien", label: "Vie quotidienne & installation" },
+          { href: "/services/business", label: "Offre entreprises" },
+        ],
+      },
+      {
+        title: "MesDémarches",
         items: [
           { href: "/services", label: "Nos services" },
           { href: "/comment-ca-marche", label: "Comment ça marche" },
           { href: "/tarifs", label: "Tarifs" },
-          { href: "/professionnels", label: "Notaires, banques, courtiers" },
-        ],
-      },
-      {
-        title: "Outils",
-        items: [
-          { href: "/outils/budget", label: "Budget mensuel" },
-          { href: "/rendez-vous", label: "Demander un rendez-vous" },
-        ],
-      },
-      {
-        title: "Aide",
-        items: [
+          { href: "/rendez-vous", label: "Réserver un rendez-vous" },
+          { href: "/professionnels", label: "Professionnels partenaires" },
+          { href: "/faq", label: "Questions fréquentes" },
           { href: "/contact", label: "Contact" },
-          { href: "/faq", label: "FAQ" },
         ],
       },
       {
@@ -58,7 +61,7 @@ export const fr = {
         items: [
           { href: "/mentions-legales", label: "Mentions légales" },
           { href: "/confidentialite", label: "Politique de confidentialité" },
-          { href: "/cookies", label: "Cookies et stockage local" },
+          { href: "/cookies", label: "Cookies" },
           { href: "/mes-donnees", label: "Mes données personnelles" },
           { href: "/cgv", label: "Conditions générales de vente" },
         ],

@@ -22,7 +22,7 @@ const services: { icon: LucideIcon; fr: string; en: string }[] = [
   { icon: FileCheck2, fr: "Titre de séjour", en: "Residence permit" },
   { icon: Flag, fr: "Naturalisation", en: "Naturalisation" },
   { icon: Receipt, fr: "Impôts", en: "Taxes" },
-  { icon: HeartPulse, fr: "Assurance Maladie", en: "Health insurance" },
+  { icon: HeartPulse, fr: "Assurance santé", en: "Health insurance" },
   { icon: Home, fr: "Aides au logement", en: "Housing aid" },
   { icon: Car, fr: "Permis de conduire", en: "Driving licence" },
   { icon: KeyRound, fr: "Location", en: "Renting" },

@@ -2,17 +2,21 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { CookieNotice } from "@/components/privacy/CookieNotice";
+import { MobileCtaBar } from "@/components/layout/MobileCtaBar";
+import { HtmlLang } from "@/components/layout/HtmlLang";
 
 /** Habillage du site public, français et anglais (l'espace admin a le sien). */
 export default function SiteLayout({ children }: LayoutProps<"/">) {
   return (
     <>
+      <HtmlLang />
       <SkipLink />
       <Header />
       <main id="contenu" className="flex-1">
         {children}
       </main>
       <Footer />
+      <MobileCtaBar />
       <CookieNotice />
     </>
   );

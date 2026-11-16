@@ -1,19 +1,21 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "gold" | "onDark";
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 hover:-translate-y-px active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0";
 const variants: Record<Variant, string> = {
-  primary: "bg-brand-700 text-white shadow-sm hover:bg-brand-800",
+  primary: "bg-brand-700 text-white shadow-[0_10px_24px_-12px_rgba(28,58,122,0.7)] hover:bg-brand-800",
   secondary: "border border-line bg-white text-brand-800 hover:border-brand-300 hover:bg-brand-50",
   ghost: "text-brand-700 hover:bg-brand-50",
+  gold: "bg-gold-300 text-brand-950 shadow-[0_10px_28px_-12px_rgba(207,167,94,0.9)] hover:bg-gold-200",
+  onDark: "border border-white/25 text-white hover:border-white/40 hover:bg-white/10",
 };
 const sizes: Record<Size, string> = {
-  md: "px-4 py-2.5 text-sm",
-  lg: "px-6 py-3.5 text-base",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-7 py-3.5 text-base",
 };
 
 export function buttonClasses(variant: Variant = "primary", size: Size = "md", extra = "") {
@@ -68,20 +70,29 @@ export function SectionHeading({
   description,
   align = "left",
   as: Tag = "h2",
+  tone = "light",
 }: {
   eyebrow?: string;
   title: string;
   description?: string;
   align?: "left" | "center";
   as?: "h1" | "h2";
+  tone?: "light" | "dark";
 }) {
+  const dark = tone === "dark";
   return (
-    <div className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
-      {eyebrow && <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-accent-600">{eyebrow}</p>}
-      <Tag className={`font-bold tracking-tight text-ink ${Tag === "h1" ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"}`}>
+    <div className={align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-3xl"}>
+      {eyebrow && (
+        <p className={`mb-3 text-xs font-semibold uppercase tracking-[0.2em] ${dark ? "text-gold-300" : "text-accent-700"}`}>{eyebrow}</p>
+      )}
+      <Tag
+        className={`font-display font-medium leading-[1.08] tracking-tight ${dark ? "text-white" : "text-ink"} ${
+          Tag === "h1" ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl"
+        }`}
+      >
         {title}
       </Tag>
-      {description && <p className="mt-3 text-base leading-relaxed text-muted sm:text-lg">{description}</p>}
+      {description && <p className={`mt-4 text-base leading-relaxed sm:text-lg ${dark ? "text-brand-100/85" : "text-muted"}`}>{description}</p>}
     </div>
   );
 }
@@ -89,9 +100,12 @@ export function SectionHeading({
 /** En-tête standard des pages intérieures. */
 export function PageHeader({ eyebrow, title, description, children }: { eyebrow?: string; title: string; description?: string; children?: ReactNode }) {
   return (
-    <div className="border-b border-line bg-surface">
-      <Container className="py-12 sm:py-16">
-        <SectionHeading as="h1" eyebrow={eyebrow} title={title} description={description} />
+    <div className="relative overflow-hidden bg-brand-950 text-white">
+      <div aria-hidden="true" className="hero-grid pointer-events-none absolute inset-0 opacity-60" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-40 h-96 w-96 rounded-full bg-brand-600/30 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 left-10 h-80 w-80 rounded-full bg-accent-500/10 blur-3xl" />
+      <Container className="relative py-14 sm:py-20">
+        <SectionHeading as="h1" tone="dark" eyebrow={eyebrow} title={title} description={description} />
         {children}
       </Container>
     </div>

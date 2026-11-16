@@ -47,7 +47,7 @@ export function CategoryPanel({ category, services, locale }: { category: Catalo
         )}
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {services.map((s) => (
-            <li key={s.id} className="flex flex-col rounded-card border border-line bg-white p-5 transition-shadow hover:shadow-[0_10px_30px_rgba(22,32,58,0.07)]">
+            <li key={s.id} className="reveal flex flex-col rounded-card border border-line bg-white p-5 transition-shadow hover:shadow-[0_10px_30px_rgba(22,32,58,0.07)]">
               <p className="font-display text-lg font-medium leading-snug text-ink">{s.name}</p>
               <p className="mt-1.5 text-sm italic leading-relaxed text-muted">{s.question}</p>
               <div className="flex-1">{s.description && <ServiceDescription text={s.description} locale={locale} />}</div>
