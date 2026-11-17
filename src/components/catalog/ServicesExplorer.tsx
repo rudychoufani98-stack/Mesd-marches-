@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
 import { formatCategoryPrice, type CatalogCategory, type CatalogService } from "@/config/catalog";
 import type { Locale } from "@/i18n";
-import { CategoryIcon } from "./CategoryIcon";
 import { CategoryPanel } from "./CategoryPanel";
 
 const copy = {
@@ -37,25 +35,22 @@ export function ServicesExplorer({ categories, services, locale }: { categories:
     <>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((c) => (
-          <li key={c.id} className="reveal">
+          <li key={c.id}>
             <button
               type="button"
               onClick={() => select(c.id)}
               aria-expanded={open === c.id}
-              className={`group flex h-full w-full flex-col rounded-[1.25rem] border bg-white p-6 text-left transition-all hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(22,32,58,0.10)] ${
-                open === c.id ? "border-brand-700 ring-2 ring-brand-700/20" : "border-line"
+              className={`group flex h-full w-full flex-col rounded-md border bg-white p-7 text-left transition-colors hover:border-ink/40 ${
+                open === c.id ? "border-brand-950 ring-1 ring-brand-950" : "border-line"
               }`}
             >
-              <span className="flex items-start justify-between gap-3">
-                <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-accent-50 text-brand-700 transition-colors group-hover:from-brand-700 group-hover:to-brand-800 group-hover:text-white">
-                  <CategoryIcon icon={c.icon} className="h-6 w-6" />
-                </span>
-                <span className="rounded-full bg-surface px-3 py-1 text-sm font-semibold text-ink">{formatCategoryPrice(c, locale)}</span>
+              <span className="flex items-baseline justify-between gap-4">
+                <span className="font-display text-[1.3rem] font-semibold leading-tight text-ink">{c.name}</span>
+                <span className="whitespace-nowrap text-[15px] font-semibold tabular-nums text-ink">{formatCategoryPrice(c, locale)}</span>
               </span>
-              <span className="mt-5 block font-display text-xl font-medium leading-snug text-ink">{c.name}</span>
-              <span className="mt-2 block flex-1 text-sm leading-relaxed text-muted">{c.description}</span>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
-                {t.discover} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span className="mt-3 block flex-1 text-[15px] leading-relaxed text-muted">{c.description}</span>
+              <span className="mt-6 self-start text-[15px] font-semibold text-brand-900 underline decoration-brand-300 underline-offset-[6px] group-hover:decoration-brand-900">
+                {t.discover}
               </span>
             </button>
           </li>
@@ -63,7 +58,7 @@ export function ServicesExplorer({ categories, services, locale }: { categories:
       </ul>
 
       {current && (
-        <div ref={panelRef} className="mt-10 scroll-mt-24 animate-fade-up rounded-[1.5rem] border border-line bg-surface p-5 sm:p-8">
+        <div ref={panelRef} className="mt-10 scroll-mt-28 animate-fade-up rounded-md border border-line bg-surface p-5 sm:p-8">
           <nav aria-label={t.nav} className="-mx-1 mb-6 flex gap-2 overflow-x-auto px-1 pb-1">
             {categories.map((c) => (
               <button
@@ -71,15 +66,15 @@ export function ServicesExplorer({ categories, services, locale }: { categories:
                 type="button"
                 onClick={() => select(c.id)}
                 aria-current={c.id === current.id}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-line bg-white px-3.5 py-1.5 text-sm text-ink aria-[current=true]:border-brand-700 aria-[current=true]:bg-brand-700 aria-[current=true]:text-white"
+                className="inline-flex shrink-0 items-center rounded-[3px] border border-line bg-white px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-ink/40 aria-[current=true]:border-brand-950 aria-[current=true]:bg-brand-950 aria-[current=true]:text-white"
               >
-                <CategoryIcon icon={c.icon} className="h-4 w-4" /> {c.name}
+                {c.name}
               </button>
             ))}
           </nav>
           <div className="mb-6 flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="font-display text-3xl font-medium text-ink">{current.name}</h2>
-            <button type="button" onClick={() => setOpen(null)} className="text-sm text-muted hover:text-ink">
+            <h2 className="font-display text-[1.7rem] font-semibold leading-tight text-ink">{current.name}</h2>
+            <button type="button" onClick={() => setOpen(null)} className="text-sm text-muted underline underline-offset-4 hover:text-ink">
               {t.close}
             </button>
           </div>

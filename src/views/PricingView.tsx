@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Check, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 import { formatCategoryPrice } from "@/config/catalog";
 import { alternates, href, type Locale } from "@/i18n";
 import { getCatalog } from "@/lib/data/catalog";
-import { CategoryIcon } from "@/components/catalog/CategoryIcon";
-import { Container, PageHeader } from "@/components/ui/primitives";
+import { buttonClasses, Container, PageHeader } from "@/components/ui/primitives";
 import { jsonLd } from "@/lib/seo";
 
 const copy = {
@@ -68,10 +67,10 @@ export async function PricingView({ locale }: { locale: Locale }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(catalogJsonLd)} />
       <PageHeader eyebrow={c.eyebrow} title={c.title} description={c.description} />
       <Container className="space-y-12 py-12 sm:py-16">
-        <div className="overflow-hidden rounded-[1.5rem] border border-line bg-white">
+        <div className="overflow-hidden rounded-md border border-line bg-white">
           <table className="w-full text-left">
             <caption className="sr-only">{c.title}</caption>
-            <thead className="bg-surface text-xs uppercase tracking-wider text-muted">
+            <thead className="border-b border-line bg-surface text-sm text-muted">
               <tr>
                 <th scope="col" className="px-5 py-3 font-semibold">
                   {c.category}
@@ -85,34 +84,32 @@ export async function PricingView({ locale }: { locale: Locale }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
-              <tr className="bg-accent-50/40">
-                <th scope="row" className="px-5 py-4">
-                  <span className="flex items-center gap-3 font-semibold text-ink">
-                    <Phone className="h-5 w-5 text-accent-700" aria-hidden="true" /> {c.free}
-                  </span>
-                  <span className="mt-1 block pl-8 text-sm font-normal text-muted">{c.freeText}</span>
+              <tr>
+                <th scope="row" className="px-5 py-5">
+                  <span className="block font-display text-lg font-semibold text-ink">{c.free}</span>
+                  <span className="mt-1 block text-sm font-normal text-muted">{c.freeText}</span>
                 </th>
-                <td className="px-5 py-4 text-right font-display text-xl font-medium text-ink">{c.freePrice}</td>
+                <td className="px-5 py-4 text-right font-display text-lg font-semibold text-ink">{c.freePrice}</td>
                 <td className="hidden px-5 py-4 text-right sm:table-cell">
-                  <Link href={`${booking}?mode=appel`} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
-                    {c.book} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <Link href={`${booking}?mode=appel`} className="text-[15px] font-semibold text-brand-900 underline decoration-brand-300 underline-offset-[6px] transition-colors hover:decoration-brand-900">
+                    {c.book}
                   </Link>
                 </td>
               </tr>
               {categories.map((cat) => (
                 <tr key={cat.id}>
-                  <th scope="row" className="px-5 py-4">
-                    <Link href={href(`/services/${cat.id}`, locale)} className="flex items-center gap-3 font-semibold text-ink hover:text-brand-700">
-                      <CategoryIcon icon={cat.icon} className="h-5 w-5 text-brand-700" /> {cat.name}
+                  <th scope="row" className="px-5 py-5">
+                    <Link href={href(`/services/${cat.id}`, locale)} className="font-display text-lg font-semibold text-ink hover:text-brand-700">
+                      {cat.name}
                     </Link>
                   </th>
-                  <td className="whitespace-nowrap px-5 py-4 text-right font-display text-xl font-medium text-ink">{formatCategoryPrice(cat, locale)}</td>
+                  <td className="whitespace-nowrap px-5 py-4 text-right font-display text-lg font-semibold text-ink">{formatCategoryPrice(cat, locale)}</td>
                   <td className="hidden px-5 py-4 text-right sm:table-cell">
                     <Link
                       href={cat.kind === "business" ? `${booking}?mode=appel&categorie=${cat.id}` : `${booking}?mode=accompagnement&categorie=${cat.id}`}
-                      className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline"
+                      className="text-[15px] font-semibold text-brand-900 underline decoration-brand-300 underline-offset-[6px] transition-colors hover:decoration-brand-900"
                     >
-                      {c.book} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      {c.book}
                     </Link>
                   </td>
                 </tr>
@@ -122,19 +119,19 @@ export async function PricingView({ locale }: { locale: Locale }) {
         </div>
 
         {includes.length > 0 && (
-          <section className="rounded-[1.5rem] bg-brand-950 p-8 text-white sm:p-10" aria-labelledby="inclus">
-            <h2 id="inclus" className="font-display text-2xl font-medium">
+          <section className="rounded-md bg-brand-950 p-8 text-white sm:p-12" aria-labelledby="inclus">
+            <h2 id="inclus" className="font-display text-[1.7rem] font-semibold leading-tight">
               {c.included}
             </h2>
             <ul className="mt-5 grid gap-3 sm:grid-cols-2">
               {includes.map((i) => (
                 <li key={i} className="flex gap-3 text-brand-100">
-                  <Check className="mt-0.5 h-5 w-5 shrink-0 text-gold-300" aria-hidden="true" /> {i}
+                  <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-300" aria-hidden="true" /> {i}
                 </li>
               ))}
             </ul>
-            <Link href={href("/services", locale)} className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-full bg-gold-300 px-6 text-sm font-semibold text-brand-950 hover:bg-gold-200">
-              {c.see} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <Link href={href("/services", locale)} className={buttonClasses("light", "lg", "mt-9")}>
+              {c.see}
             </Link>
           </section>
         )}

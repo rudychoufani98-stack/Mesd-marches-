@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Building2, Check, Phone } from "lucide-react";
 import { formatCategoryPrice, type CatalogCategory, type CatalogService } from "@/config/catalog";
 import { getCategorySeo } from "@/config/catalog-seo";
 import { siteConfig } from "@/config/site";
 import { alternates, href, type Locale } from "@/i18n";
 import { getCatalog } from "@/lib/data/catalog";
 import { CategoryPanel } from "@/components/catalog/CategoryPanel";
-import { CategoryIcon } from "@/components/catalog/CategoryIcon";
 import { ServicesExplorer } from "@/components/catalog/ServicesExplorer";
-import { Container } from "@/components/ui/primitives";
+import { buttonClasses, Container, FaqList } from "@/components/ui/primitives";
 import { jsonLd } from "@/lib/seo";
 
 const copy = {
@@ -33,6 +31,7 @@ const copy = {
     allServices: "Nos services",
     home: "Accueil",
     faqTitle: "Vos questions",
+    faqText: "Une question qui n'est pas ici ? Posez-la lors de l'appel offert.",
     priceQuestion: (name: string) => `Combien coûte l'accompagnement « ${name} » ?`,
     priceAnswer: (price: string, list: string) => `${price}, pour l'ensemble des services de la catégorie : ${list}. Le premier appel de 15 minutes est offert.`,
     businessPriceAnswer: (price: string) => `${price}, selon vos besoins. Nous établissons un devis après un premier échange avec votre équipe.`,
@@ -60,6 +59,7 @@ const copy = {
     allServices: "Our services",
     home: "Home",
     faqTitle: "Your questions",
+    faqText: "A question that isn't here? Ask it during the free call.",
     priceQuestion: (name: string) => `How much does "${name}" support cost?`,
     priceAnswer: (price: string, list: string) => `${price}, for every service in the category: ${list}. The first 15-minute call is free.`,
     businessPriceAnswer: (price: string) => `${price}, depending on your needs. We draw up a quote after a first call with your team.`,
@@ -99,23 +99,23 @@ export async function ServicesView({ locale }: { locale: Locale }) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(structuredData)} />
       <section className="bg-brand-950 text-white">
-        <Container className="py-16 sm:py-20">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">{c.eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-medium leading-tight tracking-tight sm:text-5xl">{c.title}</h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-brand-100/90">{c.intro}</p>
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-            {c.promises.map((p) => (
-              <li key={p} className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-gold-300" aria-hidden="true" /> {p}
+        <Container className="py-16 sm:py-20 lg:py-24">
+          <h1 className="max-w-3xl font-display text-[2.1rem] font-semibold leading-[1.06] tracking-[-0.02em] sm:text-[2.75rem]">{c.title}</h1>
+          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-brand-100/85">{c.intro}</p>
+          <ul className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-brand-100/75">
+            {c.promises.map((p, i) => (
+              <li key={p} className="flex items-center gap-5">
+                {i > 0 && <span aria-hidden="true" className="h-3.5 w-px bg-white/25" />}
+                {p}
               </li>
             ))}
           </ul>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href={`${booking}?mode=accompagnement`} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-gold-300 px-6 text-sm font-semibold text-brand-950 hover:bg-gold-200">
-              {c.bookCta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Link href={`${booking}?mode=accompagnement`} className={buttonClasses("light", "lg")}>
+              {c.bookCta}
             </Link>
-            <Link href={`${booking}?mode=appel`} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/30 px-6 text-sm font-semibold text-white hover:bg-white/10">
-              <Phone className="h-4 w-4" aria-hidden="true" /> {c.callCta}
+            <Link href={`${booking}?mode=appel`} className={buttonClasses("onDark", "lg")}>
+              {c.callCta}
             </Link>
           </div>
         </Container>
@@ -123,10 +123,10 @@ export async function ServicesView({ locale }: { locale: Locale }) {
 
       <section className="py-16 sm:py-20" aria-labelledby="particuliers">
         <Container>
-          <h2 id="particuliers" className="font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl">
+          <h2 id="particuliers" className="font-display text-[1.7rem] font-semibold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[2.1rem]">
             {c.personal}
           </h2>
-          <p className="mt-3 max-w-2xl text-muted">{c.personalText}</p>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">{c.personalText}</p>
           <div className="mt-10">
             <ServicesExplorer categories={personal} services={services} locale={locale} />
           </div>
@@ -138,15 +138,12 @@ export async function ServicesView({ locale }: { locale: Locale }) {
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div className="max-w-2xl">
-                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent-700">
-                  <Building2 className="h-4 w-4" aria-hidden="true" /> {c.businessEyebrow}
-                </p>
-                <h2 id="business-titre" className="mt-3 font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl">
+                <p className="text-sm font-medium text-brand-700">{c.businessEyebrow}</p>
+                <h2 id="business-titre" className="mt-4 font-display text-[1.7rem] font-semibold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[2.1rem]">
                   {business.name}
                 </h2>
-                <p className="mt-3 text-muted">{business.description}</p>
+                <p className="mt-4 text-lg leading-relaxed text-muted">{business.description}</p>
               </div>
-              <p className="font-display text-2xl font-medium text-ink">{formatCategoryPrice(business, locale)}</p>
             </div>
             <div className="mt-10">
               <CategoryPanel category={business} services={services.filter((s) => s.categoryId === business.id)} locale={locale} />
@@ -248,72 +245,55 @@ export async function CategoryView({ slug, locale }: { slug: string; locale: Loc
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(structuredData)} />
-      <section className="relative overflow-hidden bg-brand-950 text-white">
-        <div aria-hidden="true" className="hero-grid pointer-events-none absolute inset-0 opacity-60" />
-        <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-40 h-96 w-96 rounded-full bg-brand-600/30 blur-3xl" />
-        <Container className="relative py-14 sm:py-20">
-          <nav aria-label={c.breadcrumb} className="text-sm text-brand-100/80">
-            <Link href={href("/services", locale)} className="hover:text-white">
+      <section className="bg-brand-950 text-white">
+        <Container className="py-14 sm:py-20">
+          <nav aria-label={c.breadcrumb} className="text-sm text-brand-100/70">
+            <Link href={href("/services", locale)} className="underline decoration-white/25 underline-offset-4 hover:text-white">
               {c.allServices}
             </Link>{" "}
-            / <span className="text-white">{category.name}</span>
+            <span aria-hidden="true">/</span> <span className="text-white">{category.name}</span>
           </nav>
-          <div className="mt-6 flex items-center gap-4">
-            <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-gold-300">
-              <CategoryIcon icon={category.icon} className="h-6 w-6" />
-            </span>
-            <h1 className="font-display text-4xl font-medium tracking-tight sm:text-5xl">{category.name}</h1>
-          </div>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-brand-100/90">{seo?.lead ?? category.description}</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <h1 className="mt-7 max-w-4xl font-display text-[2.1rem] font-semibold leading-[1.06] tracking-[-0.02em] sm:text-[2.75rem]">{category.name}</h1>
+          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-brand-100/85">{seo?.lead ?? category.description}</p>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
               href={category.kind === "business" ? `${booking}?mode=appel&categorie=${category.id}` : `${booking}?mode=accompagnement&categorie=${category.id}`}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-gold-300 px-6 text-sm font-semibold text-brand-950 hover:bg-gold-200"
+              className={buttonClasses("light", "lg")}
             >
-              {category.kind === "business" ? c.businessCta : `${c.ctaBook} · ${formatCategoryPrice(category, locale)}`} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              {category.kind === "business" ? c.businessCta : `${c.ctaBook} · ${formatCategoryPrice(category, locale)}`}
             </Link>
-            <Link
-              href={`${booking}?mode=appel&categorie=${category.id}`}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/30 px-6 text-sm font-semibold text-white hover:bg-white/10"
-            >
-              <Phone className="h-4 w-4" aria-hidden="true" /> {c.ctaCall}
+            <Link href={`${booking}?mode=appel&categorie=${category.id}`} className={buttonClasses("onDark", "lg")}>
+              {c.ctaCall}
             </Link>
           </div>
         </Container>
       </section>
 
-      <Container className="py-12 sm:py-16">
+      <Container className="py-14 sm:py-20">
         <CategoryPanel category={category} services={services} locale={locale} />
       </Container>
 
-      <section className="border-t border-line bg-surface py-16 sm:py-20" aria-labelledby="faq-categorie">
-        <Container>
-          <h2 id="faq-categorie" className="text-center font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl">
-            {c.faqTitle}
-          </h2>
-          <div className="reveal mx-auto mt-10 max-w-3xl divide-y divide-line rounded-[1.5rem] border border-line bg-white shadow-[0_20px_50px_-30px_rgba(22,32,58,0.25)]">
-            {faq.map((f) => (
-              <details key={f.q} className="group p-6">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink">
-                  <h3 className="text-base">{f.q}</h3>
-                  <span className="text-xl text-brand-700 transition-transform group-open:rotate-45" aria-hidden="true">
-                    +
-                  </span>
-                </summary>
-                <p className="mt-3 leading-relaxed text-muted">{f.a}</p>
-              </details>
-            ))}
+      <section className="border-t border-line bg-surface py-20 sm:py-24" aria-labelledby="faq-categorie">
+        <Container className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+          <div>
+            <h2 id="faq-categorie" className="font-display text-[1.7rem] font-semibold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[2.1rem]">
+              {c.faqTitle}
+            </h2>
+            <p className="mt-5 max-w-sm text-lg leading-relaxed text-muted">{c.faqText}</p>
           </div>
-          <div className="mt-12 text-center">
-            <p className="font-display text-2xl font-medium text-ink">{c.ctaTitle}</p>
-            <p className="mt-2 text-muted">{c.ctaText}</p>
-            <Link
-              href={`${booking}?mode=appel&categorie=${category.id}`}
-              className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-700 px-7 text-sm font-semibold text-white shadow-[0_10px_24px_-12px_rgba(28,58,122,0.7)] hover:bg-brand-800"
-            >
-              <Phone className="h-4 w-4" aria-hidden="true" /> {c.ctaCall}
-            </Link>
+          <FaqList items={faq} />
+        </Container>
+      </section>
+
+      <section className="bg-brand-950 py-20 text-white sm:py-24">
+        <Container className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className="font-display text-[1.9rem] font-semibold leading-[1.08] tracking-[-0.02em] sm:text-[2.4rem]">{c.ctaTitle}</h2>
+            <p className="mt-5 text-lg leading-relaxed text-brand-100/80">{c.ctaText}</p>
           </div>
+          <Link href={`${booking}?mode=appel&categorie=${category.id}`} className={buttonClasses("light", "lg", "shrink-0")}>
+            {c.ctaCall}
+          </Link>
         </Container>
       </section>
     </>

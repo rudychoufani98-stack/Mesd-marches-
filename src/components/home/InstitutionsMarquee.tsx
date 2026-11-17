@@ -43,11 +43,9 @@ const copy = {
 function Item({ s, locale }: { s: (typeof services)[number]; locale: Locale }) {
   const Icon = s.icon;
   return (
-    <li className="inline-flex shrink-0 items-center gap-3 px-7">
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-100 text-brand-700">
-        <Icon className="h-5 w-5" aria-hidden="true" />
-      </span>
-      <span className="font-display text-lg font-medium text-ink">{s[locale]}</span>
+    <li className="inline-flex shrink-0 items-center gap-2.5 border-l border-line px-8 first:border-l-0">
+      <Icon className="h-4 w-4 text-brand-700" strokeWidth={1.5} aria-hidden="true" />
+      <span className="whitespace-nowrap text-[15px] text-ink/80">{s[locale]}</span>
     </li>
   );
 }
@@ -55,11 +53,11 @@ function Item({ s, locale }: { s: (typeof services)[number]; locale: Locale }) {
 export function InstitutionsMarquee({ locale }: { locale: Locale }) {
   const c = copy[locale];
   return (
-    <section aria-labelledby="domaines" className="border-b border-line bg-white py-10">
-      <h2 id="domaines" className="px-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+    <section aria-labelledby="domaines" className="border-b border-line bg-paper py-8">
+      <h2 id="domaines" className="px-4 text-center text-sm text-muted">
         {c.title}
       </h2>
-      <div className="group relative mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+      <div className="group relative mt-5 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
         <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:w-auto motion-reduce:animate-none">
           <ul className="flex shrink-0 motion-reduce:flex-wrap motion-reduce:justify-center">
             {services.map((s) => (

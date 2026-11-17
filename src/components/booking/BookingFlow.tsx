@@ -157,7 +157,7 @@ export function BookingFlow({
     `flex w-full items-start gap-3 rounded-card border-2 bg-white p-4 text-left transition-colors ${on ? "border-brand-700 bg-brand-50/50" : "border-line hover:border-brand-200"}`;
 
   return (
-    <form action={action} noValidate className="relative rounded-[1.5rem] border border-line bg-white p-5 shadow-sm sm:p-8">
+    <form action={action} noValidate className="relative rounded-lg border border-line bg-white p-5 shadow-sm sm:p-8">
       <Honeypot />
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="kind" value={kind} />
@@ -186,7 +186,7 @@ export function BookingFlow({
       {/* 1. Besoin */}
       <div hidden={step !== 0} className="space-y-6">
         <fieldset>
-          <legend className="font-display text-xl font-medium text-ink">{t.chooseKind}</legend>
+          <legend className="font-display text-lg font-semibold text-ink">{t.chooseKind}</legend>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {(["appel", "accompagnement"] as const).map((k) => (
               <button key={k} type="button" onClick={() => setKind(k)} aria-pressed={kind === k} className={card(kind === k)}>
@@ -260,7 +260,7 @@ export function BookingFlow({
             type="button"
             disabled={!canStep1}
             onClick={() => setStep(1)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand-700 px-5 font-semibold text-white hover:bg-brand-800 disabled:opacity-40"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[3px] bg-brand-950 px-5 font-semibold text-white hover:bg-brand-800 disabled:opacity-40"
           >
             {t.next} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -270,7 +270,7 @@ export function BookingFlow({
       {/* 2. Créneau */}
       <div hidden={step !== 1} className="space-y-6">
         <div>
-          <h2 className="font-display text-xl font-medium text-ink">{t.slotTitle}</h2>
+          <h2 className="font-display text-lg font-semibold text-ink">{t.slotTitle}</h2>
           <p className="text-sm text-muted">{t.parisTime}</p>
         </div>
         {days.length === 0 ? (
@@ -334,7 +334,7 @@ export function BookingFlow({
             type="button"
             disabled={!slot}
             onClick={() => setStep(2)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand-700 px-5 font-semibold text-white hover:bg-brand-800 disabled:opacity-40"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[3px] bg-brand-950 px-5 font-semibold text-white hover:bg-brand-800 disabled:opacity-40"
           >
             {t.next} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -389,7 +389,7 @@ export function BookingFlow({
           <button
             type="submit"
             disabled={pending}
-            className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand-700 px-5 font-semibold text-white hover:bg-brand-800 disabled:opacity-60"
+            className="inline-flex min-h-11 items-center gap-2 rounded-[3px] bg-brand-950 px-5 font-semibold text-white hover:bg-brand-800 disabled:opacity-60"
           >
             {paid && <Lock className="h-4 w-4" aria-hidden="true" />}
             {pending ? t.sending : paid ? t.pay : t.confirm}

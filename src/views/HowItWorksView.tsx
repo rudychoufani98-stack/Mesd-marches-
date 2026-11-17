@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { alternates, href, type Locale } from "@/i18n";
 import { ButtonLink, Container, PageHeader } from "@/components/ui/primitives";
 
@@ -77,31 +77,34 @@ export function howItWorksMetadata(locale: Locale): Metadata {
 
 export function HowItWorksView({ locale }: { locale: Locale }) {
   const t = copy[locale];
+  const stepLabel = locale === "en" ? "Step" : "Étape";
   return (
     <>
       <PageHeader eyebrow={t.title} title={t.heading} description={t.promise} />
-      <Container className="py-12 sm:py-16">
-        <ol className="grid gap-10 md:grid-cols-3">
+      <Container className="py-16 sm:py-20">
+        <ol className="grid gap-12 md:grid-cols-3 md:gap-10">
           {t.steps.map((s, i) => (
-            <li key={s.title} className="border-t-2 border-brand-700 pt-6">
-              <span className="font-display text-5xl font-light text-brand-700">0{i + 1}</span>
-              <h2 className="mt-3 text-xl font-bold text-ink">{s.title}</h2>
-              <p className="mt-2 leading-relaxed text-muted">{s.text}</p>
+            <li key={s.title} className="border-t border-ink/25 pt-6">
+              <p className="text-sm font-medium text-brand-700">
+                {stepLabel} {i + 1}
+              </p>
+              <h2 className="mt-3 font-display text-[1.3rem] font-semibold leading-tight text-ink">{s.title}</h2>
+              <p className="mt-3 leading-relaxed text-muted">{s.text}</p>
             </li>
           ))}
         </ol>
 
-        <section className="mt-16 rounded-[1.5rem] bg-brand-950 p-8 text-white sm:p-10">
-          <h2 className="font-display text-3xl font-medium">{t.weDoTitle}</h2>
+        <section className="mt-20 rounded-md bg-brand-950 p-8 text-white sm:p-12">
+          <h2 className="font-display text-[1.7rem] font-semibold leading-tight">{t.weDoTitle}</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {t.weDo.map((i) => (
               <li key={i} className="flex gap-3 text-brand-100">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-gold-300" aria-hidden="true" /> {i}
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-300" aria-hidden="true" /> {i}
               </li>
             ))}
           </ul>
-          <ButtonLink href={`${href("/rendez-vous", locale)}?mode=appel`} size="lg" variant="secondary" className="mt-8">
-            {t.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <ButtonLink href={`${href("/rendez-vous", locale)}?mode=appel`} size="lg" variant="light" className="mt-9">
+            {t.cta}
           </ButtonLink>
         </section>
       </Container>

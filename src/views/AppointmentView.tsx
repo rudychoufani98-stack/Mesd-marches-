@@ -89,7 +89,7 @@ export function AppointmentView({ locale, searchParams }: { locale: Locale; sear
             </li>
           ))}
         </ul>
-        <Suspense fallback={<div className="h-[32rem] animate-pulse rounded-[1.5rem] bg-surface" />}>
+        <Suspense fallback={<div className="h-[32rem] animate-pulse rounded-lg bg-surface" />}>
           <Booking locale={locale} searchParams={searchParams} />
         </Suspense>
       </Container>
@@ -108,9 +108,9 @@ async function Confirmation({ locale, searchParams }: { locale: Locale; searchPa
   const sp = await searchParams;
   const d = typeof sp.d === "string" && !Number.isNaN(Date.parse(sp.d)) ? sp.d : null;
   return (
-    <div className="mx-auto max-w-lg rounded-[1.5rem] border border-line bg-white p-8 text-center shadow-sm">
+    <div className="mx-auto max-w-lg rounded-lg border border-line bg-white p-8 text-center shadow-sm">
       <CheckCircle2 className="mx-auto h-12 w-12 text-accent-500" aria-hidden="true" />
-      <h1 className="mt-4 font-display text-3xl font-medium text-ink">{c.confirmedTitle}</h1>
+      <h1 className="mt-4 font-display text-2xl font-semibold text-ink">{c.confirmedTitle}</h1>
       {d && (
         <p className="mt-3 text-lg text-ink">
           {c.confirmedText} <strong>{formatSlot(d, locale)}</strong> {sp.mode === "telephone" ? c.byPhone : c.byVideo}.
@@ -132,7 +132,7 @@ async function Confirmation({ locale, searchParams }: { locale: Locale; searchPa
 export function BookingConfirmationView({ locale, searchParams }: { locale: Locale; searchParams: SearchParams }) {
   return (
     <Container className="py-14 sm:py-20">
-      <Suspense fallback={<div className="mx-auto h-72 max-w-lg animate-pulse rounded-[1.5rem] bg-surface" />}>
+      <Suspense fallback={<div className="mx-auto h-72 max-w-lg animate-pulse rounded-lg bg-surface" />}>
         <Confirmation locale={locale} searchParams={searchParams} />
       </Suspense>
     </Container>

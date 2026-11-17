@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
 import { getDictionary, href, localeFromPath, stripLocale, switchLocalePath } from "@/i18n";
-import { Flag } from "@/components/ui/Flag";
 import { Logo } from "@/components/ui/Logo";
 import { ButtonLink } from "@/components/ui/primitives";
 
@@ -14,7 +13,7 @@ function isActive(pathname: string, path: string) {
   return path === "/" ? current === "/" : current.startsWith(path);
 }
 
-/** Bouton de langue : drapeau + code, vers la même page dans l'autre langue. */
+/** Bouton de langue : code de l'autre langue, vers la même page dans cette langue. */
 function LanguageSwitch({ pathname, className = "" }: { pathname: string; className?: string }) {
   const locale = localeFromPath(pathname);
   const target = locale === "fr" ? "en" : "fr";
@@ -26,18 +25,14 @@ function LanguageSwitch({ pathname, className = "" }: { pathname: string; classN
       lang={target}
       aria-label={t.common.switchTo}
       title={t.common.switchTo}
-      className={`inline-flex min-h-10 items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-3 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/10 ${className}`}
+      className={`inline-flex min-h-10 items-center rounded-[3px] border border-line px-3 text-sm font-semibold tracking-wide text-ink/80 transition-colors hover:border-ink/40 hover:text-ink ${className}`}
     >
-      <Flag country={target === "en" ? "gb" : "fr"} />
       {t.common.switchLabel}
     </Link>
   );
 }
 
-/**
- * En-tête sombre et translucide, dans la continuité des bandeaux de haut de page.
- * Devient plus opaque avec une ombre légère dès que l'on fait défiler la page.
- */
+/** En-tête clair et sobre : marque, navigation, accès à l'appel offert. Un filet apparaît au défilement. */
 export function Header() {
   const pathname = usePathname();
   const locale = localeFromPath(pathname);
@@ -70,21 +65,21 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-40 border-b text-white backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 ${
-        scrolled || open ? "border-white/10 bg-brand-950/90 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.5)]" : "border-transparent bg-brand-950"
+      className={`sticky top-0 z-40 border-b bg-paper/95 backdrop-blur-sm transition-[border-color,box-shadow] duration-300 ${
+        scrolled || open ? "border-line shadow-[0_1px_0_rgba(22,32,58,0.04)]" : "border-line/70"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Logo href={href("/", locale)} tone="dark" />
+      <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <Logo href={href("/", locale)} />
 
         <nav aria-label={t.common.mainNavigation} className="hidden xl:block">
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-7">
             {t.nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={href(item.href, locale)}
                   aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                  className="whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-medium text-brand-100/80 transition-colors hover:bg-white/10 hover:text-white aria-[current=page]:bg-white/10 aria-[current=page]:font-semibold aria-[current=page]:text-white aria-[current=page]:shadow-[inset_0_-2px_0_var(--color-gold-300)]"
+                  className="whitespace-nowrap py-2 text-[15px] text-ink/70 transition-colors hover:text-ink aria-[current=page]:text-ink aria-[current=page]:shadow-[inset_0_-1px_0_var(--color-brand-700)]"
                 >
                   {item.label}
                 </Link>
@@ -93,19 +88,19 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden items-center gap-2 xl:flex">
-            <Link href={href("/connexion", locale)} className="rounded-full px-3 py-2 text-sm font-medium text-brand-100/80 hover:bg-white/10 hover:text-white">
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-5 xl:flex">
+            <Link href={href("/connexion", locale)} className="text-[15px] text-ink/70 transition-colors hover:text-ink">
               {t.common.login}
             </Link>
-            <ButtonLink href={callHref} variant="gold" className="whitespace-nowrap">
+            <ButtonLink href={callHref} className="whitespace-nowrap">
               <Phone className="h-4 w-4" aria-hidden="true" /> {t.common.primaryCta}
             </ButtonLink>
           </div>
           <LanguageSwitch pathname={pathname} />
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10 xl:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-[3px] text-ink hover:bg-surface xl:hidden"
             aria-expanded={open}
             aria-controls="menu-mobile"
             aria-label={open ? t.common.closeMenu : t.common.openMenu}
@@ -117,26 +112,26 @@ export function Header() {
       </div>
 
       {open && (
-        <nav id="menu-mobile" aria-label={t.common.mainNavigation} className="border-t border-white/10 bg-brand-950 xl:hidden">
-          <ul className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6">
+        <nav id="menu-mobile" aria-label={t.common.mainNavigation} className="border-t border-line bg-paper xl:hidden">
+          <ul className="mx-auto flex max-w-6xl flex-col px-4 py-3 sm:px-6">
             {t.nav.map((item) => (
-              <li key={item.href}>
+              <li key={item.href} className="border-b border-line/70">
                 <Link
                   href={href(item.href, locale)}
                   aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                  className="block rounded-xl px-3 py-3 font-medium text-brand-100 hover:bg-white/10 aria-[current=page]:bg-white/10 aria-[current=page]:font-semibold aria-[current=page]:text-white aria-[current=page]:shadow-[inset_3px_0_0_var(--color-gold-300)]"
+                  className="block py-3.5 font-display text-lg text-ink/80 aria-[current=page]:text-ink"
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href={href("/connexion", locale)} className="block rounded-xl px-3 py-3 font-medium text-brand-100 hover:bg-white/10">
+            <li className="border-b border-line/70">
+              <Link href={href("/connexion", locale)} className="block py-3.5 font-display text-lg text-ink/80">
                 {t.common.login}
               </Link>
             </li>
-            <li className="pt-2">
-              <ButtonLink href={callHref} variant="gold" size="lg" className="w-full">
+            <li className="pt-4 pb-2">
+              <ButtonLink href={callHref} size="lg" className="w-full">
                 <Phone className="h-4 w-4" aria-hidden="true" /> {t.common.primaryCta}
               </ButtonLink>
             </li>

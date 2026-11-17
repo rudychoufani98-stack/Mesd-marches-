@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState } from "react";
-import { ArrowRight, Lock } from "lucide-react";
 import { DISCOVERY, type CatalogCategory } from "@/config/catalog";
 import { submitAppointment } from "@/lib/forms/actions";
 import { appointmentModes, appointmentSlots, initialFormState, optionLabel } from "@/lib/forms/schemas";
@@ -45,7 +44,7 @@ const copy = {
   },
 };
 
-const labelClasses = "block text-xs font-semibold uppercase tracking-wider text-muted";
+const labelClasses = "block text-sm font-medium text-ink";
 
 export function QuickLeadForm({ categories, locale }: { categories: CatalogCategory[]; locale: Locale }) {
   const t = copy[locale];
@@ -70,9 +69,9 @@ export function QuickLeadForm({ categories, locale }: { categories: CatalogCateg
     );
 
   return (
-    <form action={action} noValidate className="relative space-y-4 rounded-[1.5rem] bg-white p-6 text-ink shadow-[0_30px_80px_rgba(8,15,35,0.35)] sm:p-7">
+    <form action={action} noValidate className="relative space-y-4 rounded-md border border-white/10 bg-paper p-6 text-ink sm:p-8">
       <div>
-        <h2 className="font-display text-2xl font-semibold">{t.title}</h2>
+        <h2 className="font-display text-[1.5rem] font-semibold leading-tight">{t.title}</h2>
         <p className="mt-1 text-sm text-muted">{t.subtitle}</p>
       </div>
       <FormStatus state={state} />
@@ -117,7 +116,7 @@ export function QuickLeadForm({ categories, locale }: { categories: CatalogCateg
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="lead-phone" className={labelClasses}>
-            {t.phone} <span className="font-normal normal-case tracking-normal">({t.optional})</span>
+            {t.phone} <span className="font-normal text-muted">({t.optional})</span>
           </label>
           <input {...input("phone")} type="tel" autoComplete="tel" maxLength={24} />
           {err("phone")}
@@ -148,10 +147,10 @@ export function QuickLeadForm({ categories, locale }: { categories: CatalogCateg
       <ConsentField error={e("consent")} defaultChecked={previous(state, "consent") === "on"} locale={locale} />
 
       <Button type="submit" size="lg" disabled={pending} className="w-full">
-        {pending ? t.sending : t.send} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        {pending ? t.sending : t.send}
       </Button>
-      <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted">
-        <Lock className="h-3.5 w-3.5" aria-hidden="true" /> {t.trust}
+      <p className="text-center text-xs text-muted">
+        {t.trust}
       </p>
     </form>
   );

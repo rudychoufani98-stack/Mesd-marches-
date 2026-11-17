@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 /*
- * Système visuel MesDémarches.
- * Bleu profond (brand) pour la structure et les actions principales,
- * vert d'eau doux (accent) pour les éléments de progression et les touches visuelles.
+ * Système visuel MesDémarches : sobre et professionnel.
+ * Bleu nuit pour la structure et les actions, fond blanc, une seule famille de caractères (sans empattement),
+ * filets fins, angles nets, aucun effet décoratif.
  * Volontairement éloigné des codes graphiques institutionnels.
  */
 @theme {
@@ -35,14 +35,21 @@
   --color-muted: #5b6478;
   --color-line: #e3e7ef;
   --color-surface: #f6f8fb;
+  --color-paper: #ffffff;
 
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 1.125rem;
+  /* Angles nets : toute l'échelle d'arrondis est resserrée (formulaires, cartes, encadrés). */
+  --radius-card: 0.375rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.3125rem;
+  --radius-xl: 0.375rem;
+  --radius-2xl: 0.5rem;
+  --radius-3xl: 0.625rem;
 
   --animate-fade-up: fade-up 0.5s ease-out both;
-  --animate-marquee: marquee 45s linear infinite;
+  --animate-marquee: marquee 70s linear infinite;
 
   @keyframes marquee {
     from {
@@ -70,14 +77,14 @@ html {
 }
 
 body {
-  background: #ffffff;
+  background: var(--color-paper);
   color: var(--color-ink);
 }
 
 :focus-visible {
   outline: 3px solid var(--color-brand-400);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -100,36 +107,5 @@ body {
   }
   body {
     background: #fff;
-  }
-}
-
-/* Trame discrète des bandeaux sombres (profondeur, sans image). */
-.hero-grid {
-  background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse at 70% 0%, black 10%, transparent 70%);
-}
-
-/* Apparition douce des blocs au défilement, uniquement si le navigateur le permet
-   et si la personne n'a pas demandé à réduire les animations. */
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: reveal-up linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 22%;
-    }
   }
 }

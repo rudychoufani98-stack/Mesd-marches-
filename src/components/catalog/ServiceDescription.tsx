@@ -20,7 +20,7 @@ export function ServiceDescription({ text, locale, compact = false }: { text: st
         <span className="block text-sm leading-relaxed text-ink">{promise}</span>
         {gains.map((g) => (
           <span key={g} className="mt-1 flex gap-2 text-sm text-ink">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden="true" />
             {g}
           </span>
         ))}
@@ -33,11 +33,11 @@ export function ServiceDescription({ text, locale, compact = false }: { text: st
       <p className="text-[0.95rem] font-medium leading-relaxed text-ink">{promise}</p>
       {gains.length > 0 && (
         <>
-          <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-muted">{label}</p>
+          <p className="mt-4 text-sm font-semibold text-ink">{label}</p>
           <ul className="mt-1.5 space-y-1.5">
             {gains.map((g) => (
               <li key={g} className="flex gap-2 text-sm text-ink">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-600" aria-hidden="true" />
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden="true" />
                 {g}
               </li>
             ))}

@@ -1,19 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { jsonLd } from "@/lib/seo";
 import { defaultLocale, localeDirection } from "@/i18n";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-});
-
-/** Police d'affichage (titres de l'accueil) pour un rendu plus haut de gamme. */
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+/** Une seule famille de caractères pour tout le site (titres et texte). */
+const body = Plus_Jakarta_Sans({
+  variable: "--font-body",
   subsets: ["latin", "latin-ext"],
   display: "swap",
 });
@@ -65,12 +59,12 @@ const organizationJsonLd = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1c3a7a",
+  themeColor: "#0b1630",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang={defaultLocale} dir={localeDirection[defaultLocale]} className={`${jakarta.variable} ${fraunces.variable} h-full antialiased`}>
+    <html lang={defaultLocale} dir={localeDirection[defaultLocale]} className={`${body.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organizationJsonLd)} />
         {children}

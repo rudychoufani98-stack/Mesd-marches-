@@ -68,7 +68,7 @@ export function paymentMetadata(locale: Locale): Metadata {
   return { title: locale === "en" ? "Payment" : "Paiement", robots: { index: false, follow: false } };
 }
 
-const card = "mx-auto max-w-lg rounded-[1.5rem] border border-line bg-white p-7 shadow-[0_20px_50px_rgba(22,32,58,0.08)] sm:p-9";
+const card = "mx-auto max-w-lg rounded-md border border-line bg-white p-7 sm:p-9";
 
 /* ---------------------------------------------------------------- /payer (lien envoyé par l'admin) */
 
@@ -105,7 +105,7 @@ async function PaySummary({ searchParams, locale }: { searchParams: SearchParams
       <input type="hidden" name="categorie" value={category.id} />
       {typeof sp.ref === "string" && <input type="hidden" name="ref" value={sp.ref} />}
       {typeof sp.sig === "string" && <input type="hidden" name="sig" value={sp.sig} />}
-      <h1 className="font-display text-3xl font-medium text-ink">{t.payTitle}</h1>
+      <h1 className="font-display text-2xl font-semibold text-ink">{t.payTitle}</h1>
       <p className="mt-2 text-sm text-muted">{t.payText}</p>
       <p className="mt-6 font-semibold text-ink">{category.name}</p>
       <ul className="mt-2 space-y-1 text-sm text-muted">
@@ -148,7 +148,7 @@ async function ThankYou({ searchParams, locale }: { searchParams: SearchParams; 
   if (!paid) {
     return (
       <div className={`${card} text-center`}>
-        <h1 className="font-display text-2xl font-medium text-ink">{t.unavailableTitle}</h1>
+        <h1 className="font-display text-xl font-semibold text-ink">{t.unavailableTitle}</h1>
         <p className="mt-3 text-muted">{t.unavailableText}</p>
         <ButtonLink href={href("/rendez-vous", locale)} className="mt-6">
           {t.freeCall}
@@ -175,7 +175,7 @@ async function ThankYou({ searchParams, locale }: { searchParams: SearchParams; 
     return (
       <div className={`${card} text-center`}>
         <CalendarCheck className="mx-auto h-12 w-12 text-accent-500" aria-hidden="true" />
-        <h1 className="mt-4 font-display text-3xl font-medium text-ink">{t.bookedTitle}</h1>
+        <h1 className="mt-4 font-display text-2xl font-semibold text-ink">{t.bookedTitle}</h1>
         {startsAt && (
           <p className="mt-3 text-lg text-ink">
             {t.bookedText} <strong>{formatSlot(startsAt, locale)}</strong>.
@@ -201,7 +201,7 @@ async function ThankYou({ searchParams, locale }: { searchParams: SearchParams; 
       <div className="mx-auto max-w-4xl">
         <div className="text-center">
           <CheckCircle2 className="mx-auto h-12 w-12 text-accent-500" aria-hidden="true" />
-          <h1 className="mt-4 font-display text-3xl font-medium text-ink sm:text-4xl">{t.calendarTitle}</h1>
+          <h1 className="mt-4 font-display text-2xl font-semibold text-ink sm:text-3xl">{t.calendarTitle}</h1>
           <p className="mx-auto mt-3 max-w-xl text-muted">{t.calendarText}</p>
         </div>
         <div className="mt-8">
@@ -220,7 +220,7 @@ async function ThankYou({ searchParams, locale }: { searchParams: SearchParams; 
   return (
     <div className={`${card} text-center`}>
       <CheckCircle2 className="mx-auto h-12 w-12 text-accent-500" aria-hidden="true" />
-      <h1 className="mt-4 font-display text-3xl font-medium text-ink">{t.thanksTitle}</h1>
+      <h1 className="mt-4 font-display text-2xl font-semibold text-ink">{t.thanksTitle}</h1>
       <p className="mt-3 text-muted">{t.thanksText}</p>
       <dl className="mx-auto mt-6 max-w-xs space-y-1 text-sm">
         {amount && (

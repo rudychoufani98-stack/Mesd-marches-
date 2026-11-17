@@ -217,7 +217,7 @@ export async function GuideView({ slug, locale }: { slug: string; locale: Locale
           <details className="group rounded-card border border-line bg-white">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 font-semibold text-ink">
               <span>
-                <span aria-hidden="true">✅</span> {c.checklist} ({guide.checklist.length})
+                {c.checklist} ({guide.checklist.length})
               </span>
               <span className="text-xl text-brand-700 transition-transform group-open:rotate-45" aria-hidden="true">
                 +

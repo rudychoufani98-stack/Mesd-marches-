@@ -13,35 +13,35 @@ const copy = {
       "MesDémarches prépare les nouveaux arrivants à leurs rendez-vous : dossiers organisés, questions préparées, calendrier clair. Parlons d'un partenariat.",
     badge: "Espace professionnels",
     titleStart: "Travaillons ensemble :",
-    titleHighlight: "des clients mieux préparés.",
+    titleHighlight: "des clients mieux préparés",
     intro:
       "MesDémarches aide les nouveaux arrivants en France à organiser leurs démarches. Quand ils arrivent dans votre étude ou votre agence, leurs documents sont prêts et leurs questions sont claires.",
     contactCta: "Échanger avec nous",
     audiencesTitle: "Pour quels professionnels ?",
     audiences: [
-      { emoji: "⚖️", title: "Notaires", text: "Achat immobilier, succession, actes de la vie familiale : des clients qui comprennent les étapes et arrivent avec les bonnes pièces." },
-      { emoji: "🏦", title: "Banques", text: "Ouverture de compte, premier rendez-vous : des clients préparés, qui savent quelles questions poser et quels justificatifs apporter." },
-      { emoji: "🤝", title: "Courtiers", text: "Des personnes qui comprennent le vocabulaire (TAEG, coût total, assurance) avant de rencontrer un professionnel du crédit." },
-      { emoji: "🔑", title: "Agences et propriétaires", text: "Des dossiers de location complets, lisibles et rangés, sans pièce abusive demandée ni oubliée." },
+      { title: "Notaires", text: "Achat immobilier, succession, actes de la vie familiale : des clients qui comprennent les étapes et arrivent avec les bonnes pièces." },
+      { title: "Banques", text: "Ouverture de compte, premier rendez-vous : des clients préparés, qui savent quelles questions poser et quels justificatifs apporter." },
+      { title: "Courtiers", text: "Des personnes qui comprennent le vocabulaire (TAEG, coût total, assurance) avant de rencontrer un professionnel du crédit." },
+      { title: "Agences et propriétaires", text: "Des dossiers de location complets, lisibles et rangés, sans pièce abusive demandée ni oubliée." },
     ],
     stepsTitle: "Comment ça fonctionne",
     steps: [
-      { emoji: "👋", title: "Le client vient nous voir", text: "Il nous confie l'organisation de ses démarches." },
-      { emoji: "🧭", title: "Nous préparons ensemble", text: "Documents réunis et classés, étapes expliquées, questions notées, calendrier construit." },
-      { emoji: "🏛️", title: "Il arrive prêt à son rendez-vous", text: "Notaire, banque, courtier : vous gagnez du temps, et le conseil reste le vôtre." },
+      { title: "Le client vient nous voir", text: "Il nous confie l'organisation de ses démarches." },
+      { title: "Nous préparons ensemble", text: "Documents réunis et classés, étapes expliquées, questions notées, calendrier construit." },
+      { title: "Il arrive prêt à son rendez-vous", text: "Notaire, banque, courtier : vous gagnez du temps, et le conseil reste le vôtre." },
     ],
     scopeTitle: "Notre périmètre",
     weDoTitle: "Ce que nous faisons pour vos clients",
     weDo: [
-      { emoji: "🗂️", text: "Organiser les documents du client et vérifier qu'il n'en manque pas pour son rendez-vous" },
-      { emoji: "📖", text: "Expliquer les étapes et le vocabulaire, à partir des sources officielles" },
-      { emoji: "📝", text: "Préparer avec le client la liste de ses questions" },
-      { emoji: "🗓️", text: "Construire un calendrier réaliste de ses démarches" },
+      { text: "Organiser les documents du client et vérifier qu'il n'en manque pas pour son rendez-vous" },
+      { text: "Expliquer les étapes et le vocabulaire, à partir des sources officielles" },
+      { text: "Préparer avec le client la liste de ses questions" },
+      { text: "Construire un calendrier réaliste de ses démarches" },
     ],
     weDontTitle: "Ce qui reste votre métier",
     weDont: [
-      { emoji: "⚖️", text: "Aucun conseil juridique, fiscal ou en crédit : cela reste votre métier" },
-      { emoji: "🔒", text: "Aucune transmission des coordonnées d'un client sans son accord exprès" },
+      { text: "Aucun conseil juridique, fiscal ou en crédit : cela reste votre métier" },
+      { text: "Aucune transmission des coordonnées d'un client sans son accord exprès" },
     ],
     talkTitle: "Parlons-en",
     talkText:
@@ -56,35 +56,35 @@ const copy = {
       "MesDémarches prepares newcomers for their appointments: organised files, prepared questions, a clear timeline. Let's talk about a partnership.",
     badge: "For professionals",
     titleStart: "Let's work together:",
-    titleHighlight: "better-prepared clients.",
+    titleHighlight: "better-prepared clients",
     intro:
       "MesDémarches helps newcomers to France organise their procedures. When they arrive at your office or agency, their documents are ready and their questions are clear.",
     contactCta: "Talk to us",
     audiencesTitle: "Which professionals is it for?",
     audiences: [
-      { emoji: "⚖️", title: "Notaries", text: "Property purchases, inheritance, family deeds: clients who understand the steps and arrive with the right documents." },
-      { emoji: "🏦", title: "Banks", text: "Opening an account, a first appointment: prepared clients who know which questions to ask and which supporting documents to bring." },
-      { emoji: "🤝", title: "Brokers", text: "People who understand the vocabulary (APR, total cost, insurance) before meeting a lending professional." },
-      { emoji: "🔑", title: "Agencies and landlords", text: "Complete, clear and well-organised rental applications, with no improper document requested and none forgotten." },
+      { title: "Notaries", text: "Property purchases, inheritance, family deeds: clients who understand the steps and arrive with the right documents." },
+      { title: "Banks", text: "Opening an account, a first appointment: prepared clients who know which questions to ask and which supporting documents to bring." },
+      { title: "Brokers", text: "People who understand the vocabulary (APR, total cost, insurance) before meeting a lending professional." },
+      { title: "Agencies and landlords", text: "Complete, clear and well-organised rental applications, with no improper document requested and none forgotten." },
     ],
     stepsTitle: "How it works",
     steps: [
-      { emoji: "👋", title: "The client comes to us", text: "They entrust us with organising their procedures." },
-      { emoji: "🧭", title: "We prepare together", text: "Documents gathered and filed, steps explained, questions noted, timeline built." },
-      { emoji: "🏛️", title: "They arrive ready for their appointment", text: "Notary, bank, broker: you save time, and the advice remains yours." },
+      { title: "The client comes to us", text: "They entrust us with organising their procedures." },
+      { title: "We prepare together", text: "Documents gathered and filed, steps explained, questions noted, timeline built." },
+      { title: "They arrive ready for their appointment", text: "Notary, bank, broker: you save time, and the advice remains yours." },
     ],
     scopeTitle: "Our scope",
     weDoTitle: "What we do for your clients",
     weDo: [
-      { emoji: "🗂️", text: "Organise the client's documents and check that nothing is missing for their appointment" },
-      { emoji: "📖", text: "Explain the steps and the vocabulary, based on official sources" },
-      { emoji: "📝", text: "Prepare the client's list of questions with them" },
-      { emoji: "🗓️", text: "Build a realistic timeline for their procedures" },
+      { text: "Organise the client's documents and check that nothing is missing for their appointment" },
+      { text: "Explain the steps and the vocabulary, based on official sources" },
+      { text: "Prepare the client's list of questions with them" },
+      { text: "Build a realistic timeline for their procedures" },
     ],
     weDontTitle: "What remains your job",
     weDont: [
-      { emoji: "⚖️", text: "No legal, tax or lending advice: that remains your job" },
-      { emoji: "🔒", text: "No sharing of a client's contact details without their explicit consent" },
+      { text: "No legal, tax or lending advice: that remains your job" },
+      { text: "No sharing of a client's contact details without their explicit consent" },
     ],
     talkTitle: "Let's talk",
     talkText:
@@ -103,97 +103,86 @@ export function professionalsMetadata(locale: Locale): Metadata {
 export function ProfessionalsView({ locale }: { locale: Locale }) {
   const t = copy[locale];
   const contactHref = href("/contact", locale);
+  const stepLabel = locale === "en" ? "Step" : "Étape";
   return (
     <>
-      <section className="relative overflow-hidden border-b border-line bg-gradient-to-br from-brand-50 via-white to-accent-50">
+      <section className="border-b border-line bg-surface">
         <Container className="py-14 sm:py-20">
-          <p className="inline-flex items-center gap-2 rounded-full border border-line bg-white/80 px-3 py-1 text-sm font-medium text-brand-800">
-            <span aria-hidden="true">🤝</span> {t.badge}
-          </p>
-          <h1 className="mt-5 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-5xl">
-            {t.titleStart} <span className="text-brand-700">{t.titleHighlight}</span>
+          <p className="text-sm font-medium text-brand-700">{t.badge}</p>
+          <h1 className="mt-4 max-w-3xl font-display text-[2.1rem] font-semibold leading-[1.06] tracking-[-0.02em] text-ink sm:text-[2.6rem]">
+            {t.titleStart} {t.titleHighlight}
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">{t.intro}</p>
-          <div className="no-print mt-8 flex flex-col gap-3 sm:flex-row">
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{t.intro}</p>
+          <div className="no-print mt-9 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href={contactHref} size="lg">
-              <span aria-hidden="true">✉️</span> {t.contactCta}
+              {t.contactCta}
             </ButtonLink>
             <PrintButton locale={locale} />
           </div>
         </Container>
       </section>
 
-      <Container className="space-y-16 py-14 sm:py-20">
+      <Container className="space-y-20 py-16 sm:py-24">
         <section aria-labelledby="pour-qui">
-          <h2 id="pour-qui" className="text-2xl font-bold text-ink sm:text-3xl">
+          <h2 id="pour-qui" className="font-display text-[1.7rem] font-semibold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[2.1rem]">
             {t.audiencesTitle}
           </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="mt-10 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
             {t.audiences.map((a) => (
-              <div key={a.title} className="rounded-card border border-line bg-white p-5">
-                <span className="text-3xl" aria-hidden="true">
-                  {a.emoji}
-                </span>
-                <h3 className="mt-3 font-semibold text-ink">{a.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted">{a.text}</p>
+              <div key={a.title} className="border-t border-ink/25 pt-5">
+                <dt className="font-display text-xl font-semibold leading-tight text-ink">{a.title}</dt>
+                <dd className="mt-2 text-[15px] leading-relaxed text-muted">{a.text}</dd>
               </div>
             ))}
-          </div>
+          </dl>
         </section>
 
         <section aria-labelledby="fonctionnement">
-          <h2 id="fonctionnement" className="text-2xl font-bold text-ink sm:text-3xl">
+          <h2 id="fonctionnement" className="font-display text-[1.7rem] font-semibold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[2.1rem]">
             {t.stepsTitle}
           </h2>
-          <ol className="mt-8 grid gap-4 md:grid-cols-3">
+          <ol className="mt-10 grid gap-10 md:grid-cols-3">
             {t.steps.map((s, i) => (
-              <li key={s.title} className="relative rounded-card border border-line bg-white p-6">
-                <span className="absolute right-5 top-4 text-4xl font-extrabold text-brand-50" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <span className="text-3xl" aria-hidden="true">
-                  {s.emoji}
-                </span>
-                <h3 className="mt-3 font-semibold text-ink">{s.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
+              <li key={s.title} className="border-t border-ink/25 pt-5">
+                <p className="text-sm font-medium text-brand-700">
+                  {stepLabel} {i + 1}
+                </p>
+                <h3 className="mt-3 font-display text-xl font-semibold leading-tight text-ink">{s.title}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-muted">{s.text}</p>
               </li>
             ))}
           </ol>
         </section>
 
-        <section aria-labelledby="perimetre" className="grid gap-6 md:grid-cols-2">
+        <section aria-labelledby="perimetre" className="grid gap-12 md:grid-cols-2">
           <h2 id="perimetre" className="sr-only">
             {t.scopeTitle}
           </h2>
-          <div className="rounded-card border border-accent-200 bg-accent-50/50 p-6">
-            <h3 className="text-lg font-bold text-ink">{t.weDoTitle}</h3>
-            <ul className="mt-4 space-y-3">
-              {t.weDo.map((w) => (
-                <li key={w.text} className="flex gap-3 text-sm text-ink">
-                  <span aria-hidden="true">{w.emoji}</span> {w.text}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-card border border-line bg-white p-6">
-            <h3 className="text-lg font-bold text-ink">{t.weDontTitle}</h3>
-            <ul className="mt-4 space-y-3">
-              {t.weDont.map((w) => (
-                <li key={w.text} className="flex gap-3 text-sm text-ink">
-                  <span aria-hidden="true">{w.emoji}</span> {w.text}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {[
+            { title: t.weDoTitle, items: t.weDo },
+            { title: t.weDontTitle, items: t.weDont },
+          ].map((block) => (
+            <div key={block.title} className="border-t border-ink/25 pt-5">
+              <h3 className="font-display text-xl font-semibold leading-tight text-ink">{block.title}</h3>
+              <ul className="mt-5 space-y-3">
+                {block.items.map((w) => (
+                  <li key={w.text} className="flex gap-3 text-[15px] leading-relaxed text-ink">
+                    <span aria-hidden="true" className="mt-[0.72em] h-px w-3 shrink-0 bg-brand-700" />
+                    {w.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </section>
 
-        <section aria-labelledby="parlons-en" className="rounded-card bg-brand-900 p-6 text-white sm:p-10">
-          <h2 id="parlons-en" className="text-2xl font-bold sm:text-3xl">
-            {t.talkTitle} <span aria-hidden="true">💬</span>
+        <section aria-labelledby="parlons-en" className="rounded-md bg-brand-950 p-8 text-white sm:p-12">
+          <h2 id="parlons-en" className="font-display text-[1.7rem] font-semibold leading-tight sm:text-[2.1rem]">
+            {t.talkTitle}
           </h2>
-          <p className="mt-4 max-w-3xl leading-relaxed text-brand-100">{t.talkText}</p>
-          <div className="no-print mt-6">
-            <ButtonLink href={contactHref} variant="secondary">
+          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-brand-100/85">{t.talkText}</p>
+          <div className="no-print mt-8">
+            <ButtonLink href={contactHref} variant="light" size="lg">
               {t.talkCta}
             </ButtonLink>
           </div>

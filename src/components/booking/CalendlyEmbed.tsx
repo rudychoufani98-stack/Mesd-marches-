@@ -26,7 +26,7 @@ export function CalendlyEmbed({ name, email, reference, title }: { name?: string
     <iframe
       src={url.toString()}
       title={title}
-      className="h-[720px] w-full rounded-[1.25rem] border border-line bg-white"
+      className="h-[720px] w-full rounded-lg border border-line bg-white"
       loading="eager"
       referrerPolicy="strict-origin-when-cross-origin"
     />
